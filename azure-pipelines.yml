@@ -11,7 +11,7 @@ jobs:
     displayName: Build solution with code analysis
     inputs:
       command: build
-      projects: '**\*.sln'
+      projects: '**/*.sln'
       arguments: -c $(buildConfiguration) -warnaserror
 
 - job: RunTestsOnWindows
@@ -23,14 +23,14 @@ jobs:
     displayName: Build solution
     inputs:
       command: build
-      projects: '**\*.sln'
+      projects: '**/*.sln'
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
     timeoutInMinutes: 30
     inputs:
       command: test
-      projects: '**\*Tests.csproj'
+      projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
 
 - job: RunTestsOnLinux
@@ -42,14 +42,14 @@ jobs:
     displayName: Build solution
     inputs:
       command: build
-      projects: '**\*.sln'
+      projects: '**/*.sln'
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
     timeoutInMinutes: 30
     inputs:
       command: test
-      projects: '**\*Tests.csproj'
+      projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
 
 - job: RunTestsOnMacOS
@@ -61,12 +61,12 @@ jobs:
     displayName: Build solution
     inputs:
       command: build
-      projects: '**\*.sln'
+      projects: '**/*.sln'
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
     timeoutInMinutes: 30
     inputs:
       command: test
-      projects: '**\*Tests.csproj'
+      projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
