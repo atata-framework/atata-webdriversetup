@@ -1,5 +1,6 @@
 # Atata.WebDriverSetup
 
+[![Build status](https://dev.azure.com/atata-framework/atata-webdriversetup/_apis/build/status/atata-webdriversetup-ci?branchName=main)](https://dev.azure.com/atata-framework/atata-webdriversetup/_build/latest?definitionId=39&branchName=main)
 [![Slack](https://img.shields.io/badge/join-Slack-green.svg?colorB=4EB898)](https://join.slack.com/t/atata-framework/shared_invite/zt-5j3lyln7-WD1ZtMDzXBhPm0yXLDBzbA)
 [![Atata docs](https://img.shields.io/badge/docs-Atata_Framework-orange.svg)](https://atata.io)
 [![Twitter](https://img.shields.io/badge/follow-@AtataFramework-blue.svg)](https://twitter.com/AtataFramework)
