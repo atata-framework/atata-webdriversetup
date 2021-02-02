@@ -3,7 +3,7 @@ using System.IO;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Atata.WebDriverSetup.Tests
+namespace Atata.WebDriverSetup.IntegrationTests
 {
     [TestFixture]
     [Parallelizable(ParallelScope.Self)]
@@ -18,7 +18,7 @@ namespace Atata.WebDriverSetup.Tests
 
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
-        [TestCase(BrowserNames.Edge)]
+        [TestCase(BrowserNames.Edge, Category = TestCategories.UnsupportedOnLinux)]
         [TestCase(BrowserNames.Opera)]
         [TestCase(BrowserNames.InternetExplorer)]
         public void WithAutoVersion(string browserName)
@@ -32,7 +32,7 @@ namespace Atata.WebDriverSetup.Tests
 
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
-        [TestCase(BrowserNames.Edge)]
+        [TestCase(BrowserNames.Edge, Category = TestCategories.UnsupportedOnLinux)]
         [TestCase(BrowserNames.Opera)]
         [TestCase(BrowserNames.InternetExplorer)]
         public void WithLatestVersion(string browserName)
@@ -46,7 +46,7 @@ namespace Atata.WebDriverSetup.Tests
 
         [TestCase(BrowserNames.Chrome, "87.0.4280.88")]
         [TestCase(BrowserNames.Firefox, "0.28.0")]
-        [TestCase(BrowserNames.Edge, "89.0.774.4")]
+        [TestCase(BrowserNames.Edge, "89.0.774.4", Category = TestCategories.UnsupportedOnLinux)]
         [TestCase(BrowserNames.Opera, "86.0.4240.80")]
         [TestCase(BrowserNames.InternetExplorer, "3.141.59")]
         public void WithVersion(string browserName, string version)
@@ -60,7 +60,7 @@ namespace Atata.WebDriverSetup.Tests
 
         [TestCase(BrowserNames.Chrome, "87")]
         [TestCase(BrowserNames.Chrome, "87.0.4280")]
-        [TestCase(BrowserNames.Edge, "89.0.774.4")]
+        [TestCase(BrowserNames.Edge, "89.0.774.4", Category = TestCategories.UnsupportedOnLinux)]
         public void ByBrowserVersion(string browserName, string version)
         {
             DriverSetup.Configure(browserName)

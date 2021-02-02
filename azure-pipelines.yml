@@ -50,7 +50,7 @@ jobs:
     inputs:
       command: test
       projects: '**/*Tests.csproj'
-      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build --filter TestCategory!=UnsupportedOnLinux
 
 - job: RunTestsOnMacOS
   displayName: Run tests on MacOS
