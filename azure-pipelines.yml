@@ -1,0 +1,34 @@
+variables:
+  buildConfiguration: 'Release'
+
+jobs:
+- job: BuildAndRunCodeAnalysis
+  displayName: Build and run code analysis
+  pool:
+    vmImage: windows-latest
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build solution with code analysis
+    inputs:
+      command: build
+      projects: '**\*.sln'
+      arguments: -c $(buildConfiguration) -warnaserror
+
+- job: RunTestsOnWindows
+  displayName: Run tests on Windows
+  pool:
+    vmImage: windows-latest
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build solution
+    inputs:
+      command: build
+      projects: '**\*.sln'
+      arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
+  - task: DotNetCoreCLI@2
+    displayName: Run tests
+    timeoutInMinutes: 30
+    inputs:
+      command: test
+      projects: '**\*Tests.csproj'
+      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
