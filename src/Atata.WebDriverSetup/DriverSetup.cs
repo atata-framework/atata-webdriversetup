@@ -9,6 +9,16 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public static class DriverSetup
     {
+        private static readonly Dictionary<string, Func<IHttpRequestExecutor, IDriverSetupStrategy>> BrowserStrategyFactoryMap =
+            new Dictionary<string, Func<IHttpRequestExecutor, IDriverSetupStrategy>>
+            {
+                [BrowserNames.Chrome] = hre => new ChromeDriverSetupStrategy(hre),
+                [BrowserNames.Firefox] = hre => new FirefoxDriverSetupStrategy(hre),
+                [BrowserNames.Edge] = hre => new EdgeDriverSetupStrategy(hre),
+                [BrowserNames.Opera] = hre => new OperaDriverSetupStrategy(hre),
+                [BrowserNames.InternetExplorer] = hre => new InternetExplorerDriverSetupStrategy()
+            };
+
         /// <summary>
         /// Gets the global setup options.
         /// </summary>
@@ -30,39 +40,54 @@ namespace Atata.WebDriverSetup
             new List<DriverSetupConfigurationBuilder>();
 
         /// <summary>
+        /// Registers the driver setup strategy factory.
+        /// </summary>
+        /// <param name="browserName">Name of the browser.</param>
+        /// <param name="driverSetupStrategyFactory">The driver setup strategy factory.</param>
+        public static void RegisterStrategyFactory(
+            string browserName,
+            Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)
+        {
+            browserName.CheckNotNull(nameof(browserName));
+            driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
+
+            BrowserStrategyFactoryMap[browserName] = driverSetupStrategyFactory;
+        }
+
+        /// <summary>
         /// Creates the Chrome driver setup configuration builder.
         /// </summary>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/> for Chrome driver.</returns>
         public static DriverSetupConfigurationBuilder ConfigureChrome() =>
-            Configure(BrowserNames.Chrome, hre => new ChromeDriverSetupStrategy(hre));
+            Configure(BrowserNames.Chrome);
 
         /// <summary>
-        /// Creates the Firefox driver setup configuration builder.
+        /// Creates the Firefox/Gecko driver setup configuration builder.
         /// </summary>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/> for Firefox driver.</returns>
         public static DriverSetupConfigurationBuilder ConfigureFirefox() =>
-            Configure(BrowserNames.Firefox, hre => new FirefoxDriverSetupStrategy(hre));
+            Configure(BrowserNames.Firefox);
 
         /// <summary>
         /// Creates the Edge driver setup configuration builder.
         /// </summary>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/> for Edge driver.</returns>
         public static DriverSetupConfigurationBuilder ConfigureEdge() =>
-            Configure(BrowserNames.Edge, hre => new EdgeDriverSetupStrategy(hre));
+            Configure(BrowserNames.Edge);
 
         /// <summary>
         /// Creates the Opera driver setup configuration builder.
         /// </summary>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/> for Opera driver.</returns>
         public static DriverSetupConfigurationBuilder ConfigureOpera() =>
-            Configure(BrowserNames.Opera, hre => new OperaDriverSetupStrategy(hre));
+            Configure(BrowserNames.Opera);
 
         /// <summary>
         /// Creates the Internet Explorer driver setup configuration builder.
         /// </summary>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/> for Internet Explorer driver.</returns>
         public static DriverSetupConfigurationBuilder ConfigureInternetExplorer() =>
-            Configure(BrowserNames.InternetExplorer, hre => new InternetExplorerDriverSetupStrategy());
+            Configure(BrowserNames.InternetExplorer);
 
         /// <summary>
         /// Creates the driver setup configuration builder for the specified <paramref name="browserName"/>.
@@ -70,24 +95,10 @@ namespace Atata.WebDriverSetup
         /// </summary>
         /// <param name="browserName">The browser name. Can be one of <see cref="BrowserNames"/> values.</param>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/>.</returns>
-        public static DriverSetupConfigurationBuilder Configure(string browserName)
-        {
-            switch (browserName)
-            {
-                case BrowserNames.Chrome:
-                    return ConfigureChrome();
-                case BrowserNames.Firefox:
-                    return ConfigureFirefox();
-                case BrowserNames.Edge:
-                    return ConfigureEdge();
-                case BrowserNames.Opera:
-                    return ConfigureOpera();
-                case BrowserNames.InternetExplorer:
-                    return ConfigureInternetExplorer();
-                default:
-                    throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
-            }
-        }
+        public static DriverSetupConfigurationBuilder Configure(string browserName) =>
+            BrowserStrategyFactoryMap.TryGetValue(browserName, out var strategyFactory)
+                ? Configure(browserName, strategyFactory)
+                : throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
 
         /// <summary>
         /// Creates the driver setup configuration builder using <paramref name="driverSetupStrategyFactory"/>
