@@ -12,8 +12,8 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            if (Directory.Exists(DriverSetup.GlobalOptions.CachePath))
-                Directory.Delete(DriverSetup.GlobalOptions.CachePath, true);
+            if (Directory.Exists(DriverSetup.GlobalOptions.StorageDirectoryPath))
+                Directory.Delete(DriverSetup.GlobalOptions.StorageDirectoryPath, true);
         }
 
         [TestCase(BrowserNames.Chrome)]
@@ -93,7 +93,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
         private static string AssertDriverExists(string browserName, string version = null)
         {
             string driverDirectoryPath = Path.Combine(
-                DriverSetup.GlobalOptions.CachePath,
+                DriverSetup.GlobalOptions.StorageDirectoryPath,
                 browserName.Replace(" ", null).ToLower());
 
             Assert.That(driverDirectoryPath, Does.Exist);

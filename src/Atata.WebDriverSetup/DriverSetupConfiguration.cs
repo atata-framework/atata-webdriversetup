@@ -21,7 +21,7 @@
         {
             if (options != null)
             {
-                CachePath = options.CachePath;
+                StorageDirectoryPath = options.StorageDirectoryPath;
                 Proxy = options.Proxy;
                 LatestVersionCheckInterval = options.LatestVersionCheckInterval;
                 HttpRequestTryCount = options.HttpRequestTryCount;

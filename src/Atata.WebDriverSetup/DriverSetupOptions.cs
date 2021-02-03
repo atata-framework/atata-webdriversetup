@@ -10,10 +10,10 @@ namespace Atata.WebDriverSetup
     public class DriverSetupOptions
     {
         /// <summary>
-        /// Gets or sets the cache directory path.
+        /// Gets or sets the storage directory path.
         /// The default value is <c>"{basedir}/drivers")</c>.
         /// </summary>
-        public string CachePath { get; set; } =
+        public string StorageDirectoryPath { get; set; } =
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
 
         /// <summary>

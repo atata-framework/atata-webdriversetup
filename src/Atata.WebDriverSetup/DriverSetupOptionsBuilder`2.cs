@@ -26,9 +26,9 @@ namespace Atata.WebDriverSetup
         /// </summary>
         public TContext BuildingContext { get; }
 
-        public TBuilder WithCachePath(string path)
+        public TBuilder WithStorageDirectoryPath(string path)
         {
-            BuildingContext.CachePath = path.CheckNotNullOrWhitespace(nameof(path));
+            BuildingContext.StorageDirectoryPath = path.CheckNotNullOrWhitespace(nameof(path));
             return (TBuilder)this;
         }
 

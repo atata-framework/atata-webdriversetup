@@ -134,7 +134,7 @@ namespace Atata.WebDriverSetup
 
         private string BuildDriverDestinationDirectoryPath(string version) =>
             Path.Combine(
-                configuration.CachePath,
+                configuration.StorageDirectoryPath,
                 browserName.Replace(" ", null).ToLower(),
                 version);
 
