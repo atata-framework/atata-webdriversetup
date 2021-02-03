@@ -55,7 +55,7 @@ namespace Atata.WebDriverSetup
             OSInfo.IsWindows
                 ? AppVersionDetector.GetFromProgramFiles(@"Microsoft\Edge\Application\msedge.exe")
                     ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Microsoft\Edge")
-                    ?? AppVersionDetector.GetByApplicationPathFromRegistry("msedge.exe")
+                    ?? AppVersionDetector.GetByApplicationPathInRegistry("msedge.exe")
                 : null;
 
         /// <inheritdoc/>

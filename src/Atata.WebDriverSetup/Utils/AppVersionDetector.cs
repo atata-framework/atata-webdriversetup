@@ -6,11 +6,24 @@ using System.Linq;
 
 namespace Atata.WebDriverSetup
 {
+    /// <summary>
+    /// Provides a set of utility methods for the installed application version detection.
+    /// </summary>
     public static class AppVersionDetector
     {
+        /// <summary>
+        /// Gets the application version from "Program Files" and "Program Files (x86)" folders.
+        /// </summary>
+        /// <param name="applicationRelativePaths">The application relative paths in Program Files or Program Files (x86) folders.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
         public static string GetFromProgramFiles(params string[] applicationRelativePaths) =>
             GetFromProgramFiles(applicationRelativePaths.AsEnumerable());
 
+        /// <summary>
+        /// Gets the application version from "Program Files" and "Program Files (x86)" folders.
+        /// </summary>
+        /// <param name="applicationRelativePaths">The application relative paths in Program Files or Program Files (x86) folders.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
         public static string GetFromProgramFiles(IEnumerable<string> applicationRelativePaths)
         {
             string[] programFilesFolders = new[]
@@ -29,12 +42,22 @@ namespace Atata.WebDriverSetup
                 : null;
         }
 
+        /// <summary>
+        /// Gets the application version from "BLBeacon/version" key in registry.
+        /// </summary>
+        /// <param name="applicationRelativePathInSoftwareSection">The application relative path in software section.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
         public static string GetFromBLBeaconInRegistry(string applicationRelativePathInSoftwareSection) =>
             RegistryUtils.GetValue(
                 $@"HKEY_CURRENT_USER\Software\{applicationRelativePathInSoftwareSection}\BLBeacon",
                 "version");
 
-        public static string GetByApplicationPathFromRegistry(string applicationName)
+        /// <summary>
+        /// Gets the application version by application path in registry.
+        /// </summary>
+        /// <param name="applicationName">Name of the application.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetByApplicationPathInRegistry(string applicationName)
         {
             string applicationPath = RegistryUtils.GetApplicationPath(applicationName);
 

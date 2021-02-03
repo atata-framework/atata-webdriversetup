@@ -56,7 +56,7 @@ namespace Atata.WebDriverSetup
             OSInfo.IsWindows
                 ? AppVersionDetector.GetFromProgramFiles(@"Google\Chrome\Application\chrome.exe")
                     ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Google\Chrome")
-                    ?? AppVersionDetector.GetByApplicationPathFromRegistry("chrome.exe")
+                    ?? AppVersionDetector.GetByApplicationPathInRegistry("chrome.exe")
                 : null;
 
         /// <inheritdoc/>
