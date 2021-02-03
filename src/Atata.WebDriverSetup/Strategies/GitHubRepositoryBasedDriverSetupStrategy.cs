@@ -6,7 +6,7 @@ namespace Atata.WebDriverSetup
     /// <summary>
     /// Represents the base class for the driver setup strategies that are based on GitHub repository as a driver storage.
     /// </summary>
-    public abstract class GitHubRepositoryBasedDriverSetupStrategy
+    public abstract class GitHubRepositoryBasedDriverSetupStrategy : IDriverSetupStrategy
     {
         private readonly IHttpRequestExecutor httpRequestExecutor;
 
@@ -32,6 +32,10 @@ namespace Atata.WebDriverSetup
             baseUrl = $"https://github.com/{organizationName}/{repositoryName}";
         }
 
+        /// <inheritdoc/>
+        public abstract string DriverBinaryFileName { get; }
+
+        /// <inheritdoc/>
         public string GetDriverLatestVersion()
         {
             string latestReleaseUrl = $"{baseUrl}/releases/latest";
@@ -40,9 +44,15 @@ namespace Atata.WebDriverSetup
             return actualReleaseUrl.Split('/').Last().Substring(versionTagPrefix.Length);
         }
 
+        /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version) =>
             new Uri($"{baseUrl}/releases/download/{versionTagPrefix}{version}/{GetDriverDownloadFileName(version)}");
 
+        /// <summary>
+        /// Gets the name of the driver download file.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns>The file name.</returns>
         protected abstract string GetDriverDownloadFileName(string version);
     }
 }

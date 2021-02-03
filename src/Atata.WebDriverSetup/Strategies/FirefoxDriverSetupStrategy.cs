@@ -15,11 +15,12 @@
         }
 
         /// <inheritdoc/>
-        public string DriverBinaryFileName { get; } =
+        public override string DriverBinaryFileName { get; } =
             OSInfo.IsWindows
                 ? "geckodriver.exe"
                 : "geckodriver";
 
+        /// <inheritdoc/>
         protected override string GetDriverDownloadFileName(string version)
         {
             string commonNamePart = $"geckodriver-v{version}-";

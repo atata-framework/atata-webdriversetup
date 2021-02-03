@@ -1,5 +1,8 @@
 ﻿namespace Atata.WebDriverSetup
 {
+    /// <summary>
+    /// Represents the Opera driver (<c>operadriver.exe</c>/<c>operadriver</c>) setup strategy.
+    /// </summary>
     public class OperaDriverSetupStrategy : GitHubRepositoryBasedDriverSetupStrategy, IDriverSetupStrategy
     {
         /// <summary>
@@ -12,11 +15,12 @@
         }
 
         /// <inheritdoc/>
-        public string DriverBinaryFileName { get; } =
+        public override string DriverBinaryFileName { get; } =
             OSInfo.IsWindows
                 ? "operadriver.exe"
                 : "operadriver";
 
+        /// <inheritdoc/>
         protected override string GetDriverDownloadFileName(string version)
         {
             string commonNamePart = $"operadriver_";
