@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Atata.WebDriverSetup
 {
+    /// <summary>
+    /// Represents the base class for the driver setup strategies that are based on GitHub repository as a driver storage.
+    /// </summary>
     public abstract class GitHubRepositoryBasedDriverSetupStrategy
     {
         private readonly IHttpRequestExecutor httpRequestExecutor;
@@ -11,6 +14,13 @@ namespace Atata.WebDriverSetup
 
         private readonly string baseUrl;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GitHubRepositoryBasedDriverSetupStrategy"/> class.
+        /// </summary>
+        /// <param name="httpRequestExecutor">The HTTP request executor.</param>
+        /// <param name="organizationName">Name of the GitHub organization.</param>
+        /// <param name="repositoryName">Name of the GitHub repository.</param>
+        /// <param name="versionTagPrefix">The version tag prefix.</param>
         protected GitHubRepositoryBasedDriverSetupStrategy(
             IHttpRequestExecutor httpRequestExecutor,
             string organizationName,

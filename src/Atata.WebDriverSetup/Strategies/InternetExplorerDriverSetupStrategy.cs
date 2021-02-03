@@ -2,12 +2,18 @@
 
 namespace Atata.WebDriverSetup
 {
+    /// <summary>
+    /// Represents the Internet Explorer driver (<c>IEDriverServer.exe</c>) setup strategy.
+    /// </summary>
     public class InternetExplorerDriverSetupStrategy : IDriverSetupStrategy
     {
+        /// <inheritdoc/>
         public string DriverBinaryFileName { get; } = "IEDriverServer.exe";
 
+        /// <inheritdoc/>
         public string GetDriverLatestVersion() => "3.150.1";
 
+        /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version)
         {
             string versionTillPatch = VersionUtils.TrimRevision(version);

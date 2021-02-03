@@ -30,6 +30,11 @@ namespace Atata.WebDriverSetup
         public DriverSetupConfigurationBuilder ByBrowserVersion(string version) =>
             WithVersion(DriverVersions.CreateCorrespondingToBrowser(version));
 
+        /// <summary>
+        /// Sets the version of driver to use.
+        /// </summary>
+        /// <param name="version">The version string.</param>
+        /// <returns>The same builder instance.</returns>
         public DriverSetupConfigurationBuilder WithVersion(string version)
         {
             BuildingContext.Version = version.CheckNotNullOrWhitespace(nameof(version));

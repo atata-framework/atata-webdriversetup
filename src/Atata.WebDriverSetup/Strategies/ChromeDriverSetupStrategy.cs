@@ -2,6 +2,9 @@
 
 namespace Atata.WebDriverSetup
 {
+    /// <summary>
+    /// Represents the Chrome driver (<c>chromedriver.exe</c>/<c>chromedriver</c>) setup strategy.
+    /// </summary>
     public class ChromeDriverSetupStrategy :
         IDriverSetupStrategy,
         IGetsInstalledBrowserVersion,
@@ -18,19 +21,26 @@ namespace Atata.WebDriverSetup
 
         private readonly IHttpRequestExecutor httpRequestExecutor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChromeDriverSetupStrategy"/> class.
+        /// </summary>
+        /// <param name="httpRequestExecutor">The HTTP request executor.</param>
         public ChromeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
         {
             this.httpRequestExecutor = httpRequestExecutor;
         }
 
+        /// <inheritdoc/>
         public string DriverBinaryFileName { get; } =
             OSInfo.IsWindows
                 ? "chromedriver.exe"
                 : "chromedriver";
 
+        /// <inheritdoc/>
         public string GetDriverLatestVersion() =>
             httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
 
+        /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version) =>
             new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName()}");
 
@@ -41,6 +51,7 @@ namespace Atata.WebDriverSetup
                 ? "chromedriver_mac64.zip"
                 : "chromedriver_win32.zip";
 
+        /// <inheritdoc/>
         public string GetInstalledBrowserVersion() =>
             OSInfo.IsWindows
                 ? AppVersionDetector.GetFromProgramFiles(@"Google\Chrome\Application\chrome.exe")
@@ -48,6 +59,7 @@ namespace Atata.WebDriverSetup
                     ?? AppVersionDetector.GetByApplicationPathFromRegistry("chrome.exe")
                 : null;
 
+        /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
         {
             int browserVersionNumbersCount = VersionUtils.GetNumbersCount(browserVersion);

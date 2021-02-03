@@ -26,18 +26,35 @@ namespace Atata.WebDriverSetup
         /// </summary>
         public TContext BuildingContext { get; }
 
+        /// <summary>
+        /// Sets the storage directory path.
+        /// The default value is <c>"{basedir}/drivers")</c>.
+        /// </summary>
+        /// <param name="path">The directory path.</param>
+        /// <returns>The same builder instance.</returns>
         public TBuilder WithStorageDirectoryPath(string path)
         {
             BuildingContext.StorageDirectoryPath = path.CheckNotNullOrWhitespace(nameof(path));
             return (TBuilder)this;
         }
 
+        /// <summary>
+        /// Sets the web proxy.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
+        /// <returns>The same builder instance.</returns>
         public TBuilder WithProxy(IWebProxy proxy)
         {
             BuildingContext.Proxy = proxy;
             return (TBuilder)this;
         }
 
+        /// <summary>
+        /// Sets the latest version check interval.
+        /// The default values is <c>2</c> hours.
+        /// </summary>
+        /// <param name="interval">The interval.</param>
+        /// <returns>The same builder instance.</returns>
         public TBuilder WithLatestVersionCheckInterval(TimeSpan interval)
         {
             BuildingContext.LatestVersionCheckInterval = interval;

@@ -4,15 +4,21 @@ using System.Net.Http;
 
 namespace Atata.WebDriverSetup
 {
+    /// <inheritdoc/>
     public class HttpRequestExecutor : IHttpRequestExecutor
     {
         private readonly IWebProxy proxy;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
         public HttpRequestExecutor(IWebProxy proxy = null)
         {
             this.proxy = proxy;
         }
 
+        /// <inheritdoc/>
         public string DownloadString(string url)
         {
             using (var webClient = CreateWebClient())
@@ -21,6 +27,7 @@ namespace Atata.WebDriverSetup
             }
         }
 
+        /// <inheritdoc/>
         public void DownloadFile(string url, string filePath)
         {
             using (var webClient = CreateWebClient())
@@ -29,6 +36,7 @@ namespace Atata.WebDriverSetup
             }
         }
 
+        /// <inheritdoc/>
         public Uri GetRedirectUrl(string url)
         {
             using (HttpClient client = CreateHttpClient())

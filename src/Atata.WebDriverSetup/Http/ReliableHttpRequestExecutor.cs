@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace Atata.WebDriverSetup
 {
+    /// <summary>
+    /// Represents a reliable HTTP request executor.
+    /// </summary>
     public class ReliableHttpRequestExecutor : IHttpRequestExecutor
     {
         private readonly IHttpRequestExecutor httpRequestExecutor;
@@ -11,6 +14,12 @@ namespace Atata.WebDriverSetup
 
         private readonly TimeSpan retryInterval;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReliableHttpRequestExecutor"/> class.
+        /// </summary>
+        /// <param name="httpRequestExecutor">The HTTP request executor.</param>
+        /// <param name="tryCount">The try count.</param>
+        /// <param name="retryInterval">The retry interval.</param>
         public ReliableHttpRequestExecutor(
             IHttpRequestExecutor httpRequestExecutor,
             int tryCount,
@@ -21,6 +30,7 @@ namespace Atata.WebDriverSetup
             this.retryInterval = retryInterval;
         }
 
+        /// <inheritdoc/>
         public void DownloadFile(string url, string filePath)
         {
             ExecuteWithRetries(() =>
@@ -30,12 +40,14 @@ namespace Atata.WebDriverSetup
             });
         }
 
+        /// <inheritdoc/>
         public string DownloadString(string url)
         {
             return ExecuteWithRetries(() =>
                 httpRequestExecutor.DownloadString(url));
         }
 
+        /// <inheritdoc/>
         public Uri GetRedirectUrl(string url)
         {
             return ExecuteWithRetries(() =>

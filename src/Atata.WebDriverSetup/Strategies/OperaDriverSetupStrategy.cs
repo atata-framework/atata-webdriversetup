@@ -2,11 +2,16 @@
 {
     public class OperaDriverSetupStrategy : GitHubRepositoryBasedDriverSetupStrategy, IDriverSetupStrategy
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperaDriverSetupStrategy"/> class.
+        /// </summary>
+        /// <param name="httpRequestExecutor">The HTTP request executor.</param>
         public OperaDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
             : base(httpRequestExecutor, "operasoftware", "operachromiumdriver", "v.")
         {
         }
 
+        /// <inheritdoc/>
         public string DriverBinaryFileName { get; } =
             OSInfo.IsWindows
                 ? "operadriver.exe"
