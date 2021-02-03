@@ -18,7 +18,7 @@ namespace Atata.WebDriverSetup
         /// <param name="context">The context.</param>
         protected DriverSetupOptionsBuilder(TContext context)
         {
-            BuildingContext = context;
+            BuildingContext = context.CheckNotNull(nameof(context));
         }
 
         /// <summary>
