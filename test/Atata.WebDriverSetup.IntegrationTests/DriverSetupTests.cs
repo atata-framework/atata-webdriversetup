@@ -23,11 +23,11 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [TestCase(BrowserNames.InternetExplorer)]
         public void WithAutoVersion(string browserName)
         {
-            DriverSetup.Configure(browserName)
+            var result = DriverSetup.Configure(browserName)
                 .WithAutoVersion()
                 .SetUp();
 
-            AssertDriverAndEnvironmentVariablesExists(browserName);
+            AssertDriverIsSetUp(result, browserName);
         }
 
         [TestCase(BrowserNames.Chrome)]
@@ -37,11 +37,11 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [TestCase(BrowserNames.InternetExplorer)]
         public void WithLatestVersion(string browserName)
         {
-            DriverSetup.Configure(browserName)
+            var result = DriverSetup.Configure(browserName)
                 .WithLatestVersion()
                 .SetUp();
 
-            AssertDriverAndEnvironmentVariablesExists(browserName);
+            AssertDriverIsSetUp(result, browserName);
         }
 
         [TestCase(BrowserNames.Chrome, "87.0.4280.88")]
@@ -51,11 +51,11 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [TestCase(BrowserNames.InternetExplorer, "3.141.59")]
         public void WithVersion(string browserName, string version)
         {
-            DriverSetup.Configure(browserName)
+            var result = DriverSetup.Configure(browserName)
                 .WithVersion(version)
                 .SetUp();
 
-            AssertDriverAndEnvironmentVariablesExists(browserName, version);
+            AssertDriverIsSetUp(result, browserName, version);
         }
 
         [TestCase(BrowserNames.Chrome, "87")]
@@ -63,11 +63,11 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [TestCase(BrowserNames.Edge, "89.0.774.4", Category = TestCategories.UnsupportedOnLinux)]
         public void ByBrowserVersion(string browserName, string version)
         {
-            DriverSetup.Configure(browserName)
+            var result = DriverSetup.Configure(browserName)
                 .ByBrowserVersion(version)
                 .SetUp();
 
-            AssertDriverAndEnvironmentVariablesExists(browserName, version);
+            AssertDriverIsSetUp(result, browserName, version);
         }
 
         [TestCase(BrowserNames.Firefox, "84")]
@@ -82,15 +82,22 @@ namespace Atata.WebDriverSetup.IntegrationTests
                 builder.SetUp());
         }
 
-        private static void AssertDriverAndEnvironmentVariablesExists(string browserName, string version = null)
+        private static void AssertDriverIsSetUp(
+            DriverSetupResult setupResult,
+            string browserName,
+            string version = null)
         {
-            string driverDirectoryPath = AssertDriverExists(browserName, version);
+            var driverLocation = AssertDriverExists(browserName, version);
 
-            AssertPathEnvironmentVariable(driverDirectoryPath);
-            AssertUniqueDriverEnvironmentVariable(browserName, driverDirectoryPath);
+            AssertDriverSetupResult(setupResult, browserName, version, driverLocation);
+
+            AssertPathEnvironmentVariable(driverLocation.DirectoryPath);
+            AssertUniqueDriverEnvironmentVariable(browserName, driverLocation.DirectoryPath);
         }
 
-        private static string AssertDriverExists(string browserName, string version = null)
+        private static (string DirectoryPath, string FileName) AssertDriverExists(
+            string browserName,
+            string version)
         {
             string driverDirectoryPath = Path.Combine(
                 DriverSetup.GlobalOptions.StorageDirectoryPath,
@@ -106,9 +113,27 @@ namespace Atata.WebDriverSetup.IntegrationTests
                 versionDirectory.Name.Should().StartWith(version);
 
             versionDirectory.GetDirectories().Should().BeEmpty();
-            versionDirectory.GetFiles().Should().ContainSingle();
 
-            return versionDirectory.FullName;
+            FileInfo driverFile = versionDirectory.GetFiles().Should().ContainSingle()
+                .Subject;
+
+            return (versionDirectory.FullName, driverFile.Name);
+        }
+
+        private static void AssertDriverSetupResult(
+            DriverSetupResult result,
+            string browserName,
+            string version,
+            (string DirectoryPath, string FileName) driverLocation)
+        {
+            result.Should().NotBeNull();
+            result.BrowserName.Should().Be(browserName);
+
+            if (version != null)
+                result.Version.Should().StartWith(version);
+
+            result.DirectoryPath.Should().Be(driverLocation.DirectoryPath);
+            result.FileName.Should().Be(driverLocation.FileName);
         }
 
         private static void AssertPathEnvironmentVariable(string driverDirectoryPath)

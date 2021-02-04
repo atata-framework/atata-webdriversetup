@@ -68,7 +68,12 @@ namespace Atata.WebDriverSetup
         /// <summary>
         /// Sets up driver.
         /// </summary>
-        public void SetUp()
+        /// <returns>
+        /// The <see cref="DriverSetupResult"/> instance;
+        /// or <see langword="null"/>, if the configuration
+        /// <see cref="DriverSetupOptions.IsEnabled"/> property is <see langword="false"/>.
+        /// </returns>
+        public DriverSetupResult SetUp()
         {
             if (BuildingContext.IsEnabled)
             {
@@ -85,17 +90,28 @@ namespace Atata.WebDriverSetup
                     BuildingContext,
                     httpRequestExecutor);
 
-                if (BuildingContext.Version == DriverVersions.Auto)
-                    setupExecutor.SetupCorrespondingOrLatestVersion();
-                else if (BuildingContext.Version == DriverVersions.Latest)
-                    setupExecutor.SetupLatestVersion();
-                else if (DriverVersions.TryExtractBrowserVersion(BuildingContext.Version, out string browserVersion))
-                    setupExecutor.SetupByBrowserVersion(browserVersion);
-                else
-                    setupExecutor.SetUp(BuildingContext.Version);
+                DriverSetupResult result = ExecuteSetUp(setupExecutor, BuildingContext.Version);
 
                 DriverSetup.PendingConfigurations.Remove(this);
+
+                return result;
             }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static DriverSetupResult ExecuteSetUp(WebDriverSetupExecutor setupExecutor, string version)
+        {
+            if (version == DriverVersions.Auto)
+                return setupExecutor.SetupCorrespondingOrLatestVersion();
+            else if (version == DriverVersions.Latest)
+                return setupExecutor.SetupLatestVersion();
+            else if (DriverVersions.TryExtractBrowserVersion(version, out string browserVersion))
+                return setupExecutor.SetupByBrowserVersion(browserVersion);
+            else
+                return setupExecutor.SetUp(version);
         }
     }
 }

@@ -95,10 +95,14 @@ namespace Atata.WebDriverSetup
         /// </summary>
         /// <param name="browserName">The browser name. Can be one of <see cref="BrowserNames"/> values.</param>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/>.</returns>
-        public static DriverSetupConfigurationBuilder Configure(string browserName) =>
-            BrowserStrategyFactoryMap.TryGetValue(browserName, out var strategyFactory)
+        public static DriverSetupConfigurationBuilder Configure(string browserName)
+        {
+            browserName.CheckNotNullOrWhitespace(nameof(browserName));
+
+            return BrowserStrategyFactoryMap.TryGetValue(browserName, out var strategyFactory)
                 ? Configure(browserName, strategyFactory)
                 : throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
+        }
 
         /// <summary>
         /// Creates the driver setup configuration builder using <paramref name="driverSetupStrategyFactory"/>
@@ -128,35 +132,47 @@ namespace Atata.WebDriverSetup
             };
 
         /// <summary>
-        /// Sets up driver with auto version detecting for the browsers with the specified names.
+        /// Sets up driver with auto version detection for the browser with the specified name.
+        /// Supported browser names are defined in <see cref="BrowserNames" />.
+        /// </summary>
+        /// <param name="browserName">The browser name. Can be one or many of <see cref="BrowserNames"/> values.</param>
+        /// <returns>
+        /// The <see cref="DriverSetupResult"/> instance;
+        /// or <see langword="null"/>, if the <see cref="DriverSetupOptions.IsEnabled"/> property
+        /// of <see cref="GlobalOptions"/> is <see langword="false"/>.
+        /// </returns>
+        public static DriverSetupResult AutoSetUp(string browserName) =>
+            Configure(browserName).WithAutoVersion().SetUp();
+
+        /// <summary>
+        /// Sets up drivers with auto version detection for the browsers with the specified names.
         /// Supported browser names are defined in <see cref="BrowserNames"/>.
         /// </summary>
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames"/> values.</param>
-        public static void AutoSetUp(params string[] browserNames)
-        {
+        /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
+        public static DriverSetupResult[] AutoSetUp(params string[] browserNames) =>
             AutoSetUp(browserNames.AsEnumerable());
-        }
 
         /// <summary>
-        /// Sets up driver with auto version detecting for the browsers with the specified names.
-        /// Supported browser names are defined in <see cref="BrowserNames"/>.
+        /// Sets up drivers with auto version detection for the browsers with the specified names.
+        /// Supported browser names are defined in <see cref="BrowserNames" />.
         /// </summary>
-        /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames"/> values.</param>
-        public static void AutoSetUp(IEnumerable<string> browserNames)
-        {
-            browserNames.CheckNotNull(nameof(browserNames));
-
-            foreach (string browserName in browserNames)
-                Configure(browserName).WithAutoVersion().SetUp();
-        }
+        /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
+        /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
+        public static DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames) =>
+            browserNames.CheckNotNull(nameof(browserNames))
+                .Select(AutoSetUp)
+                .Where(res => res != null)
+                .ToArray();
 
         /// <summary>
-        /// Sets up pending configurations that are stored in <see cref="PendingConfigurations"/> property.
+        /// Sets up pending configurations that are stored in <see cref="PendingConfigurations" /> property.
         /// </summary>
-        public static void SetUpPendingConfigurations()
-        {
-            foreach (var configuration in PendingConfigurations.ToArray())
-                configuration.SetUp();
-        }
+        /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
+        public static DriverSetupResult[] SetUpPendingConfigurations() =>
+            PendingConfigurations.ToArray()
+                .Select(conf => conf.SetUp())
+                .Where(res => res != null)
+                .ToArray();
     }
 }
