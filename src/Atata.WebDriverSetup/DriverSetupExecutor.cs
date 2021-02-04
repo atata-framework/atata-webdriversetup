@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Atata.WebDriverSetup
 {
-    internal class WebDriverSetupExecutor
+    internal class DriverSetupExecutor
     {
         private readonly string browserName;
 
@@ -17,7 +17,7 @@ namespace Atata.WebDriverSetup
 
         private readonly IHttpRequestExecutor httpRequestExecutor;
 
-        internal WebDriverSetupExecutor(
+        internal DriverSetupExecutor(
             string browserName,
             IDriverSetupStrategy setupStrategy,
             DriverSetupConfiguration configuration,

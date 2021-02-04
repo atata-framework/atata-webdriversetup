@@ -84,7 +84,7 @@ namespace Atata.WebDriverSetup
 
                 IDriverSetupStrategy setupStrategy = driverSetupStrategyFactory.Invoke(httpRequestExecutor);
 
-                WebDriverSetupExecutor setupExecutor = new WebDriverSetupExecutor(
+                DriverSetupExecutor setupExecutor = new DriverSetupExecutor(
                     BrowserName,
                     setupStrategy,
                     BuildingContext,
@@ -102,7 +102,7 @@ namespace Atata.WebDriverSetup
             }
         }
 
-        private static DriverSetupResult ExecuteSetUp(WebDriverSetupExecutor setupExecutor, string version)
+        private static DriverSetupResult ExecuteSetUp(DriverSetupExecutor setupExecutor, string version)
         {
             if (version == DriverVersions.Auto)
                 return setupExecutor.SetupCorrespondingOrLatestVersion();
