@@ -66,6 +66,28 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
+        /// <para>
+        /// Sets the name of the environment variable
+        /// that will be set with a value equal to the driver directory path.
+        /// </para>
+        /// <para>
+        /// The default value is specific to the driver being configured.
+        /// It has <c>"Atata.{BrowserName}Driver"</c> format.
+        /// For example: <c>"Atata.ChromeDriver"</c> or <c>"Atata.InternetExplorerDriver"</c>.
+        /// </para>
+        /// <para>
+        /// The <see langword="null"/> value means that none variable should be set.
+        /// </para>
+        /// </summary>
+        /// <param name="variableName">The variable name.</param>
+        /// <returns>The same builder instance.</returns>
+        public DriverSetupConfigurationBuilder WithEnvironmentVariableName(string variableName)
+        {
+            BuildingContext.EnvironmentVariableName = variableName;
+            return this;
+        }
+
+        /// <summary>
         /// Sets up driver.
         /// </summary>
         /// <returns>

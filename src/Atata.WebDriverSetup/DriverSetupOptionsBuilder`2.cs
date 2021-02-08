@@ -84,5 +84,54 @@ namespace Atata.WebDriverSetup
             BuildingContext.SpecificVersionCheckInterval = interval;
             return (TBuilder)this;
         }
+
+        /// <summary>
+        /// Sets the HTTP request try count.
+        /// The default values is <c>3</c>.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithHttpRequestTryCount(int count)
+        {
+            BuildingContext.HttpRequestTryCount = count;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
+        /// Sets the HTTP request retry interval.
+        /// The default values is <c>3</c> seconds.
+        /// </summary>
+        /// <param name="interval">The interval.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithHttpRequestRetryInterval(TimeSpan interval)
+        {
+            BuildingContext.HttpRequestRetryInterval = interval;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
+        /// Sets a value indicating whether the configuration is enabled.
+        /// The default values is <see langword="true"/>.
+        /// </summary>
+        /// <param name="isEnabled">Whether is enabled.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithEnabledState(bool isEnabled)
+        {
+            BuildingContext.IsEnabled = isEnabled;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
+        /// Sets a value indicating whether to add the driver directory path
+        /// to environment "Path" variable.
+        /// The default value is <see langword="true"/>.
+        /// </summary>
+        /// <param name="isEnabled">Whether is enabled.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithAddToEnvironmentPathVariable(bool isEnabled)
+        {
+            BuildingContext.AddToEnvironmentPathVariable = isEnabled;
+            return (TBuilder)this;
+        }
     }
 }
