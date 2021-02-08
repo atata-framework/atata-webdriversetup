@@ -28,6 +28,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
                 .SetUp();
 
             AssertDriverIsSetUp(result, browserName);
+            AssertVersionCache(browserName);
         }
 
         [TestCase(BrowserNames.Chrome)]
@@ -42,6 +43,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
                 .SetUp();
 
             AssertDriverIsSetUp(result, browserName);
+            AssertVersionCache(browserName);
         }
 
         [TestCase(BrowserNames.Chrome, "87.0.4280.88")]
@@ -68,6 +70,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
                 .SetUp();
 
             AssertDriverIsSetUp(result, browserName, version);
+            AssertVersionCache(browserName, version);
         }
 
         [TestCase(BrowserNames.Firefox, "84")]
@@ -90,7 +93,6 @@ namespace Atata.WebDriverSetup.IntegrationTests
             var driverLocation = AssertDriverExists(browserName, version);
 
             AssertDriverSetupResult(setupResult, browserName, version, driverLocation);
-            AssertVersionCache(browserName, version);
 
             AssertPathEnvironmentVariable(driverLocation.DirectoryPath);
             AssertUniqueDriverEnvironmentVariable(browserName, driverLocation.DirectoryPath);
@@ -140,7 +142,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
             result.FileName.Should().Be(driverLocation.FileName);
         }
 
-        private static void AssertVersionCache(string browserName, string version)
+        private static void AssertVersionCache(string browserName, string version = null)
         {
             string driverDirectoryPath = GetRootDriverDirectoryPath(browserName);
             string cacheFilePath = Path.Combine(driverDirectoryPath, "versioncache.xml");
