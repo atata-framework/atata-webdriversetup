@@ -13,12 +13,6 @@ namespace Atata.WebDriverSetup
         string DriverBinaryFileName { get; }
 
         /// <summary>
-        /// Gets the driver latest version.
-        /// </summary>
-        /// <returns>The latest version string.</returns>
-        string GetDriverLatestVersion();
-
-        /// <summary>
         /// Gets the driver download URL.
         /// </summary>
         /// <param name="version">The version.</param>

@@ -23,7 +23,9 @@
             {
                 StorageDirectoryPath = options.StorageDirectoryPath;
                 Proxy = options.Proxy;
+                UseVersionCache = options.UseVersionCache;
                 LatestVersionCheckInterval = options.LatestVersionCheckInterval;
+                SpecificVersionCheckInterval = options.SpecificVersionCheckInterval;
                 HttpRequestTryCount = options.HttpRequestTryCount;
                 HttpRequestRetryInterval = options.HttpRequestRetryInterval;
                 IsEnabled = options.IsEnabled;

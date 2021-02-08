@@ -77,20 +77,19 @@ namespace Atata.WebDriverSetup
         {
             if (BuildingContext.IsEnabled)
             {
-                IHttpRequestExecutor httpRequestExecutor = new ReliableHttpRequestExecutor(
-                    new HttpRequestExecutor(BuildingContext.Proxy),
-                    BuildingContext.HttpRequestTryCount,
-                    BuildingContext.HttpRequestRetryInterval);
+                IHttpRequestExecutor httpRequestExecutor = CreateHttpRequestExecutor();
 
                 IDriverSetupStrategy setupStrategy = driverSetupStrategyFactory.Invoke(httpRequestExecutor);
 
+                string driverVersion = ResolveDriverVersion(setupStrategy, BuildingContext.Version);
+
                 DriverSetupExecutor setupExecutor = new DriverSetupExecutor(
                     BrowserName,
-                    setupStrategy,
                     BuildingContext,
+                    setupStrategy,
                     httpRequestExecutor);
 
-                DriverSetupResult result = ExecuteSetUp(setupExecutor, BuildingContext.Version);
+                DriverSetupResult result = setupExecutor.SetUp(driverVersion);
 
                 DriverSetup.PendingConfigurations.Remove(this);
 
@@ -102,16 +101,25 @@ namespace Atata.WebDriverSetup
             }
         }
 
-        private static DriverSetupResult ExecuteSetUp(DriverSetupExecutor setupExecutor, string version)
+        private IHttpRequestExecutor CreateHttpRequestExecutor() =>
+            new ReliableHttpRequestExecutor(
+                new HttpRequestExecutor(BuildingContext.Proxy),
+                BuildingContext.HttpRequestTryCount,
+                BuildingContext.HttpRequestRetryInterval);
+
+        private string ResolveDriverVersion(IDriverSetupStrategy setupStrategy, string version)
         {
+            DriverVersionResolver driverVersionResolver = new DriverVersionResolver(
+                BrowserName, BuildingContext, setupStrategy);
+
             if (version == DriverVersions.Auto)
-                return setupExecutor.SetupCorrespondingOrLatestVersion();
+                return driverVersionResolver.ResolveCorrespondingOrLatestVersion();
             else if (version == DriverVersions.Latest)
-                return setupExecutor.SetupLatestVersion();
+                return driverVersionResolver.ResolveLatestVersion();
             else if (DriverVersions.TryExtractBrowserVersion(version, out string browserVersion))
-                return setupExecutor.SetupByBrowserVersion(browserVersion);
+                return driverVersionResolver.ResolveByBrowserVersion(browserVersion);
             else
-                return setupExecutor.SetUp(version);
+                return version;
         }
     }
 }

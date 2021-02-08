@@ -50,6 +50,18 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
+        /// Sets a value indicating whether to use version cache.
+        /// The default value is <see langword="true"/>.
+        /// </summary>
+        /// <param name="useVersionCache">Whether to use version cache.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithVersionCache(bool useVersionCache)
+        {
+            BuildingContext.UseVersionCache = useVersionCache;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
         /// Sets the latest version check interval.
         /// The default values is <c>2</c> hours.
         /// </summary>
@@ -58,6 +70,18 @@ namespace Atata.WebDriverSetup
         public TBuilder WithLatestVersionCheckInterval(TimeSpan interval)
         {
             BuildingContext.LatestVersionCheckInterval = interval;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
+        /// Sets the specific version check interval.
+        /// The default values is <c>2</c> hours.
+        /// </summary>
+        /// <param name="interval">The interval.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithSpecificVersionCheckInterval(TimeSpan interval)
+        {
+            BuildingContext.SpecificVersionCheckInterval = interval;
             return (TBuilder)this;
         }
     }

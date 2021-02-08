@@ -3,7 +3,8 @@
     /// <summary>
     /// Represents the Firefox/Gecko driver (<c>geckodriver.exe</c>/<c>geckodriver</c>) setup strategy.
     /// </summary>
-    public class FirefoxDriverSetupStrategy : GitHubRepositoryBasedDriverSetupStrategy, IDriverSetupStrategy
+    public class FirefoxDriverSetupStrategy :
+        GitHubRepositoryBasedDriverSetupStrategy
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FirefoxDriverSetupStrategy"/> class.

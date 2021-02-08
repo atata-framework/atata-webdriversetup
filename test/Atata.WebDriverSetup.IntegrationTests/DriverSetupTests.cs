@@ -90,6 +90,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
             var driverLocation = AssertDriverExists(browserName, version);
 
             AssertDriverSetupResult(setupResult, browserName, version, driverLocation);
+            AssertVersionCache(browserName, version);
 
             AssertPathEnvironmentVariable(driverLocation.DirectoryPath);
             AssertUniqueDriverEnvironmentVariable(browserName, driverLocation.DirectoryPath);
@@ -99,9 +100,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
             string browserName,
             string version)
         {
-            string driverDirectoryPath = Path.Combine(
-                DriverSetup.GlobalOptions.StorageDirectoryPath,
-                browserName.Replace(" ", null).ToLower());
+            string driverDirectoryPath = GetRootDriverDirectoryPath(browserName);
 
             Assert.That(driverDirectoryPath, Does.Exist);
 
@@ -120,6 +119,11 @@ namespace Atata.WebDriverSetup.IntegrationTests
             return (versionDirectory.FullName, driverFile.Name);
         }
 
+        private static string GetRootDriverDirectoryPath(string browserName) =>
+            Path.Combine(
+                DriverSetup.GlobalOptions.StorageDirectoryPath,
+                browserName.Replace(" ", null).ToLower());
+
         private static void AssertDriverSetupResult(
             DriverSetupResult result,
             string browserName,
@@ -136,6 +140,17 @@ namespace Atata.WebDriverSetup.IntegrationTests
             result.FileName.Should().Be(driverLocation.FileName);
         }
 
+        private static void AssertVersionCache(string browserName, string version)
+        {
+            string driverDirectoryPath = GetRootDriverDirectoryPath(browserName);
+            string cacheFilePath = Path.Combine(driverDirectoryPath, "versioncache.xml");
+
+            Assert.That(cacheFilePath, Does.Exist);
+
+            if (version != null)
+                File.ReadAllText(cacheFilePath).Should().Contain(version);
+        }
+
         private static void AssertPathEnvironmentVariable(string driverDirectoryPath)
         {
             Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process)
@@ -143,7 +158,9 @@ namespace Atata.WebDriverSetup.IntegrationTests
                 .Should().Contain(driverDirectoryPath);
         }
 
-        private static void AssertUniqueDriverEnvironmentVariable(string browserName, string driverDirectoryPath)
+        private static void AssertUniqueDriverEnvironmentVariable(
+            string browserName,
+            string driverDirectoryPath)
         {
             string uniqueEnvironmentVariableName = $"Atata.{browserName.Replace(" ", null)}Driver";
 

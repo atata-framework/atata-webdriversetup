@@ -5,7 +5,9 @@ namespace Atata.WebDriverSetup
     /// <summary>
     /// Represents the Internet Explorer driver (<c>IEDriverServer.exe</c>) setup strategy.
     /// </summary>
-    public class InternetExplorerDriverSetupStrategy : IDriverSetupStrategy
+    public class InternetExplorerDriverSetupStrategy :
+        IDriverSetupStrategy,
+        IGetsDriverLatestVersion
     {
         /// <inheritdoc/>
         public string DriverBinaryFileName { get; } = "IEDriverServer.exe";

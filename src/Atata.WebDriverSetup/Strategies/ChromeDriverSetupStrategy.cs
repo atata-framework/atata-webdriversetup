@@ -7,6 +7,7 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public class ChromeDriverSetupStrategy :
         IDriverSetupStrategy,
+        IGetsDriverLatestVersion,
         IGetsInstalledBrowserVersion,
         IGetsDriverVersionCorrespondingToBrowserVersion
     {

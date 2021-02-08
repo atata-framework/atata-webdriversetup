@@ -11,45 +11,22 @@ namespace Atata.WebDriverSetup
     {
         private readonly string browserName;
 
-        private readonly IDriverSetupStrategy setupStrategy;
-
         private readonly DriverSetupConfiguration configuration;
+
+        private readonly IDriverSetupStrategy setupStrategy;
 
         private readonly IHttpRequestExecutor httpRequestExecutor;
 
         internal DriverSetupExecutor(
             string browserName,
-            IDriverSetupStrategy setupStrategy,
             DriverSetupConfiguration configuration,
+            IDriverSetupStrategy setupStrategy,
             IHttpRequestExecutor httpRequestExecutor)
         {
             this.browserName = browserName;
+            this.configuration = configuration;
             this.setupStrategy = setupStrategy;
             this.httpRequestExecutor = httpRequestExecutor;
-            this.configuration = configuration;
-        }
-
-        internal DriverSetupResult SetupByBrowserVersion(string version)
-        {
-            version.CheckNotNullOrWhitespace(nameof(version));
-
-            string driverVersion = ResolveDriverVersionByBrowserVersion(version);
-
-            return SetUp(driverVersion);
-        }
-
-        internal DriverSetupResult SetupLatestVersion()
-        {
-            string driverVersion = ResolveLatestDriverVersion();
-
-            return SetUp(driverVersion);
-        }
-
-        internal DriverSetupResult SetupCorrespondingOrLatestVersion()
-        {
-            string driverVersion = ResolveDriverVersion();
-
-            return SetUp(driverVersion);
         }
 
         internal DriverSetupResult SetUp(string version)
@@ -59,7 +36,7 @@ namespace Atata.WebDriverSetup
             string driverDestinationDirectoryPath = BuildDriverDestinationDirectoryPath(version);
             string driverDestinationFileName = setupStrategy.DriverBinaryFileName;
 
-            DownloadDriverIfNotPresent(version, driverDestinationDirectoryPath, driverDestinationFileName);
+            DownloadDriverIfMissing(version, driverDestinationDirectoryPath, driverDestinationFileName);
 
             SetEnvironmentVariables(driverDestinationDirectoryPath);
 
@@ -70,45 +47,7 @@ namespace Atata.WebDriverSetup
                 driverDestinationFileName);
         }
 
-        private string ResolveDriverVersion() =>
-            ResolveCorrespondingDriverVersion()
-            ?? ResolveLatestDriverVersion();
-
-        private string ResolveCorrespondingDriverVersion()
-        {
-            string installedVersion = (setupStrategy as IGetsInstalledBrowserVersion)?.GetInstalledBrowserVersion();
-
-            return installedVersion != null
-                ? ResolveDriverVersionByBrowserVersion(installedVersion)
-                : null;
-        }
-
-        private string ResolveDriverVersionByBrowserVersion(string version)
-        {
-            version.CheckNotNullOrWhitespace(nameof(version));
-
-            if (setupStrategy is IGetsDriverVersionCorrespondingToBrowserVersion getsDriverVersion)
-            {
-                // TODO: Work with cache.
-                return getsDriverVersion.GetDriverVersionCorrespondingToBrowserVersion(version)
-                    ?? throw new DriverSetupException(
-                        $"Failed to find {browserName} driver version corresponding to browser {version} version.");
-            }
-            else
-            {
-                throw new DriverSetupException(
-                    $"Cannot get {browserName} driver version corresponding to browser version as " +
-                    $"{setupStrategy.GetType().Name} doesn't support that feature.");
-            }
-        }
-
-        private string ResolveLatestDriverVersion()
-        {
-            // TODO: Work with cache.
-            return setupStrategy.GetDriverLatestVersion();
-        }
-
-        private void DownloadDriverIfNotPresent(
+        private void DownloadDriverIfMissing(
             string version,
             string driverDestinationDirectoryPath,
             string driverDestinationFileName)

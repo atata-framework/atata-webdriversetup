@@ -6,7 +6,9 @@ namespace Atata.WebDriverSetup
     /// <summary>
     /// Represents the base class for the driver setup strategies that are based on GitHub repository as a driver storage.
     /// </summary>
-    public abstract class GitHubRepositoryBasedDriverSetupStrategy : IDriverSetupStrategy
+    public abstract class GitHubRepositoryBasedDriverSetupStrategy :
+        IDriverSetupStrategy,
+        IGetsDriverLatestVersion
     {
         private readonly IHttpRequestExecutor httpRequestExecutor;
 

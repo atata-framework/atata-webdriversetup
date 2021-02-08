@@ -3,7 +3,8 @@
     /// <summary>
     /// Represents the Opera driver (<c>operadriver.exe</c>/<c>operadriver</c>) setup strategy.
     /// </summary>
-    public class OperaDriverSetupStrategy : GitHubRepositoryBasedDriverSetupStrategy, IDriverSetupStrategy
+    public class OperaDriverSetupStrategy :
+        GitHubRepositoryBasedDriverSetupStrategy
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OperaDriverSetupStrategy"/> class.
