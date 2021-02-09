@@ -164,7 +164,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
             string browserName,
             string driverDirectoryPath)
         {
-            string uniqueEnvironmentVariableName = $"Atata.{browserName.Replace(" ", null)}Driver";
+            string uniqueEnvironmentVariableName = $"{browserName.Replace(" ", null)}Driver";
 
             Environment.GetEnvironmentVariable(uniqueEnvironmentVariableName, EnvironmentVariableTarget.Process)
                 .Should().Be(driverDirectoryPath);

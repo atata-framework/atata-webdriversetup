@@ -72,8 +72,8 @@ namespace Atata.WebDriverSetup
         /// </para>
         /// <para>
         /// The default value is specific to the driver being configured.
-        /// It has <c>"Atata.{BrowserName}Driver"</c> format.
-        /// For example: <c>"Atata.ChromeDriver"</c> or <c>"Atata.InternetExplorerDriver"</c>.
+        /// It has <c>"{BrowserName}Driver"</c> format.
+        /// For example: <c>"ChromeDriver"</c> or <c>"InternetExplorerDriver"</c>.
         /// </para>
         /// <para>
         /// The <see langword="null"/> value means that none variable should be set.

@@ -128,7 +128,7 @@ namespace Atata.WebDriverSetup
         private static DriverSetupConfiguration CreateConfiguration(string browserName) =>
             new DriverSetupConfiguration(GlobalConfiguration.BuildingContext)
             {
-                EnvironmentVariableName = $"Atata.{browserName.Replace(" ", null)}Driver"
+                EnvironmentVariableName = $"{browserName.Replace(" ", null)}Driver"
             };
 
         /// <summary>
