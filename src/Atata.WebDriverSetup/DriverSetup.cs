@@ -151,7 +151,7 @@ namespace Atata.WebDriverSetup
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames"/> values.</param>
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
         public static DriverSetupResult[] AutoSetUp(params string[] browserNames) =>
-            AutoSetUp(browserNames.AsEnumerable());
+            AutoSetUp(browserNames?.AsEnumerable());
 
         /// <summary>
         /// Sets up drivers with auto version detection for the browsers with the specified names.
@@ -164,6 +164,18 @@ namespace Atata.WebDriverSetup
                 .Select(AutoSetUp)
                 .Where(res => res != null)
                 .ToArray();
+
+        /// <summary>
+        /// Sets up drivers with auto version detection for the browsers with the specified names.
+        /// Supported browser names are defined in <see cref="BrowserNames" />.
+        /// Skips invalid/unsupported browser names.
+        /// </summary>
+        /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
+        /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
+        public static DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames) =>
+            browserNames != null
+                ? AutoSetUp(browserNames.Where(name => BrowserStrategyFactoryMap.ContainsKey(name)))
+                : new DriverSetupResult[0];
 
         /// <summary>
         /// Sets up pending configurations that are stored in <see cref="PendingConfigurations" /> property.
