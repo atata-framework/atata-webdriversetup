@@ -91,7 +91,7 @@ namespace Atata.WebDriverSetup
 
         /// <summary>
         /// Creates the driver setup configuration builder for the specified <paramref name="browserName"/>.
-        /// Supported browser names are defined in <see cref="BrowserNames"/>.
+        /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
         /// </summary>
         /// <param name="browserName">The browser name. Can be one of <see cref="BrowserNames"/> values.</param>
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/>.</returns>
@@ -133,7 +133,7 @@ namespace Atata.WebDriverSetup
 
         /// <summary>
         /// Sets up driver with auto version detection for the browser with the specified name.
-        /// Supported browser names are defined in <see cref="BrowserNames" />.
+        /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
         /// </summary>
         /// <param name="browserName">The browser name. Can be one or many of <see cref="BrowserNames"/> values.</param>
         /// <returns>
@@ -146,7 +146,7 @@ namespace Atata.WebDriverSetup
 
         /// <summary>
         /// Sets up drivers with auto version detection for the browsers with the specified names.
-        /// Supported browser names are defined in <see cref="BrowserNames"/>.
+        /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
         /// </summary>
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames"/> values.</param>
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
@@ -155,7 +155,7 @@ namespace Atata.WebDriverSetup
 
         /// <summary>
         /// Sets up drivers with auto version detection for the browsers with the specified names.
-        /// Supported browser names are defined in <see cref="BrowserNames" />.
+        /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
         /// </summary>
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
@@ -167,7 +167,7 @@ namespace Atata.WebDriverSetup
 
         /// <summary>
         /// Sets up drivers with auto version detection for the browsers with the specified names.
-        /// Supported browser names are defined in <see cref="BrowserNames" />.
+        /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
         /// Skips invalid/unsupported browser names.
         /// </summary>
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
