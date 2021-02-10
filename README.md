@@ -120,49 +120,49 @@ DriverSetup.ConfigureChrome()
 
 ### DriverSetup Properties
 
-- `DriverSetupOptions GlobalOptions { get; }`\
+- **`DriverSetupOptions GlobalOptions { get; }`**\
   Gets the global setup options.
-- `DriverSetupOptionsBuilder GlobalConfiguration { get; }`\
+- **`DriverSetupOptionsBuilder GlobalConfiguration { get; }`**\
   Gets the global setup configuration builder.
-  Configures <see cref="GlobalOptions"/>.
-- `List<DriverSetupConfigurationBuilder> PendingConfigurations { get; }`\
+  Configures `GlobalOptions`.
+- **`List<DriverSetupConfigurationBuilder> PendingConfigurations { get; }`**\
   Gets the pending driver setup configurations,
   the configurations that were created but were not set up.
 
 ### DriverSetup Methods
 
-- `DriverSetupConfigurationBuilder ConfigureChrome()`\
+- **`DriverSetupConfigurationBuilder ConfigureChrome()`**\
   Creates the Chrome driver setup configuration builder.
-- `DriverSetupConfigurationBuilder ConfigureFirefox()`\
+- **`DriverSetupConfigurationBuilder ConfigureFirefox()`**\
   Creates the Firefox/Gecko driver setup configuration builder.
-- `DriverSetupConfigurationBuilder ConfigureEdge()`\
+- **`DriverSetupConfigurationBuilder ConfigureEdge()`**\
   Creates the Edge driver setup configuration builder.
-- `DriverSetupConfigurationBuilder ConfigureOpera()`\
+- **`DriverSetupConfigurationBuilder ConfigureOpera()`**\
   Creates the Opera driver setup configuration builder.
-- `DriverSetupConfigurationBuilder ConfigureInternetExplorer()`\
+- **`DriverSetupConfigurationBuilder ConfigureInternetExplorer()`**\
   Creates the Internet Explorer driver setup configuration builder.
-- `DriverSetupConfigurationBuilder Configure(string browserName)`\
+- **`DriverSetupConfigurationBuilder Configure(string browserName)`**\
   Creates the driver setup configuration builder for the specified `browserName`.
   Supported browser names are defined in `BrowserNames` static class.
-- `DriverSetupConfigurationBuilder Configure(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`\
+- **`DriverSetupConfigurationBuilder Configure(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`**\
   Creates the driver setup configuration builder using `driverSetupStrategyFactory`
   that instantiates specific `IDriverSetupStrategy`.
-- `DriverSetupResult AutoSetUp(string browserName)`\
+- **`DriverSetupResult AutoSetUp(string browserName)`**\
   Sets up driver with auto version detection for the browser with the specified name.
   Supported browser names are defined in `BrowserNames` static class.
-- `DriverSetupResult[] AutoSetUp(params string[] browserNames)`\
+- **`DriverSetupResult[] AutoSetUp(params string[] browserNames)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
-- `DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames)`\
+- **`DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
-- `DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames)`\
+- **`DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
   Skips invalid/unsupported browser names.
-- `DriverSetupResult[] SetUpPendingConfigurations()`\
+- **`DriverSetupResult[] SetUpPendingConfigurations()`**\
   Sets up pending configurations that are stored in `PendingConfigurations` property.
-- `void RegisterStrategyFactory(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`\
+- **`void RegisterStrategyFactory(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`**\
   Registers the driver setup strategy factory.
 
 ## Configuration
@@ -195,18 +195,24 @@ DriverSetup.ConfigureChrome()
     .SetUp();
 ```
 
+*Don't forget to call `SetUp()` at the end.*
+
 ### Configuration Methods
 
 #### Driver-Specific Configuration Methods
 
-- **`WithAutoVersion()`** - sets the automatic driver version detection by installed browser version.
+- **`WithAutoVersion()`**\
+  Sets the automatic driver version detection by installed browser version.
   If the version cannot be detected automatically, latest driver version should be used.
-- **`WithLatestVersion()`** - sets the latest version of driver.
-- **`ByBrowserVersion(string)`** - sets the browser version.
+- **`WithLatestVersion()`**\
+  Sets the latest version of driver.
+- **`ByBrowserVersion(string version)`**\
+  Sets the browser version.
   It will find driver version corresponding to the browser version.
-- **`WithVersion(string)`** - sets the version of driver to use.
-- **`WithEnvironmentVariableName(string)`** *(available only for driver-specific configuration)* -
-  sets the name of the environment variable
+- **`WithVersion(string version)`**\
+  Sets the version of driver to use.
+- **`WithEnvironmentVariableName(string variableName)`**\
+  Sets the name of the environment variable
   that will be set with a value equal to the driver directory path.
   The default value is specific to the driver being configured.
   It has `"{BrowserName}Driver"` format.
@@ -215,22 +221,31 @@ DriverSetup.ConfigureChrome()
 
 #### Common Configuration Methods
 
-- **`WithStorageDirectoryPath(string)`** - sets the storage directory path.
+- **`WithStorageDirectoryPath(string path)`**\
+  Sets the storage directory path.
   The default value is `"{basedir}/drivers")`.
-- **`WithProxy(IWebProxy)`** - sets the web proxy.
-- **`WithVersionCache(bool)`** - sets a value indicating whether to use version cache.
+- **`WithProxy(IWebProxy proxy)`**\
+  Sets the web proxy.
+- **`WithVersionCache(bool isEnabled)`**\
+  Sets a value indicating whether to use version cache.
   The default value is `true`.
-- **`WithLatestVersionCheckInterval(TimeSpan)`** - sets the latest version check interval.
+- **`WithLatestVersionCheckInterval(TimeSpan interval)`**\
+  Sets the latest version check interval.
   The default values is `2` hours.
-- **`WithSpecificVersionCheckInterval(TimeSpan)`** - sets the specific version check interval.
+- **`WithSpecificVersionCheckInterval(TimeSpan interval)`**\
+  Sets the specific version check interval.
   The default values is `2` hours.
-- **`WithHttpRequestTryCount(int)`** - sets the HTTP request try count.
+- **`WithHttpRequestTryCount(int count)`**\
+  Sets the HTTP request try count.
   The default values is `3`.
-- **`WithHttpRequestRetryInterval(TimeSpan)`** - sets the HTTP request retry interval.
+- **`WithHttpRequestRetryInterval(TimeSpan interval)`**\
+  Sets the HTTP request retry interval.
   The default values is `3` seconds.
-- **`WithEnabledState(bool)`** - sets a value indicating whether the configuration is enabled.
+- **`WithEnabledState(bool isEnabled)`**\
+  Sets a value indicating whether the configuration is enabled.
   The default values is `true`.
-- **`WithAddToEnvironmentPathVariable(bool)`** - sets a value indicating whether to add the driver directory path
+- **`WithAddToEnvironmentPathVariable(bool isEnabled)`**\
+  Sets a value indicating whether to add the driver directory path
   to environment "Path" variable.
   The default value is `true`.
 
