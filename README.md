@@ -15,14 +15,38 @@ Targets .NET Standard 2.0.
 
 Supports driver setup for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Set Up Version Corresponding to Locally Installed Browser Version](#set-up-version-corresponding-to-locally-installed-browser-version)
+  - [Set Up Latest Version](#set-up-latest-version)
+  - [Set Up Specific Version](#set-up-specific-version)
+  - [Set Up Version Corresponding to Specific Browser Version](#set-up-version-corresponding-to-specific-browser-version)
+- [DriverSetup Members](#driversetup-members)
+  - [DriverSetup Properties](#driversetup-properties)
+  - [DriverSetup Methods](#driversetup-methods)
+- [Configuration](#configuration)
+  - [Global Configuration](#global-configuration)
+  - [Driver-Specific Configuration](#driver-specific-configuration)
+  - [Configuration Methods](#configuration-methods)
+- [Feedback](#feedback)
+- [SemVer](#semver)
+- [License](#license)
+
 ## Installation
 
-Install [Atata.WebDriverSetup](https://www.nuget.org/packages/Atata.WebDriverSetup/) NuGet package
-through Visual Studio UI or Package Manager command:
+Install `Atata.WebDriverSetup` NuGet package.
 
-```
-PM> Install-Package Atata.WebDriverSetup
-```
+- Package Manager:
+  ```
+  Install-Package Atata.Configuration.Json
+  ```
+
+- .NET CLI:
+  ```
+  dotnet add package Atata.Configuration.Json
+  ```
 
 The package depends only on: `Microsoft.Win32.Registry` package,
 which is used to detect locally installed browser version.
@@ -94,7 +118,7 @@ DriverSetup.ConfigureChrome()
 
 `DriverSetup` is a static class, so all its members are static too.
 
-### Properties
+### DriverSetup Properties
 
 - `DriverSetupOptions GlobalOptions { get; }`\
   Gets the global setup options.
@@ -105,7 +129,7 @@ DriverSetup.ConfigureChrome()
   Gets the pending driver setup configurations,
   the configurations that were created but were not set up.
 
-### Methods
+### DriverSetup Methods
 
 - `DriverSetupConfigurationBuilder ConfigureChrome()`\
   Creates the Chrome driver setup configuration builder.
