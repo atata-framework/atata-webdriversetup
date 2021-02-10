@@ -53,11 +53,11 @@ namespace Atata.WebDriverSetup
         /// Sets a value indicating whether to use version cache.
         /// The default value is <see langword="true"/>.
         /// </summary>
-        /// <param name="useVersionCache">Whether to use version cache.</param>
+        /// <param name="isEnabled">Whether to use version cache.</param>
         /// <returns>The same builder instance.</returns>
-        public TBuilder WithVersionCache(bool useVersionCache)
+        public TBuilder WithVersionCache(bool isEnabled)
         {
-            BuildingContext.UseVersionCache = useVersionCache;
+            BuildingContext.UseVersionCache = isEnabled;
             return (TBuilder)this;
         }
 
