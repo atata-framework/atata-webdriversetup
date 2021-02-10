@@ -7,7 +7,208 @@
 [![Twitter](https://img.shields.io/badge/follow-@AtataFramework-blue.svg)](https://twitter.com/AtataFramework)
 [![Atata Templates](https://img.shields.io/badge/get-Atata_Templates-green.svg?color=4BC21F)](https://marketplace.visualstudio.com/items?itemName=YevgeniyShunevych.AtataTemplates)
 
-Sets up browser drivers for Selenium WebDriver.
+**Atata.WebDriverSetup** is a .NET library that sets up browser drivers for Selenium WebDriver,
+e.g. `chromedriver`, `geckodriver`, etc.
+It provides functionality similar to Java `WebDriverManager`.
+
+Targets .NET Standard 2.0.
+
+Supports driver setup for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
+
+## Installation
+
+Install [Atata.WebDriverSetup](https://www.nuget.org/packages/Atata.WebDriverSetup/) NuGet package
+through Visual Studio UI or Package Manager command:
+
+```
+PM> Install-Package Atata.WebDriverSetup
+```
+
+The package depends only on: `Microsoft.Win32.Registry` package,
+which is used to detect locally installed browser version.
+
+## Usage
+
+The main class is `DriverSetup`.
+The recommended place to perform driver(s) setup is a global set up method.
+
+NUnit example:
+
+```cs
+[SetUpFixture]
+public class SetUpFixture
+{
+    [OneTimeSetUp]
+    public void SetUp()
+    {
+        DriverSetup.AutoSetUp(BrowserNames.Chrome);
+    }
+}
+```
+
+### Set Up Version Corresponding to Locally Installed Browser Version
+
+1. Configure with default configuration options:
+   ```cs
+   DriverSetup.AutoSetUp(BrowserNames.Chrome);
+   ```
+1. Configure with custom configuration options:
+   ```cs
+   DriverSetup.ConfigureChrome()
+       .WithAutoVersion()
+       // Additional options can be set here.
+       .SetUp();
+   ```
+
+`DriverSetup.AutoSetUp` method also supports multiple drivers setup:
+
+```cs
+DriverSetup.AutoSetUp(BrowserNames.Chrome, BrowserNames.Firefox);
+```
+
+### Set Up Latest Version
+
+```cs
+DriverSetup.ConfigureChrome()
+    .WithLatestVersion()
+    .SetUp();
+```
+
+### Set Up Specific Version
+
+```cs
+DriverSetup.ConfigureChrome()
+    .WithVersion("87.0.4280.88")
+    .SetUp();
+```
+
+### Set Up Version Corresponding to Specific Browser Version
+
+```cs
+DriverSetup.ConfigureChrome()
+    .ByBrowserVersion("87")
+    .SetUp();
+```
+
+## DriverSetup Members
+
+`DriverSetup` is a static class, so all its members are static too.
+
+### Properties
+
+- `DriverSetupOptions GlobalOptions { get; }`\
+  Gets the global setup options.
+- `DriverSetupOptionsBuilder GlobalConfiguration { get; }`\
+  Gets the global setup configuration builder.
+  Configures <see cref="GlobalOptions"/>.
+- `List<DriverSetupConfigurationBuilder> PendingConfigurations { get; }`\
+  Gets the pending driver setup configurations,
+  the configurations that were created but were not set up.
+
+### Methods
+
+- `DriverSetupConfigurationBuilder ConfigureChrome()`\
+  Creates the Chrome driver setup configuration builder.
+- `DriverSetupConfigurationBuilder ConfigureFirefox()`\
+  Creates the Firefox/Gecko driver setup configuration builder.
+- `DriverSetupConfigurationBuilder ConfigureEdge()`\
+  Creates the Edge driver setup configuration builder.
+- `DriverSetupConfigurationBuilder ConfigureOpera()`\
+  Creates the Opera driver setup configuration builder.
+- `DriverSetupConfigurationBuilder ConfigureInternetExplorer()`\
+  Creates the Internet Explorer driver setup configuration builder.
+- `DriverSetupConfigurationBuilder Configure(string browserName)`\
+  Creates the driver setup configuration builder for the specified `browserName`.
+  Supported browser names are defined in `BrowserNames` static class.
+- `DriverSetupConfigurationBuilder Configure(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`\
+  Creates the driver setup configuration builder using `driverSetupStrategyFactory`
+  that instantiates specific `IDriverSetupStrategy`.
+- `DriverSetupResult AutoSetUp(string browserName)`\
+  Sets up driver with auto version detection for the browser with the specified name.
+  Supported browser names are defined in `BrowserNames` static class.
+- `DriverSetupResult[] AutoSetUp(params string[] browserNames)`\
+  Sets up drivers with auto version detection for the browsers with the specified names.
+  Supported browser names are defined in `BrowserNames` static class.
+- `DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames)`\
+  Sets up drivers with auto version detection for the browsers with the specified names.
+  Supported browser names are defined in `BrowserNames` static class.
+- `DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames)`\
+  Sets up drivers with auto version detection for the browsers with the specified names.
+  Supported browser names are defined in `BrowserNames` static class.
+  Skips invalid/unsupported browser names.
+- `DriverSetupResult[] SetUpPendingConfigurations()`\
+  Sets up pending configurations that are stored in `PendingConfigurations` property.
+- `void RegisterStrategyFactory(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`\
+  Registers the driver setup strategy factory.
+
+## Configuration
+
+It's possible to set configuration options globally and separately for a specific driver.
+
+### Global Configuration
+
+#### Using Fluent Builder
+
+```cs
+DriverSetup.GlobalConfiguration
+    .WithStorageDirectoryPath("...")
+    .WithVersionCache(false);
+```
+
+#### Using Options Properties
+
+```cs
+DriverSetup.GlobalOptions.StorageDirectoryPath = "...";
+DriverSetup.GlobalOptions.UseVersionCache = false;
+```
+
+### Driver-Specific Configuration
+
+```cs
+DriverSetup.ConfigureChrome()
+    .WithStorageDirectoryPath("...")
+    .WithVersionCache(false)
+    .SetUp();
+```
+
+### Configuration Methods
+
+#### Driver-Specific Configuration Methods
+
+- **`WithAutoVersion()`** - sets the automatic driver version detection by installed browser version.
+  If the version cannot be detected automatically, latest driver version should be used.
+- **`WithLatestVersion()`** - sets the latest version of driver.
+- **`ByBrowserVersion(string)`** - sets the browser version.
+  It will find driver version corresponding to the browser version.
+- **`WithVersion(string)`** - sets the version of driver to use.
+- **`WithEnvironmentVariableName(string)`** *(available only for driver-specific configuration)* -
+  sets the name of the environment variable
+  that will be set with a value equal to the driver directory path.
+  The default value is specific to the driver being configured.
+  It has `"{BrowserName}Driver"` format.
+  For example: `"ChromeDriver"` or `"InternetExplorerDriver"`.
+  The `null` value means that none variable should be set.
+
+#### Common Configuration Methods
+
+- **`WithStorageDirectoryPath(string)`** - sets the storage directory path.
+  The default value is `"{basedir}/drivers")`.
+- **`WithProxy(IWebProxy)`** - sets the web proxy.
+- **`WithVersionCache(bool)`** - sets a value indicating whether to use version cache.
+  The default value is `true`.
+- **`WithLatestVersionCheckInterval(TimeSpan)`** - sets the latest version check interval.
+  The default values is `2` hours.
+- **`WithSpecificVersionCheckInterval(TimeSpan)`** - sets the specific version check interval.
+  The default values is `2` hours.
+- **`WithHttpRequestTryCount(int)`** - sets the HTTP request try count.
+  The default values is `3`.
+- **`WithHttpRequestRetryInterval(TimeSpan)`** - sets the HTTP request retry interval.
+  The default values is `3` seconds.
+- **`WithEnabledState(bool)`** - sets a value indicating whether the configuration is enabled.
+  The default values is `true`.
+- **`WithAddToEnvironmentPathVariable(bool)`** - sets a value indicating whether to add the driver directory path
+  to environment "Path" variable.
+  The default value is `true`.
 
 ## Feedback
 
