@@ -11,15 +11,11 @@
 e.g. `chromedriver`, `geckodriver`, etc.
 Basically, it provides functionality similar to Java `WebDriverManager`.
 
-Sets up drivers for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
-Supports Windows, Linux and MacOS platforms.
-After a driver is set up, adds the driver path to environment variables,
-which can be consumed by WebDriver.
-
-Targets .NET Standard 2.0.
+*Targets .NET Standard 2.0*
 
 ## Table of Contents
 
+- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Set Up Version Corresponding to Locally Installed Browser Version](#set-up-version-corresponding-to-locally-installed-browser-version)
@@ -37,18 +33,27 @@ Targets .NET Standard 2.0.
 - [SemVer](#semver)
 - [License](#license)
 
+## Features
+
+- Sets up drivers for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
+- Supports Windows, Linux and MacOS platforms.
+- Can download latest or specific driver versions.
+- Can auto-detect locally installed browser version and download corresponding driver version.
+- Caches the used driver versions.
+- After a driver is set up, adds the driver path to environment "PATH" variable, which is consumed by WebDriver.
+
 ## Installation
 
 Install `Atata.WebDriverSetup` NuGet package.
 
 - Package Manager:
   ```
-  Install-Package Atata.Configuration.Json
+  Install-Package Atata.WebDriverSetup
   ```
 
 - .NET CLI:
   ```
-  dotnet add package Atata.Configuration.Json
+  dotnet add package Atata.WebDriverSetup
   ```
 
 The package depends only on: `Microsoft.Win32.Registry` package,
@@ -80,7 +85,6 @@ which is read by WebDriver's DriverService classes.
 ChromeDriver chromeDriver = new ChromeDriver();
 ```
 
-
 ### Set Up Version Corresponding to Locally Installed Browser Version
 
 1. Configure with default configuration options:
@@ -98,8 +102,12 @@ ChromeDriver chromeDriver = new ChromeDriver();
 `DriverSetup.AutoSetUp` method also supports multiple drivers setup:
 
 ```cs
-DriverSetup.AutoSetUp(BrowserNames.Chrome, BrowserNames.Firefox);
+DriverSetup.AutoSetUp(BrowserNames.Chrome, BrowserNames.Edge);
 ```
+
+**Note:**
+If the version of browser cannot be detected automatically, latest driver version is used.
+Version auto-detection is currently supported only for Chrome and Edge browsers.
 
 ### Set Up Latest Version
 
@@ -117,6 +125,13 @@ DriverSetup.ConfigureChrome()
     .SetUp();
 ```
 
+**Version format:**
+- Chrome: `"87.0.4280.88"`
+- Firefox: `"0.28.0"`
+- Edge: `"89.0.774.4"`
+- Opera: `"86.0.4240.80"`
+- InternetExplorer: `"3.141.59"`
+
 ### Set Up Version Corresponding to Specific Browser Version
 
 ```cs
@@ -124,6 +139,13 @@ DriverSetup.ConfigureChrome()
     .ByBrowserVersion("87")
     .SetUp();
 ```
+
+**Note:**
+This feature is currently supported only for Chrome and Edge browsers.
+
+**Version format:**
+- Chrome: `"87"` or `"87.0.4280"`
+- Edge: `"89.0.774.4"`
 
 ## DriverSetup Members
 
