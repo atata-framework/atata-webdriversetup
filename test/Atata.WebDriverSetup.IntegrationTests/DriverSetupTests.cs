@@ -18,9 +18,9 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
-        [TestCase(BrowserNames.Edge, Category = TestCategories.UnsupportedOnLinux)]
+        [TestCase(BrowserNames.Edge, ExcludePlatform = Platforms.Linux)]
         [TestCase(BrowserNames.Opera)]
-        [TestCase(BrowserNames.InternetExplorer)]
+        [TestCase(BrowserNames.InternetExplorer, IncludePlatform = Platforms.Windows)]
         public void WithAutoVersion(string browserName)
         {
             var result = DriverSetup.Configure(browserName)
@@ -33,9 +33,9 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
-        [TestCase(BrowserNames.Edge, Category = TestCategories.UnsupportedOnLinux)]
+        [TestCase(BrowserNames.Edge, ExcludePlatform = Platforms.Linux)]
         [TestCase(BrowserNames.Opera)]
-        [TestCase(BrowserNames.InternetExplorer)]
+        [TestCase(BrowserNames.InternetExplorer, IncludePlatform = Platforms.Windows)]
         public void WithLatestVersion(string browserName)
         {
             var result = DriverSetup.Configure(browserName)
@@ -48,9 +48,9 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome, "87.0.4280.88")]
         [TestCase(BrowserNames.Firefox, "0.28.0")]
-        [TestCase(BrowserNames.Edge, "89.0.774.4", Category = TestCategories.UnsupportedOnLinux)]
+        [TestCase(BrowserNames.Edge, "89.0.774.4", ExcludePlatform = Platforms.Linux)]
         [TestCase(BrowserNames.Opera, "86.0.4240.80")]
-        [TestCase(BrowserNames.InternetExplorer, "3.141.59")]
+        [TestCase(BrowserNames.InternetExplorer, "3.141.59", IncludePlatform = Platforms.Windows)]
         public void WithVersion(string browserName, string version)
         {
             var result = DriverSetup.Configure(browserName)
@@ -62,7 +62,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome, "87")]
         [TestCase(BrowserNames.Chrome, "87.0.4280")]
-        [TestCase(BrowserNames.Edge, "89.0.774.4", Category = TestCategories.UnsupportedOnLinux)]
+        [TestCase(BrowserNames.Edge, "89.0.774.4", ExcludePlatform = Platforms.Linux)]
         public void ByBrowserVersion(string browserName, string version)
         {
             var result = DriverSetup.Configure(browserName)
@@ -75,7 +75,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Firefox, "84")]
         [TestCase(BrowserNames.Opera, "73.0.3856.329")]
-        [TestCase(BrowserNames.InternetExplorer, "11.0.0.4")]
+        [TestCase(BrowserNames.InternetExplorer, "11.0.0.4", IncludePlatform = Platforms.Windows)]
         public void ByBrowserVersion_Unsupported(string browserName, string version)
         {
             var builder = DriverSetup.Configure(browserName)
