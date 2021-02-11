@@ -9,11 +9,14 @@
 
 **Atata.WebDriverSetup** is a .NET library that sets up browser drivers for Selenium WebDriver,
 e.g. `chromedriver`, `geckodriver`, etc.
-It provides functionality similar to Java `WebDriverManager`.
+Basically, it provides functionality similar to Java `WebDriverManager`.
+
+Sets up drivers for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
+Supports Windows, Linux and MacOS platforms.
+After a driver is set up, adds the driver path to environment variables,
+which can be consumed by WebDriver.
 
 Targets .NET Standard 2.0.
-
-Supports driver setup for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
 
 ## Table of Contents
 
@@ -69,6 +72,14 @@ public class SetUpFixture
     }
 }
 ```
+
+After a driver is set up, the driver path is added to environment "PATH" variable,
+which is read by WebDriver's DriverService classes.
+
+```cs
+ChromeDriver chromeDriver = new ChromeDriver();
+```
+
 
 ### Set Up Version Corresponding to Locally Installed Browser Version
 
