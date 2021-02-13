@@ -6,6 +6,7 @@
     <Product>Atata Framework</Product>
     <Copyright>© Yevgeniy Shunevych 2021</Copyright>
     <CodeAnalysisRuleSet>$(SolutionDir)General.ruleset</CodeAnalysisRuleSet>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup Label="Code analysis packages">
