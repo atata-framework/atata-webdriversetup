@@ -27,4 +27,4 @@ Please follow the rules during development:
 - Run all tests in order to ensure the change is not breaking anything.
 - Try to add/update tests respectfully.
 - Follow [Semantic Versioning 2.0](https://semver.org/) during the source changes.
-- Create pull request when it is done.
+- [Create pull request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) when it is done.
