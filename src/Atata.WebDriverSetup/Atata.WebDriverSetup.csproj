@@ -17,10 +17,11 @@ Features:
 - Can auto-detect locally installed browser version and download corresponding driver version.
 - Caches the used driver versions.
 - After a driver is set up, adds the driver path to environment "PATH" variable, which is consumed by WebDriver.</Description>
-    <PackageId>Atata.WebDriverSetup</PackageId>
-    <PackageReleaseNotes>1.0.0 - https://atata.io/blog/2021/02/16/atata.webdriversetup-1.0.0-released/</PackageReleaseNotes>
-    <PackageTags>atata automation testing selenium webdriver chromedriver edgedriver internetexplorerdriver geckodriver operadriver</PackageTags>
     <RepositoryUrl>https://github.com/atata-framework/atata-webdriversetup</RepositoryUrl>
+    <PackageId>Atata.WebDriverSetup</PackageId>
+    <PackageTags>atata automation testing selenium webdriver chromedriver edgedriver internetexplorerdriver geckodriver operadriver</PackageTags>
+    <PackageReleaseNotes>1.0.0 - https://atata.io/blog/2021/02/16/atata.webdriversetup-1.0.0-released/</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/atata-framework/atata-webdriversetup</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
