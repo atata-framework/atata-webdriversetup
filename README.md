@@ -1,5 +1,7 @@
 # Atata.WebDriverSetup
 
+[![NuGet](http://img.shields.io/nuget/v/Atata.WebDriverSetup.svg?style=flat)](https://www.nuget.org/packages/Atata.WebDriverSetup/)
+[![GitHub release](https://img.shields.io/github/release/atata-framework/atata-webdriversetup.svg)](https://github.com/atata-framework/atata-webdriversetup/releases)
 [![Build status](https://dev.azure.com/atata-framework/atata-webdriversetup/_apis/build/status/atata-webdriversetup-ci?branchName=main)](https://dev.azure.com/atata-framework/atata-webdriversetup/_build/latest?definitionId=39&branchName=main)
 [![Gitter](https://badges.gitter.im/atata-framework/atata-webdriversetup.svg)](https://gitter.im/atata-framework/atata-webdriversetup)
 [![Slack](https://img.shields.io/badge/join-Slack-green.svg?colorB=4EB898)](https://join.slack.com/t/atata-framework/shared_invite/zt-5j3lyln7-WD1ZtMDzXBhPm0yXLDBzbA)
@@ -44,7 +46,7 @@ Basically, it provides functionality similar to Java `WebDriverManager`.
 
 ## Installation
 
-Install `Atata.WebDriverSetup` NuGet package.
+Install [`Atata.WebDriverSetup`](https://www.nuget.org/packages/Atata.WebDriverSetup/) NuGet package.
 
 - Package Manager:
   ```
