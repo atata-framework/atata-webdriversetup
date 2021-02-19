@@ -39,6 +39,32 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
+        /// Sets the x32 architecture.
+        /// </summary>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithX32Architecture() =>
+            WithArchitecture(Architecture.X32);
+
+        /// <summary>
+        /// Sets the x64 architecture.
+        /// </summary>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithX64Architecture() =>
+            WithArchitecture(Architecture.X64);
+
+        /// <summary>
+        /// Sets the architecture.
+        /// The default value is <see cref="Architecture.Auto"/>.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithArchitecture(Architecture architecture)
+        {
+            BuildingContext.Architecture = architecture;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
         /// Sets the web proxy.
         /// </summary>
         /// <param name="proxy">The proxy.</param>

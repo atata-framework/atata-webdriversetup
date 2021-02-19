@@ -22,7 +22,7 @@
                 : "operadriver";
 
         /// <inheritdoc/>
-        protected override string GetDriverDownloadFileName(string version)
+        protected override string GetDriverDownloadFileName(string version, Architecture architecture)
         {
             string commonNamePart = $"operadriver_";
 
@@ -30,7 +30,7 @@
                 ? $"{commonNamePart}mac64.zip"
                 : OSInfo.IsLinux
                     ? $"{commonNamePart}linux64.zip"
-                    : $"{commonNamePart}win{OSInfo.Bits}.zip";
+                    : $"{commonNamePart}win{architecture.GetBits()}.zip";
         }
     }
 }

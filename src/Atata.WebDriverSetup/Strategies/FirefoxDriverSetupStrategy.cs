@@ -22,15 +22,15 @@
                 : "geckodriver";
 
         /// <inheritdoc/>
-        protected override string GetDriverDownloadFileName(string version)
+        protected override string GetDriverDownloadFileName(string version, Architecture architecture)
         {
             string commonNamePart = $"geckodriver-v{version}-";
 
             return OSInfo.IsOSX
                 ? $"{commonNamePart}macos.tar.gz"
                 : OSInfo.IsLinux
-                    ? $"{commonNamePart}linux{OSInfo.Bits}.tar.gz"
-                    : $"{commonNamePart}win{OSInfo.Bits}.zip";
+                    ? $"{commonNamePart}linux{architecture.GetBits()}.tar.gz"
+                    : $"{commonNamePart}win{architecture.GetBits()}.zip";
         }
     }
 }

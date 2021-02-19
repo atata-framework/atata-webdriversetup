@@ -16,7 +16,8 @@ namespace Atata.WebDriverSetup
         /// Gets the driver download URL.
         /// </summary>
         /// <param name="version">The version.</param>
+        /// <param name="architecture">The architecture.</param>
         /// <returns>The driver download URL.</returns>
-        Uri GetDriverDownloadUrl(string version);
+        Uri GetDriverDownloadUrl(string version, Architecture architecture);
     }
 }

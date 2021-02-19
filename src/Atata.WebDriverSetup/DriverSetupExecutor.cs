@@ -64,7 +64,9 @@ namespace Atata.WebDriverSetup
                 if (!Directory.Exists(downloadDestinationDirectoryPath))
                     Directory.CreateDirectory(downloadDestinationDirectoryPath);
 
-                string downloadUrl = setupStrategy.GetDriverDownloadUrl(version).AbsoluteUri;
+                Architecture architecture = ResolveArchitecture();
+
+                string downloadUrl = setupStrategy.GetDriverDownloadUrl(version, architecture).AbsoluteUri;
                 string downloadFileName = Path.GetFileName(downloadUrl);
 
                 string downloadFilePath = Path.Combine(downloadDestinationDirectoryPath, downloadFileName);
@@ -82,11 +84,24 @@ namespace Atata.WebDriverSetup
             }
         }
 
-        private string BuildDriverDestinationDirectoryPath(string version) =>
-            Path.Combine(
+        private Architecture ResolveArchitecture() =>
+            configuration.Architecture != Architecture.Auto
+            ? configuration.Architecture
+            : OSInfo.Is64Bit
+                ? Architecture.X64
+                : Architecture.X32;
+
+        private string BuildDriverDestinationDirectoryPath(string version)
+        {
+            string path = Path.Combine(
                 configuration.StorageDirectoryPath,
                 browserName.Replace(" ", null).ToLower(),
                 version);
+
+            return configuration.Architecture == Architecture.Auto
+                ? path
+                : Path.Combine(path, configuration.Architecture.ToString().ToLower());
+        }
 
         private static void ExtractDownloadedFile(string sourceFilePath, string destinationFilePath)
         {

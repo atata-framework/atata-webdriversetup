@@ -17,6 +17,12 @@ namespace Atata.WebDriverSetup
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
 
         /// <summary>
+        /// Gets or sets the architecture (auto, x32 or x64).
+        /// The default value is <see cref="Architecture.Auto"/>.
+        /// </summary>
+        public Architecture Architecture { get; set; }
+
+        /// <summary>
         /// Gets or sets the proxy.
         /// </summary>
         public IWebProxy Proxy { get; set; }

@@ -31,6 +31,22 @@ namespace Atata.WebDriverSetup.IntegrationTests
             AssertVersionCache(browserName);
         }
 
+        [TestCase(BrowserNames.Chrome, IncludePlatform = Platforms.Windows)]
+        [TestCase(BrowserNames.Firefox, IncludePlatform = Platforms.WindowsAndLinux)]
+        [TestCase(BrowserNames.Edge, IncludePlatform = Platforms.Windows)]
+        [TestCase(BrowserNames.Opera, IncludePlatform = Platforms.Windows)]
+        [TestCase(BrowserNames.InternetExplorer, IncludePlatform = Platforms.Windows)]
+        public void WithAutoVersion_WithX32Architecture(string browserName)
+        {
+            var result = DriverSetup.Configure(browserName)
+                .WithAutoVersion()
+                .WithX32Architecture()
+                .SetUp();
+
+            AssertDriverIsSetUp(result, browserName, architecture: Architecture.X32);
+            AssertVersionCache(browserName);
+        }
+
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
         [TestCase(BrowserNames.Edge, ExcludePlatform = Platforms.Linux)]
@@ -88,9 +104,10 @@ namespace Atata.WebDriverSetup.IntegrationTests
         private static void AssertDriverIsSetUp(
             DriverSetupResult setupResult,
             string browserName,
-            string version = null)
+            string version = null,
+            Architecture architecture = Architecture.Auto)
         {
-            var driverLocation = AssertDriverExists(browserName, version);
+            var driverLocation = AssertDriverExists(browserName, version, architecture);
 
             AssertDriverSetupResult(setupResult, browserName, version, driverLocation);
 
@@ -100,7 +117,8 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         private static (string DirectoryPath, string FileName) AssertDriverExists(
             string browserName,
-            string version)
+            string version,
+            Architecture architecture)
         {
             string driverDirectoryPath = GetRootDriverDirectoryPath(browserName);
 
@@ -113,12 +131,27 @@ namespace Atata.WebDriverSetup.IntegrationTests
             if (version != null)
                 versionDirectory.Name.Should().StartWith(version);
 
-            versionDirectory.GetDirectories().Should().BeEmpty();
+            DirectoryInfo destinationDirectory;
 
-            FileInfo driverFile = versionDirectory.GetFiles().Should().ContainSingle()
+            if (architecture == Architecture.Auto)
+            {
+                destinationDirectory = versionDirectory;
+            }
+            else
+            {
+                destinationDirectory = versionDirectory.GetDirectories()
+                    .Should().ContainSingle("there should exist single architecture folder")
+                    .Subject;
+
+                destinationDirectory.Name.Should().Be(architecture.ToString().ToLower());
+            }
+
+            destinationDirectory.GetDirectories().Should().BeEmpty();
+
+            FileInfo driverFile = destinationDirectory.GetFiles().Should().ContainSingle()
                 .Subject;
 
-            return (versionDirectory.FullName, driverFile.Name);
+            return (destinationDirectory.FullName, driverFile.Name);
         }
 
         private static string GetRootDriverDirectoryPath(string browserName) =>

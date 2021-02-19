@@ -42,7 +42,7 @@ namespace Atata.WebDriverSetup
             httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
 
         /// <inheritdoc/>
-        public Uri GetDriverDownloadUrl(string version) =>
+        public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
             new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName()}");
 
         private static string GetDriverDownloadFileName() =>

@@ -47,14 +47,15 @@ namespace Atata.WebDriverSetup
         }
 
         /// <inheritdoc/>
-        public Uri GetDriverDownloadUrl(string version) =>
-            new Uri($"{baseUrl}/releases/download/{versionTagPrefix}{version}/{GetDriverDownloadFileName(version)}");
+        public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
+            new Uri($"{baseUrl}/releases/download/{versionTagPrefix}{version}/{GetDriverDownloadFileName(version, architecture)}");
 
         /// <summary>
         /// Gets the name of the driver download file.
         /// </summary>
         /// <param name="version">The version.</param>
+        /// <param name="architecture">The architecture.</param>
         /// <returns>The file name.</returns>
-        protected abstract string GetDriverDownloadFileName(string version);
+        protected abstract string GetDriverDownloadFileName(string version, Architecture architecture);
     }
 }

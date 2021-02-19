@@ -16,14 +16,14 @@ namespace Atata.WebDriverSetup
         public string GetDriverLatestVersion() => "3.150.1";
 
         /// <inheritdoc/>
-        public Uri GetDriverDownloadUrl(string version)
+        public Uri GetDriverDownloadUrl(string version, Architecture architecture)
         {
             string versionTillPatch = VersionUtils.TrimRevision(version);
             string versionTillMinor = VersionUtils.TrimPatch(version);
 
-            string osArchitecture = OSInfo.Is64Bit ? "x64" : "Win32";
+            string architectureNamePart = architecture == Architecture.X64 ? "x64" : "Win32";
 
-            return new Uri($"http://selenium-release.storage.googleapis.com/{versionTillMinor}/IEDriverServer_{osArchitecture}_{versionTillPatch}.zip");
+            return new Uri($"http://selenium-release.storage.googleapis.com/{versionTillMinor}/IEDriverServer_{architectureNamePart}_{versionTillPatch}.zip");
         }
     }
 }
