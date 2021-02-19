@@ -22,6 +22,7 @@
             if (options != null)
             {
                 StorageDirectoryPath = options.StorageDirectoryPath;
+                Architecture = options.Architecture;
                 Proxy = options.Proxy;
                 UseVersionCache = options.UseVersionCache;
                 LatestVersionCheckInterval = options.LatestVersionCheckInterval;
