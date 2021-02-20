@@ -39,7 +39,7 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
-        /// Sets the x32 architecture.
+        /// Sets the x32 (x86) architecture.
         /// </summary>
         /// <returns>The same builder instance.</returns>
         public TBuilder WithX32Architecture() =>
