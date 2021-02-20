@@ -15,9 +15,6 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            DriverSetup.GetDefaultConfiguration(BrowserNames.InternetExplorer)
-                .WithX32Architecture();
-
             globalOptions = new DriverSetupOptions();
             defaultOptions = new DriverSetupOptions(globalOptions);
             configuration = new DriverSetupConfiguration(defaultOptions);
