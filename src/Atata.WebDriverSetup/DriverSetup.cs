@@ -9,15 +9,17 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public static class DriverSetup
     {
-        private static readonly Dictionary<string, Func<IHttpRequestExecutor, IDriverSetupStrategy>> BrowserStrategyFactoryMap =
-            new Dictionary<string, Func<IHttpRequestExecutor, IDriverSetupStrategy>>
-            {
-                [BrowserNames.Chrome] = hre => new ChromeDriverSetupStrategy(hre),
-                [BrowserNames.Firefox] = hre => new FirefoxDriverSetupStrategy(hre),
-                [BrowserNames.Edge] = hre => new EdgeDriverSetupStrategy(hre),
-                [BrowserNames.Opera] = hre => new OperaDriverSetupStrategy(hre),
-                [BrowserNames.InternetExplorer] = hre => new InternetExplorerDriverSetupStrategy()
-            };
+        private static readonly Dictionary<string, DriverSetupData> BrowserDriverSetupDataMap =
+            new Dictionary<string, DriverSetupData>();
+
+        static DriverSetup()
+        {
+            RegisterStrategyFactory(BrowserNames.Chrome, hre => new ChromeDriverSetupStrategy(hre));
+            RegisterStrategyFactory(BrowserNames.Firefox, hre => new FirefoxDriverSetupStrategy(hre));
+            RegisterStrategyFactory(BrowserNames.Edge, hre => new EdgeDriverSetupStrategy(hre));
+            RegisterStrategyFactory(BrowserNames.Opera, hre => new OperaDriverSetupStrategy(hre));
+            RegisterStrategyFactory(BrowserNames.InternetExplorer, hre => new InternetExplorerDriverSetupStrategy());
+        }
 
         /// <summary>
         /// Gets the global setup options.
@@ -51,8 +53,27 @@ namespace Atata.WebDriverSetup
             browserName.CheckNotNull(nameof(browserName));
             driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
 
-            BrowserStrategyFactoryMap[browserName] = driverSetupStrategyFactory;
+            DriverSetupOptionsBuilder optionsBuilder = BrowserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData currentData)
+                ? currentData.DefaultOptionsBuilder
+                : new DriverSetupOptionsBuilder(new DriverSetupOptions(GlobalOptions));
+
+            BrowserDriverSetupDataMap[browserName] = new DriverSetupData(driverSetupStrategyFactory, optionsBuilder);
         }
+
+        /// <summary>
+        /// Gets the default driver setup configuration builder.
+        /// </summary>
+        /// <param name="browserName">Name of the browser.</param>
+        /// <example>
+        /// Can be used to set, for example, default x32 architecture for Internet Explorer driver.
+        /// <code>
+        /// DriverSetup.GetDefaultConfiguration(BrowserNames.InternetExplorer)
+        ///    .WithX32Architecture();
+        /// </code>
+        /// </example>
+        /// <returns>The <see cref="DriverSetupOptionsBuilder"/> instance.</returns>
+        public static DriverSetupOptionsBuilder GetDefaultConfiguration(string browserName) =>
+            GetDriverSetupData(browserName).DefaultOptionsBuilder;
 
         /// <summary>
         /// Creates the Chrome driver setup configuration builder.
@@ -97,11 +118,9 @@ namespace Atata.WebDriverSetup
         /// <returns>The <see cref="DriverSetupConfigurationBuilder"/>.</returns>
         public static DriverSetupConfigurationBuilder Configure(string browserName)
         {
-            browserName.CheckNotNullOrWhitespace(nameof(browserName));
+            DriverSetupData driverSetupData = GetDriverSetupData(browserName);
 
-            return BrowserStrategyFactoryMap.TryGetValue(browserName, out var strategyFactory)
-                ? Configure(browserName, strategyFactory)
-                : throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
+            return Configure(browserName, driverSetupData.StrategyFactory, driverSetupData.DefaultOptionsBuilder.BuildingContext);
         }
 
         /// <summary>
@@ -115,18 +134,41 @@ namespace Atata.WebDriverSetup
             string browserName,
             Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)
         {
+            DriverSetupOptions driverSetupOptions = BrowserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData driverSetupData)
+                ? driverSetupData.DefaultOptionsBuilder.BuildingContext
+                : GlobalOptions;
+
+            return Configure(browserName, driverSetupStrategyFactory, driverSetupOptions);
+        }
+
+        private static DriverSetupConfigurationBuilder Configure(
+            string browserName,
+            Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory,
+            DriverSetupOptions driverSetupOptions)
+        {
             var builder = new DriverSetupConfigurationBuilder(
                 browserName,
                 driverSetupStrategyFactory,
-                CreateConfiguration(browserName));
+                CreateConfiguration(browserName, driverSetupOptions));
 
             PendingConfigurations.Add(builder);
 
             return builder;
         }
 
-        private static DriverSetupConfiguration CreateConfiguration(string browserName) =>
-            new DriverSetupConfiguration(GlobalConfiguration.BuildingContext)
+        private static DriverSetupData GetDriverSetupData(string browserName)
+        {
+            browserName.CheckNotNullOrWhitespace(nameof(browserName));
+
+            return BrowserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData setupData)
+                ? setupData
+                : throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
+        }
+
+        private static DriverSetupConfiguration CreateConfiguration(
+            string browserName,
+            DriverSetupOptions driverSetupOptions) =>
+            new DriverSetupConfiguration(driverSetupOptions)
             {
                 EnvironmentVariableName = $"{browserName.Replace(" ", null)}Driver"
             };
@@ -174,7 +216,7 @@ namespace Atata.WebDriverSetup
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
         public static DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames) =>
             browserNames != null
-                ? AutoSetUp(browserNames.Where(name => BrowserStrategyFactoryMap.ContainsKey(name)))
+                ? AutoSetUp(browserNames.Where(name => BrowserDriverSetupDataMap.ContainsKey(name)))
                 : new DriverSetupResult[0];
 
         /// <summary>
@@ -186,5 +228,20 @@ namespace Atata.WebDriverSetup
                 .Select(conf => conf.SetUp())
                 .Where(res => res != null)
                 .ToArray();
+
+        private class DriverSetupData
+        {
+            public DriverSetupData(
+                Func<IHttpRequestExecutor, IDriverSetupStrategy> strategyFactory,
+                DriverSetupOptionsBuilder defaultOptionsBuilder)
+            {
+                StrategyFactory = strategyFactory;
+                DefaultOptionsBuilder = defaultOptionsBuilder;
+            }
+
+            public Func<IHttpRequestExecutor, IDriverSetupStrategy> StrategyFactory { get; }
+
+            public DriverSetupOptionsBuilder DefaultOptionsBuilder { get; }
+        }
     }
 }

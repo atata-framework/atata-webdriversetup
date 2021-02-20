@@ -6,31 +6,15 @@
     public class DriverSetupConfiguration : DriverSetupOptions
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DriverSetupConfiguration"/> class.
+        /// Initializes a new instance of the <see cref="DriverSetupConfiguration"/> class using <paramref name="baseOptions"/>.
         /// </summary>
-        public DriverSetupConfiguration()
-            : this(null)
+        /// <param name="baseOptions">The base options.</param>
+        public DriverSetupConfiguration(DriverSetupOptions baseOptions)
+            : base(baseOptions)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DriverSetupConfiguration"/> class using <paramref name="options"/>.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public DriverSetupConfiguration(DriverSetupOptions options)
-        {
-            if (options != null)
+            if (!(baseOptions is DriverSetupConfiguration))
             {
-                StorageDirectoryPath = options.StorageDirectoryPath;
-                Architecture = options.Architecture;
-                Proxy = options.Proxy;
-                UseVersionCache = options.UseVersionCache;
-                LatestVersionCheckInterval = options.LatestVersionCheckInterval;
-                SpecificVersionCheckInterval = options.SpecificVersionCheckInterval;
-                HttpRequestTryCount = options.HttpRequestTryCount;
-                HttpRequestRetryInterval = options.HttpRequestRetryInterval;
-                IsEnabled = options.IsEnabled;
-                AddToEnvironmentPathVariable = options.AddToEnvironmentPathVariable;
+                Version = DriverVersions.Auto;
             }
         }
 
@@ -38,7 +22,11 @@
         /// Gets or sets the version.
         /// The default value is <see cref="DriverVersions.Auto"/>.
         /// </summary>
-        public string Version { get; set; } = DriverVersions.Auto;
+        public string Version
+        {
+            get => GetOption<string>(nameof(Version));
+            set => SetOption(nameof(Version), value);
+        }
 
         /// <summary>
         /// <para>
@@ -54,6 +42,10 @@
         /// The <see langword="null"/> value means that none variable should be set.
         /// </para>
         /// </summary>
-        public string EnvironmentVariableName { get; set; }
+        public string EnvironmentVariableName
+        {
+            get => GetOption<string>(nameof(EnvironmentVariableName));
+            set => SetOption(nameof(EnvironmentVariableName), value);
+        }
     }
 }
