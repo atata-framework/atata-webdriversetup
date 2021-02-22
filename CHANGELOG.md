@@ -13,6 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - #3 Default driver setup configurations
 - #4 Add async `SetUp*` methods
 
-## [1.0.0] - 2017-02-16
+## [1.0.0] - 2021-02-16
 
 Initial version release.
