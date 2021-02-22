@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Atata.WebDriverSetup
 {
@@ -186,12 +187,7 @@ namespace Atata.WebDriverSetup
         public static DriverSetupResult AutoSetUp(string browserName) =>
             Configure(browserName).WithAutoVersion().SetUp();
 
-        /// <summary>
-        /// Sets up drivers with auto version detection for the browsers with the specified names.
-        /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
-        /// </summary>
-        /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames"/> values.</param>
-        /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
+        /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
         public static DriverSetupResult[] AutoSetUp(params string[] browserNames) =>
             AutoSetUp(browserNames?.AsEnumerable());
 
@@ -202,10 +198,29 @@ namespace Atata.WebDriverSetup
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
         public static DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames) =>
-            browserNames.CheckNotNull(nameof(browserNames))
-                .Select(AutoSetUp)
+            AutoSetUpAsync(browserNames).GetAwaiter().GetResult();
+
+        /// <inheritdoc cref="AutoSetUp(string)"/>
+        public static async Task<DriverSetupResult> AutoSetUpAsync(string browserName) =>
+            await Configure(browserName).WithAutoVersion().SetUpAsync();
+
+        /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
+        public static async Task<DriverSetupResult[]> AutoSetUpAsync(params string[] browserNames) =>
+            await AutoSetUpAsync(browserNames?.AsEnumerable());
+
+        /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
+        public static async Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames)
+        {
+            browserNames.CheckNotNull(nameof(browserNames));
+
+            var tasks = browserNames
+                .Distinct()
+                .Select(AutoSetUpAsync);
+
+            return (await Task.WhenAll(tasks))
                 .Where(res => res != null)
                 .ToArray();
+        }
 
         /// <summary>
         /// Sets up drivers with auto version detection for the browsers with the specified names.
@@ -215,8 +230,16 @@ namespace Atata.WebDriverSetup
         /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
         public static DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames) =>
+            AutoSetUpSafelyAsync(browserNames).GetAwaiter().GetResult();
+
+        /// <inheritdoc cref="AutoSetUpSafely"/>
+        public static async Task<DriverSetupResult[]> AutoSetUpSafelyAsync(IEnumerable<string> browserNames) =>
             browserNames != null
-                ? AutoSetUp(browserNames.Where(name => BrowserDriverSetupDataMap.ContainsKey(name)))
+                ? await AutoSetUpAsync(
+                    browserNames
+                        .Where(name => name != null)
+                        .Distinct()
+                        .Where(name => BrowserDriverSetupDataMap.ContainsKey(name)))
                 : new DriverSetupResult[0];
 
         /// <summary>
@@ -224,10 +247,18 @@ namespace Atata.WebDriverSetup
         /// </summary>
         /// <returns>The array of <see cref="DriverSetupResult"/>.</returns>
         public static DriverSetupResult[] SetUpPendingConfigurations() =>
-            PendingConfigurations.ToArray()
-                .Select(conf => conf.SetUp())
+            SetUpPendingConfigurationsAsync().GetAwaiter().GetResult();
+
+        /// <inheritdoc cref="SetUpPendingConfigurations"/>
+        public static async Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync()
+        {
+            var tasks = PendingConfigurations.ToArray()
+                .Select(conf => conf.SetUpAsync());
+
+            return (await Task.WhenAll(tasks))
                 .Where(res => res != null)
                 .ToArray();
+        }
 
         private class DriverSetupData
         {

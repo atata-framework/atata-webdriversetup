@@ -12,6 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.EdgeDriverSetupStrategy.BaseUrl")]
 [assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetupExecutor.AddToEnvironmentPathVariable(System.String)")]
 [assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetupExecutor.ExtractDownloadedFile(System.String,System.String)")]
-[assembly: SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetup.SetUpPendingConfigurations~Atata.WebDriverSetup.DriverSetupResult[]")]
+[assembly: SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetup.SetUpPendingConfigurationsAsync~System.Threading.Tasks.Task{Atata.WebDriverSetup.DriverSetupResult[]}")]
 
 #pragma warning restore S103 // Lines should not be too long

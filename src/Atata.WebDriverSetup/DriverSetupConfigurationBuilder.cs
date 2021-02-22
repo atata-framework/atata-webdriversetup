@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Atata.WebDriverSetup
 {
@@ -122,6 +123,10 @@ namespace Atata.WebDriverSetup
                 return null;
             }
         }
+
+        /// <inheritdoc cref="SetUp"/>
+        public async Task<DriverSetupResult> SetUpAsync() =>
+            await Task.Run(SetUp);
 
         private IHttpRequestExecutor CreateHttpRequestExecutor() =>
             new ReliableHttpRequestExecutor(
