@@ -182,20 +182,25 @@ This feature is currently supported only for Chrome and Edge browsers.
 - **`DriverSetupConfigurationBuilder Configure(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`**\
   Creates the driver setup configuration builder using `driverSetupStrategyFactory`
   that instantiates specific `IDriverSetupStrategy`.
-- **`DriverSetupResult AutoSetUp(string browserName)`**\
+- **`DriverSetupResult AutoSetUp(string browserName)`** &\
+  **`Task<DriverSetupResult> AutoSetUpAsync(string browserName)`**\
   Sets up driver with auto version detection for the browser with the specified name.
   Supported browser names are defined in `BrowserNames` static class.
-- **`DriverSetupResult[] AutoSetUp(params string[] browserNames)`**\
+- **`DriverSetupResult[] AutoSetUp(params string[] browserNames)`** &\
+  **`DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames)`** &\
+  **`Task<DriverSetupResult[]> AutoSetUpAsync(params string[] browserNames)`** &\
+  **`Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
-- **`DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames)`**\
-  Sets up drivers with auto version detection for the browsers with the specified names.
-  Supported browser names are defined in `BrowserNames` static class.
-- **`DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames)`**\
+- **`DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames)`** &\
+  **`Task<DriverSetupResult[]> AutoSetUpSafelyAsync(IEnumerable<string> browserNames)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
   Skips invalid/unsupported browser names.
-- **`DriverSetupResult[] SetUpPendingConfigurations()`**\
+- **`DriverSetupOptionsBuilder GetDefaultConfiguration(string browserName)`**\
+  Gets the default driver setup configuration builder.
+- **`DriverSetupResult[] SetUpPendingConfigurations()`** &\
+  **`Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync()`**\
   Sets up pending configurations that are stored in `PendingConfigurations` property.
 - **`void RegisterStrategyFactory(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`**\
   Registers the driver setup strategy factory.
@@ -221,6 +226,13 @@ DriverSetup.GlobalOptions.StorageDirectoryPath = "...";
 DriverSetup.GlobalOptions.UseVersionCache = false;
 ```
 
+### Default Driver Configuration
+
+```cs
+DriverSetup.GetDefaultConfiguration(BrowserNames.InternetExplorer)
+    .WithX32Architecture();
+```
+
 ### Driver-Specific Configuration
 
 ```cs
@@ -230,7 +242,7 @@ DriverSetup.ConfigureChrome()
     .SetUp();
 ```
 
-*Don't forget to call `SetUp()` at the end.*
+*Don't forget to call `SetUp()` or `SetUpAsync()` at the end.*
 
 ### Configuration Methods
 
@@ -259,6 +271,13 @@ DriverSetup.ConfigureChrome()
 - **`WithStorageDirectoryPath(string path)`**\
   Sets the storage directory path.
   The default value is `"{basedir}/drivers")`.
+- **`WithX32Architecture()`**\
+  Sets the x32 (x86) architecture.
+- **`WithX64Architecture`**\
+  Sets the x64 architecture.
+- **`WithArchitecture(Architecture architecture)`**\
+  Sets the architecture.
+  The default value is `Architecture.Auto`.
 - **`WithProxy(IWebProxy proxy)`**\
   Sets the web proxy.
 - **`WithVersionCache(bool isEnabled)`**\
