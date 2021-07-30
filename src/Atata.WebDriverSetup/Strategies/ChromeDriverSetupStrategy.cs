@@ -58,7 +58,9 @@ namespace Atata.WebDriverSetup
                 ? AppVersionDetector.GetFromProgramFiles(@"Google\Chrome\Application\chrome.exe")
                     ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Google\Chrome")
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("chrome.exe")
-                : AppVersionDetector.GetThroughCli("google-chrome", "--product-version");
+                : OSInfo.IsLinux
+                    ? AppVersionDetector.GetThroughCli("google-chrome", "--product-version")
+                    : AppVersionDetector.GetFromExecutableFileVersion("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
 
         /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)

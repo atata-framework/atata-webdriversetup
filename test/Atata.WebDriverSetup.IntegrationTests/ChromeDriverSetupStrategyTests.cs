@@ -15,8 +15,6 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
             string result = sut.GetInstalledBrowserVersion();
 
-            TestContext.WriteLine($"Result: {result}");
-
             result.Should().NotBeNullOrWhiteSpace();
             result[0].Should().BeInRange('1', '9');
         }

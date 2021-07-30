@@ -33,15 +33,22 @@ namespace Atata.WebDriverSetup
                 Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
             };
 
-            string applicationPath = programFilesFolders
+            return programFilesFolders
                 .Where(path => !string.IsNullOrEmpty(path))
                 .SelectMany(progPath => applicationRelativePaths.Select(relPath => Path.Combine(progPath, relPath)))
-                .FirstOrDefault(path => File.Exists(path));
-
-            return applicationPath != null
-                ? FileVersionInfo.GetVersionInfo(applicationPath).FileVersion
-                : null;
+                .Select(GetFromExecutableFileVersion)
+                .FirstOrDefault(x => x != null);
         }
+
+        /// <summary>
+        /// Gets the application version from executable file version information.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetFromExecutableFileVersion(string filePath) =>
+            File.Exists(filePath)
+                ? FileVersionInfo.GetVersionInfo(filePath).FileVersion
+                : null;
 
         /// <summary>
         /// Gets the application version from "BLBeacon/version" key in registry.
