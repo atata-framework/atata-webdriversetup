@@ -75,6 +75,20 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
+        /// Gets the application version through OSX application CLI passing <c>"--version"</c> argument.
+        /// </summary>
+        /// <param name="applicationName">The application name.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetThroughOSXApplicationCli(string applicationName)
+        {
+            string filePath = $"/Applications/{applicationName}.app/Contents/MacOS/{applicationName}";
+
+            string versionString = GetThroughCli(filePath, "--version");
+
+            return versionString.Replace($"{applicationName} ", null);
+        }
+
+        /// <summary>
         /// Gets the application version through CLI.
         /// </summary>
         /// <param name="fileNameOrCommand">The file name or command.</param>
