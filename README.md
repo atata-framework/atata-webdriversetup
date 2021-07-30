@@ -60,7 +60,7 @@ Install [`Atata.WebDriverSetup`](https://www.nuget.org/packages/Atata.WebDriverS
 
 The package depends on:
 
-- [`Microsoft.Win32.Registry`](https://www.nuget.org/packages/Microsoft.Win32.Registry/) - is used to detect locally installed browser through registry version on Windows.
+- [`Microsoft.Win32.Registry`](https://www.nuget.org/packages/Microsoft.Win32.Registry/) - is used to detect locally installed browser version through Windows Registry.
 - [`Atata.Cli`](https://www.nuget.org/packages/Atata.Cli/) - is used to detect locally installed browser version through CLI on Linux and macOS.
 
 ## Usage
