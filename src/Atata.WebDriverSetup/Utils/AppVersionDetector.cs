@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Atata.Cli;
 
 namespace Atata.WebDriverSetup
 {
@@ -32,15 +33,22 @@ namespace Atata.WebDriverSetup
                 Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
             };
 
-            string applicationPath = programFilesFolders
+            return programFilesFolders
                 .Where(path => !string.IsNullOrEmpty(path))
                 .SelectMany(progPath => applicationRelativePaths.Select(relPath => Path.Combine(progPath, relPath)))
-                .FirstOrDefault(path => File.Exists(path));
-
-            return applicationPath != null
-                ? FileVersionInfo.GetVersionInfo(applicationPath).FileVersion
-                : null;
+                .Select(GetFromExecutableFileVersion)
+                .FirstOrDefault(x => x != null);
         }
+
+        /// <summary>
+        /// Gets the application version from executable file version information.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetFromExecutableFileVersion(string filePath) =>
+            File.Exists(filePath)
+                ? FileVersionInfo.GetVersionInfo(filePath).FileVersion
+                : null;
 
         /// <summary>
         /// Gets the application version from "BLBeacon/version" key in registry.
@@ -64,6 +72,38 @@ namespace Atata.WebDriverSetup
             return string.IsNullOrEmpty(applicationPath)
                 ? null
                 : FileVersionInfo.GetVersionInfo(applicationPath).FileVersion;
+        }
+
+        /// <summary>
+        /// Gets the application version through OSX application CLI passing <c>"--version"</c> argument.
+        /// </summary>
+        /// <param name="applicationName">The application name.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetThroughOSXApplicationCli(string applicationName)
+        {
+            string filePath = $"/Applications/{applicationName}.app/Contents/MacOS/{applicationName}";
+
+            string versionString = GetThroughCli(filePath, "--version");
+
+            return versionString.Replace($"{applicationName} ", null);
+        }
+
+        /// <summary>
+        /// Gets the application version through CLI.
+        /// </summary>
+        /// <param name="fileNameOrCommand">The file name or command.</param>
+        /// <param name="arguments">The command arguments.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetThroughCli(string fileNameOrCommand, string arguments)
+        {
+            try
+            {
+                return new ProgramCli(fileNameOrCommand).Execute(arguments).Output;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
