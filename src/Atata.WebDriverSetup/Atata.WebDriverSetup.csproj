@@ -26,6 +26,7 @@ Features:
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Atata.Cli" Version="1.3.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
   </ItemGroup>
 

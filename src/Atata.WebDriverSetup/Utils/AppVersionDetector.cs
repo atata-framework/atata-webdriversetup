@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Atata.Cli;
 
 namespace Atata.WebDriverSetup
 {
@@ -64,6 +65,24 @@ namespace Atata.WebDriverSetup
             return string.IsNullOrEmpty(applicationPath)
                 ? null
                 : FileVersionInfo.GetVersionInfo(applicationPath).FileVersion;
+        }
+
+        /// <summary>
+        /// Gets the application version through CLI.
+        /// </summary>
+        /// <param name="fileNameOrCommand">The file name or command.</param>
+        /// <param name="arguments">The command arguments.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetThroughCli(string fileNameOrCommand, string arguments)
+        {
+            try
+            {
+                return new ProgramCli(fileNameOrCommand).Execute(arguments).Output;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
