@@ -61,11 +61,16 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         private static void CopyFilesRecursively(string sourcePath, string destinationPath)
         {
-            foreach (string directoryPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
-                Directory.CreateDirectory(directoryPath.Replace(sourcePath, destinationPath));
+            DirectoryInfo sourceDirectory = new DirectoryInfo(sourcePath);
 
-            foreach (string filePath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories).Where(x => !x.EndsWith(".exe")))
-                File.Copy(filePath, filePath.Replace(sourcePath, destinationPath), true);
+            foreach (var directory in sourceDirectory.GetDirectories("*", SearchOption.AllDirectories))
+                Directory.CreateDirectory(directory.FullName.Replace(sourcePath, destinationPath));
+
+            foreach (var file in sourceDirectory.GetFiles("*", SearchOption.AllDirectories)
+                .Where(x => !string.IsNullOrEmpty(x.Extension) && x.Extension != ".exe"))
+            {
+                file.CopyTo(file.FullName.Replace(sourcePath, destinationPath), overwrite: true);
+            }
         }
 
         protected static void AssertDriverIsSetUp(
