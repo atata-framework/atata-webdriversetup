@@ -1,5 +1,6 @@
 variables:
   buildConfiguration: 'Release'
+  resultsDirectoryPath: test/Atata.WebDriverSetup.IntegrationTests/bin/Debug/netcoreapp3.1/results
 
 jobs:
 - job: BuildAndRunCodeAnalysis
@@ -32,6 +33,12 @@ jobs:
       command: test
       projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+  - task: PublishPipelineArtifact@1
+    displayName: Publish test results
+    condition: succeededOrFailed()
+    inputs:
+      artifactName: Windows test results
+      targetPath: $(resultsDirectoryPath)
 
 - job: RunTestsOnLinux
   displayName: Run tests on Linux
@@ -51,9 +58,15 @@ jobs:
       command: test
       projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+  - task: PublishPipelineArtifact@1
+    displayName: Publish test results
+    condition: succeededOrFailed()
+    inputs:
+      artifactName: Linux test results
+      targetPath: $(resultsDirectoryPath)
 
 - job: RunTestsOnMacOS
-  displayName: Run tests on MacOS
+  displayName: Run tests on macOS
   pool:
     vmImage: macOS-latest
   steps:
@@ -70,3 +83,9 @@ jobs:
       command: test
       projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+  - task: PublishPipelineArtifact@1
+    displayName: Publish test results
+    condition: succeededOrFailed()
+    inputs:
+      artifactName: macOS test results
+      targetPath: $(resultsDirectoryPath)

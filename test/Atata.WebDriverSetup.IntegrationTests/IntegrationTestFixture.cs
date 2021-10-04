@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace Atata.WebDriverSetup.IntegrationTests
 {
@@ -24,6 +25,47 @@ namespace Atata.WebDriverSetup.IntegrationTests
         {
             if (Directory.Exists(DriverSetup.GlobalOptions.StorageDirectoryPath))
                 Directory.Delete(DriverSetup.GlobalOptions.StorageDirectoryPath, true);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            string driversPath = DriverSetup.GlobalOptions.StorageDirectoryPath;
+
+            if (Directory.Exists(driversPath) && Directory.EnumerateFileSystemEntries(driversPath).Any())
+            {
+                string resultDirectoryPath = BuildTestResultDirectoryPath();
+
+                if (Directory.Exists(resultDirectoryPath))
+                    Directory.Delete(resultDirectoryPath, true);
+
+                Directory.CreateDirectory(resultDirectoryPath);
+
+                CopyFilesRecursively(driversPath, resultDirectoryPath);
+            }
+        }
+
+        private static string BuildTestResultDirectoryPath()
+        {
+            string testClassName = TestContext.CurrentContext.Test.ClassName;
+            testClassName = testClassName.Substring(testClassName.LastIndexOf('.') + 1);
+
+            string testName = TestContext.CurrentContext.Test.Name;
+
+            return Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "results",
+                PathSanitizer.SanitizeForFileName(testClassName),
+                PathSanitizer.SanitizeForFileName(testName));
+        }
+
+        private static void CopyFilesRecursively(string sourcePath, string destinationPath)
+        {
+            foreach (string directoryPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+                Directory.CreateDirectory(directoryPath.Replace(sourcePath, destinationPath));
+
+            foreach (string filePath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories).Where(x => !x.EndsWith(".exe")))
+                File.Copy(filePath, filePath.Replace(sourcePath, destinationPath), true);
         }
 
         protected static void AssertDriverIsSetUp(
