@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Description>.NET library that sets up browser drivers for Selenium WebDriver, e.g. chromedriver, geckodriver, etc.
 
 Targets .NET Standard 2.0.
@@ -20,9 +20,9 @@ Features:
     <RepositoryUrl>https://github.com/atata-framework/atata-webdriversetup</RepositoryUrl>
     <PackageId>Atata.WebDriverSetup</PackageId>
     <PackageTags>atata automation testing selenium webdriver chromedriver edgedriver internetexplorerdriver geckodriver operadriver</PackageTags>
-    <PackageReleaseNotes>1.2.0 - https://atata.io/blog/2021/07/30/atata.webdriversetup-1.2.0-released/
-1.1.0 - https://atata.io/blog/2021/02/22/atata.webdriversetup-1.1.0-released/
-1.0.0 - https://atata.io/blog/2021/02/16/atata.webdriversetup-1.0.0-released/</PackageReleaseNotes>
+    <PackageReleaseNotes>1.2.1 - https://atata.io/blog/2021/10/26/atata.webdriversetup-1.2.1-released/
+1.2.0 - https://atata.io/blog/2021/07/30/atata.webdriversetup-1.2.0-released/
+1.1.0 - https://atata.io/blog/2021/02/22/atata.webdriversetup-1.1.0-released/</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/atata-framework/atata-webdriversetup</PackageProjectUrl>
   </PropertyGroup>
 
