@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- #10 Thread synchronization bug when setting up multiple drivers simultaneously
+- #10 Thread synchronization bug when setting up multiple drivers simultaneously.
 
 ## [1.2.0] - 2021-07-30
 
