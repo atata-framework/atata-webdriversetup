@@ -13,6 +13,8 @@ namespace Atata.WebDriverSetup
         private static readonly Dictionary<string, DriverSetupData> BrowserDriverSetupDataMap =
             new Dictionary<string, DriverSetupData>();
 
+        private static readonly object PendingConfigurationsSyncLock = new object();
+
         static DriverSetup()
         {
             RegisterStrategyFactory(BrowserNames.Chrome, hre => new ChromeDriverSetupStrategy(hre));
@@ -152,7 +154,10 @@ namespace Atata.WebDriverSetup
                 driverSetupStrategyFactory,
                 CreateConfiguration(browserName, driverSetupOptions));
 
-            PendingConfigurations.Add(builder);
+            lock (PendingConfigurationsSyncLock)
+            {
+                PendingConfigurations.Add(builder);
+            }
 
             return builder;
         }
@@ -252,12 +257,26 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc cref="SetUpPendingConfigurations"/>
         public static async Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync()
         {
-            var tasks = PendingConfigurations.ToArray()
-                .Select(conf => conf.SetUpAsync());
+            DriverSetupConfigurationBuilder[] pendingConfigurations = null;
+
+            lock (PendingConfigurationsSyncLock)
+            {
+                pendingConfigurations = PendingConfigurations.ToArray();
+            }
+
+            var tasks = pendingConfigurations.Select(conf => conf.SetUpAsync());
 
             return (await Task.WhenAll(tasks))
                 .Where(res => res != null)
                 .ToArray();
+        }
+
+        internal static void RemovePendingConfiguration(DriverSetupConfigurationBuilder configurationBuilder)
+        {
+            lock (PendingConfigurationsSyncLock)
+            {
+                PendingConfigurations.Remove(configurationBuilder);
+            }
         }
 
         private class DriverSetupData

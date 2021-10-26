@@ -114,7 +114,7 @@ namespace Atata.WebDriverSetup
 
                 DriverSetupResult result = setupExecutor.SetUp(driverVersion);
 
-                DriverSetup.PendingConfigurations.Remove(this);
+                DriverSetup.RemovePendingConfiguration(this);
 
                 return result;
             }
