@@ -10,10 +10,10 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public static class DriverSetup
     {
-        private static readonly Dictionary<string, DriverSetupData> BrowserDriverSetupDataMap =
+        private static readonly Dictionary<string, DriverSetupData> s_browserDriverSetupDataMap =
             new Dictionary<string, DriverSetupData>();
 
-        private static readonly object PendingConfigurationsSyncLock = new object();
+        private static readonly object s_pendingConfigurationsSyncLock = new object();
 
         static DriverSetup()
         {
@@ -56,11 +56,11 @@ namespace Atata.WebDriverSetup
             browserName.CheckNotNull(nameof(browserName));
             driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
 
-            DriverSetupOptionsBuilder optionsBuilder = BrowserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData currentData)
+            DriverSetupOptionsBuilder optionsBuilder = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData currentData)
                 ? currentData.DefaultOptionsBuilder
                 : new DriverSetupOptionsBuilder(new DriverSetupOptions(GlobalOptions));
 
-            BrowserDriverSetupDataMap[browserName] = new DriverSetupData(driverSetupStrategyFactory, optionsBuilder);
+            s_browserDriverSetupDataMap[browserName] = new DriverSetupData(driverSetupStrategyFactory, optionsBuilder);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Atata.WebDriverSetup
             string browserName,
             Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)
         {
-            DriverSetupOptions driverSetupOptions = BrowserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData driverSetupData)
+            DriverSetupOptions driverSetupOptions = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData driverSetupData)
                 ? driverSetupData.DefaultOptionsBuilder.BuildingContext
                 : GlobalOptions;
 
@@ -154,7 +154,7 @@ namespace Atata.WebDriverSetup
                 driverSetupStrategyFactory,
                 CreateConfiguration(browserName, driverSetupOptions));
 
-            lock (PendingConfigurationsSyncLock)
+            lock (s_pendingConfigurationsSyncLock)
             {
                 PendingConfigurations.Add(builder);
             }
@@ -166,7 +166,7 @@ namespace Atata.WebDriverSetup
         {
             browserName.CheckNotNullOrWhitespace(nameof(browserName));
 
-            return BrowserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData setupData)
+            return s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData setupData)
                 ? setupData
                 : throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
         }
@@ -244,7 +244,7 @@ namespace Atata.WebDriverSetup
                     browserNames
                         .Where(name => name != null)
                         .Distinct()
-                        .Where(name => BrowserDriverSetupDataMap.ContainsKey(name)))
+                        .Where(name => s_browserDriverSetupDataMap.ContainsKey(name)))
                 : new DriverSetupResult[0];
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Atata.WebDriverSetup
         {
             DriverSetupConfigurationBuilder[] pendingConfigurations = null;
 
-            lock (PendingConfigurationsSyncLock)
+            lock (s_pendingConfigurationsSyncLock)
             {
                 pendingConfigurations = PendingConfigurations.ToArray();
             }
@@ -273,13 +273,13 @@ namespace Atata.WebDriverSetup
 
         internal static void RemovePendingConfiguration(DriverSetupConfigurationBuilder configurationBuilder)
         {
-            lock (PendingConfigurationsSyncLock)
+            lock (s_pendingConfigurationsSyncLock)
             {
                 PendingConfigurations.Remove(configurationBuilder);
             }
         }
 
-        private class DriverSetupData
+        private sealed class DriverSetupData
         {
             public DriverSetupData(
                 Func<IHttpRequestExecutor, IDriverSetupStrategy> strategyFactory,

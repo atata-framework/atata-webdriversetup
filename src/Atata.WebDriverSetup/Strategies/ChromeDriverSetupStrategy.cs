@@ -20,7 +20,7 @@ namespace Atata.WebDriverSetup
         private const string DriverSpecificVersionUrlFormat =
             DriverLatestVersionUrl + "_{0}";
 
-        private readonly IHttpRequestExecutor httpRequestExecutor;
+        private readonly IHttpRequestExecutor _httpRequestExecutor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChromeDriverSetupStrategy"/> class.
@@ -28,7 +28,7 @@ namespace Atata.WebDriverSetup
         /// <param name="httpRequestExecutor">The HTTP request executor.</param>
         public ChromeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
         {
-            this.httpRequestExecutor = httpRequestExecutor;
+            _httpRequestExecutor = httpRequestExecutor;
         }
 
         /// <inheritdoc/>
@@ -39,7 +39,7 @@ namespace Atata.WebDriverSetup
 
         /// <inheritdoc/>
         public string GetDriverLatestVersion() =>
-            httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
+            _httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
 
         /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
@@ -75,7 +75,7 @@ namespace Atata.WebDriverSetup
 
             string url = string.Format(DriverSpecificVersionUrlFormat, browserVersionToUse);
 
-            return httpRequestExecutor.DownloadString(url);
+            return _httpRequestExecutor.DownloadString(url);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace Atata.WebDriverSetup.IntegrationTests
 {
     public static class PathSanitizer
     {
-        private static readonly Lazy<char[]> InvalidPathChars = new Lazy<char[]>(() => Path.GetInvalidFileNameChars());
+        private static readonly Lazy<char[]> s_invalidPathChars = new Lazy<char[]>(() => Path.GetInvalidFileNameChars());
 
         public static string SanitizeForFileName(string value) =>
-            new string(value.Where(x => !InvalidPathChars.Value.Contains(x)).ToArray());
+            new string(value.Where(x => !s_invalidPathChars.Value.Contains(x)).ToArray());
     }
 }

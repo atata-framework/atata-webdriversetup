@@ -17,7 +17,7 @@ namespace Atata.WebDriverSetup
         private const string DriverLatestVersionUrl =
             BaseUrl + "/LATEST_STABLE";
 
-        private readonly IHttpRequestExecutor httpRequestExecutor;
+        private readonly IHttpRequestExecutor _httpRequestExecutor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdgeDriverSetupStrategy"/> class.
@@ -25,7 +25,7 @@ namespace Atata.WebDriverSetup
         /// <param name="httpRequestExecutor">The HTTP request executor.</param>
         public EdgeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
         {
-            this.httpRequestExecutor = httpRequestExecutor;
+            _httpRequestExecutor = httpRequestExecutor;
         }
 
         /// <inheritdoc/>
@@ -36,7 +36,7 @@ namespace Atata.WebDriverSetup
 
         /// <inheritdoc/>
         public string GetDriverLatestVersion() =>
-            httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
+            _httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
 
         /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>

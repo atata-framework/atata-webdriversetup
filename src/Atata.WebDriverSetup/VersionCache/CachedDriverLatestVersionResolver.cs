@@ -4,25 +4,25 @@ namespace Atata.WebDriverSetup
 {
     internal class CachedDriverLatestVersionResolver : IGetsDriverLatestVersion
     {
-        private readonly IGetsDriverLatestVersion actualResolver;
+        private readonly IGetsDriverLatestVersion _actualResolver;
 
-        private readonly IDriverVersionCache driverVersionCache;
+        private readonly IDriverVersionCache _driverVersionCache;
 
-        private readonly TimeSpan versionCheckInterval;
+        private readonly TimeSpan _versionCheckInterval;
 
         internal CachedDriverLatestVersionResolver(
             IGetsDriverLatestVersion actualResolver,
             IDriverVersionCache driverVersionCache,
             TimeSpan versionCheckInterval)
         {
-            this.actualResolver = actualResolver;
-            this.driverVersionCache = driverVersionCache;
-            this.versionCheckInterval = versionCheckInterval;
+            _actualResolver = actualResolver;
+            _driverVersionCache = driverVersionCache;
+            _versionCheckInterval = versionCheckInterval;
         }
 
         public string GetDriverLatestVersion() =>
-            driverVersionCache.GetOrAddLatest(
-                DateTime.UtcNow - versionCheckInterval,
-                actualResolver.GetDriverLatestVersion);
+            _driverVersionCache.GetOrAddLatest(
+                DateTime.UtcNow - _versionCheckInterval,
+                _actualResolver.GetDriverLatestVersion);
     }
 }

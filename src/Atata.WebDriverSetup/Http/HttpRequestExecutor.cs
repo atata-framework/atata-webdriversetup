@@ -7,7 +7,7 @@ namespace Atata.WebDriverSetup
     /// <inheritdoc/>
     public class HttpRequestExecutor : IHttpRequestExecutor
     {
-        private readonly IWebProxy proxy;
+        private readonly IWebProxy _proxy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
@@ -15,7 +15,7 @@ namespace Atata.WebDriverSetup
         /// <param name="proxy">The proxy.</param>
         public HttpRequestExecutor(IWebProxy proxy = null)
         {
-            this.proxy = proxy;
+            _proxy = proxy;
         }
 
         /// <inheritdoc/>
@@ -53,8 +53,8 @@ namespace Atata.WebDriverSetup
         {
             WebClient webClient = new WebClient();
 
-            if (proxy != null)
-                webClient.Proxy = proxy;
+            if (_proxy != null)
+                webClient.Proxy = _proxy;
 
             return webClient;
         }
@@ -63,8 +63,9 @@ namespace Atata.WebDriverSetup
         {
             HttpClientHandler httpClientHandler = new HttpClientHandler
             {
-                Proxy = proxy,
-                AllowAutoRedirect = false
+                Proxy = _proxy,
+                AllowAutoRedirect = false,
+                CheckCertificateRevocationList = true
             };
             HttpClient httpClient = new HttpClient(httpClientHandler, true);
 

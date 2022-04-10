@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -11,7 +12,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
     [Parallelizable(ParallelScope.None)]
     public abstract class IntegrationTestFixture
     {
-        private static readonly string[] ValidBrowserNames = new[]
+        private static readonly string[] s_validBrowserNames = new[]
         {
             BrowserNames.Chrome,
             BrowserNames.Firefox,
@@ -48,7 +49,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
         private static string BuildTestResultDirectoryPath()
         {
             string testClassName = TestContext.CurrentContext.Test.ClassName;
-            testClassName = testClassName.Substring(testClassName.LastIndexOf('.') + 1);
+            testClassName = testClassName[(testClassName.LastIndexOf('.') + 1)..];
 
             string testName = TestContext.CurrentContext.Test.Name;
 
@@ -115,7 +116,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
                     .Should().ContainSingle("there should exist single architecture folder")
                     .Subject;
 
-                destinationDirectory.Name.Should().Be(architecture.ToString().ToLower());
+                destinationDirectory.Name.Should().Be(architecture.ToString().ToLower(CultureInfo.InvariantCulture));
             }
 
             destinationDirectory.GetDirectories().Should().BeEmpty();
@@ -129,7 +130,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
         private static string GetRootDriverDirectoryPath(string browserName) =>
             Path.Combine(
                 DriverSetup.GlobalOptions.StorageDirectoryPath,
-                browserName.Replace(" ", null).ToLower());
+                browserName.Replace(" ", null).ToLower(CultureInfo.InvariantCulture));
 
         private static void AssertDriverSetupResult(
             DriverSetupResult result,
@@ -176,6 +177,6 @@ namespace Atata.WebDriverSetup.IntegrationTests
         }
 
         protected static bool IsValidBrowserName(string browserName) =>
-            ValidBrowserNames.Contains(browserName);
+            s_validBrowserNames.Contains(browserName);
     }
 }

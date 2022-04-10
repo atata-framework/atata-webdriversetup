@@ -8,11 +8,11 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public class ReliableHttpRequestExecutor : IHttpRequestExecutor
     {
-        private readonly IHttpRequestExecutor httpRequestExecutor;
+        private readonly IHttpRequestExecutor _httpRequestExecutor;
 
-        private readonly int tryCount;
+        private readonly int _tryCount;
 
-        private readonly TimeSpan retryInterval;
+        private readonly TimeSpan _retryInterval;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReliableHttpRequestExecutor"/> class.
@@ -25,9 +25,9 @@ namespace Atata.WebDriverSetup
             int tryCount,
             TimeSpan retryInterval)
         {
-            this.httpRequestExecutor = httpRequestExecutor;
-            this.tryCount = tryCount;
-            this.retryInterval = retryInterval;
+            _httpRequestExecutor = httpRequestExecutor;
+            _tryCount = tryCount;
+            _retryInterval = retryInterval;
         }
 
         /// <inheritdoc/>
@@ -35,7 +35,7 @@ namespace Atata.WebDriverSetup
         {
             ExecuteWithRetries(() =>
             {
-                httpRequestExecutor.DownloadFile(url, filePath);
+                _httpRequestExecutor.DownloadFile(url, filePath);
                 return true;
             });
         }
@@ -44,14 +44,14 @@ namespace Atata.WebDriverSetup
         public string DownloadString(string url)
         {
             return ExecuteWithRetries(() =>
-                httpRequestExecutor.DownloadString(url));
+                _httpRequestExecutor.DownloadString(url));
         }
 
         /// <inheritdoc/>
         public Uri GetRedirectUrl(string url)
         {
             return ExecuteWithRetries(() =>
-                httpRequestExecutor.GetRedirectUrl(url));
+                _httpRequestExecutor.GetRedirectUrl(url));
         }
 
         private TResult ExecuteWithRetries<TResult>(Func<TResult> operation)
@@ -66,11 +66,11 @@ namespace Atata.WebDriverSetup
                 }
                 catch (Exception)
                 {
-                    if (attempt >= tryCount)
+                    if (attempt >= _tryCount)
                         throw;
 
                     attempt++;
-                    Task.Delay(retryInterval).Wait();
+                    Task.Delay(_retryInterval).Wait();
                 }
             }
         }

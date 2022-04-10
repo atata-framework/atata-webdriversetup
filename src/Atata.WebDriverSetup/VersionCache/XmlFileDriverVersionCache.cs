@@ -23,7 +23,7 @@ namespace Atata.WebDriverSetup
 
         private const string TimestampFormat = "u";
 
-        private readonly string filePath;
+        private readonly string _filePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlFileDriverVersionCache"/> class.
@@ -31,7 +31,7 @@ namespace Atata.WebDriverSetup
         /// <param name="filePath">The file path.</param>
         public XmlFileDriverVersionCache(string filePath)
         {
-            this.filePath = filePath;
+            _filePath = filePath;
         }
 
         /// <inheritdoc/>
@@ -73,7 +73,7 @@ namespace Atata.WebDriverSetup
                 item.SetAttributeValue(DriverAttributeName, driverVersion);
                 item.SetAttributeValue(TimestampAttributeName, DateTime.UtcNow.ToString(TimestampFormat, CultureInfo.InvariantCulture));
 
-                document.Save(filePath);
+                document.Save(_filePath);
                 return driverVersion;
             }
             else
@@ -105,16 +105,16 @@ namespace Atata.WebDriverSetup
 
         private XDocument OpenDocument()
         {
-            if (File.Exists(filePath))
+            if (File.Exists(_filePath))
             {
-                XDocument document = XDocument.Load(filePath);
+                XDocument document = XDocument.Load(_filePath);
 
                 if (document.Root.Name == RootElementName)
                     return document;
             }
             else
             {
-                string directoryPath = Path.GetDirectoryName(filePath);
+                string directoryPath = Path.GetDirectoryName(_filePath);
 
                 if (!Directory.Exists(directoryPath))
                     Directory.CreateDirectory(directoryPath);

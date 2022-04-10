@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Atata.WebDriverSetup
 {
     internal class DriverSetupExecutor
     {
-        private readonly string browserName;
+        private readonly string _browserName;
 
-        private readonly DriverSetupConfiguration configuration;
+        private readonly DriverSetupConfiguration _configuration;
 
-        private readonly IDriverSetupStrategy setupStrategy;
+        private readonly IDriverSetupStrategy _setupStrategy;
 
-        private readonly IHttpRequestExecutor httpRequestExecutor;
+        private readonly IHttpRequestExecutor _httpRequestExecutor;
 
         internal DriverSetupExecutor(
             string browserName,
@@ -23,10 +24,10 @@ namespace Atata.WebDriverSetup
             IDriverSetupStrategy setupStrategy,
             IHttpRequestExecutor httpRequestExecutor)
         {
-            this.browserName = browserName;
-            this.configuration = configuration;
-            this.setupStrategy = setupStrategy;
-            this.httpRequestExecutor = httpRequestExecutor;
+            _browserName = browserName;
+            _configuration = configuration;
+            _setupStrategy = setupStrategy;
+            _httpRequestExecutor = httpRequestExecutor;
         }
 
         internal DriverSetupResult SetUp(string version)
@@ -34,14 +35,14 @@ namespace Atata.WebDriverSetup
             version.CheckNotNullOrWhitespace(nameof(version));
 
             string driverDestinationDirectoryPath = BuildDriverDestinationDirectoryPath(version);
-            string driverDestinationFileName = setupStrategy.DriverBinaryFileName;
+            string driverDestinationFileName = _setupStrategy.DriverBinaryFileName;
 
             DownloadDriverIfMissing(version, driverDestinationDirectoryPath, driverDestinationFileName);
 
             SetEnvironmentVariables(driverDestinationDirectoryPath);
 
             return new DriverSetupResult(
-                browserName,
+                _browserName,
                 version,
                 driverDestinationDirectoryPath,
                 driverDestinationFileName);
@@ -66,11 +67,11 @@ namespace Atata.WebDriverSetup
 
                 Architecture architecture = ResolveArchitecture();
 
-                string downloadUrl = setupStrategy.GetDriverDownloadUrl(version, architecture).AbsoluteUri;
+                string downloadUrl = _setupStrategy.GetDriverDownloadUrl(version, architecture).AbsoluteUri;
                 string downloadFileName = Path.GetFileName(downloadUrl);
 
                 string downloadFilePath = Path.Combine(downloadDestinationDirectoryPath, downloadFileName);
-                httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
+                _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
 
                 try
                 {
@@ -85,8 +86,8 @@ namespace Atata.WebDriverSetup
         }
 
         private Architecture ResolveArchitecture() =>
-            configuration.Architecture != Architecture.Auto
-            ? configuration.Architecture
+            _configuration.Architecture != Architecture.Auto
+            ? _configuration.Architecture
             : OSInfo.Is64Bit
                 ? Architecture.X64
                 : Architecture.X32;
@@ -94,13 +95,13 @@ namespace Atata.WebDriverSetup
         private string BuildDriverDestinationDirectoryPath(string version)
         {
             string path = Path.Combine(
-                configuration.StorageDirectoryPath,
-                browserName.Replace(" ", null).ToLower(),
+                _configuration.StorageDirectoryPath,
+                _browserName.Replace(" ", null).ToLower(CultureInfo.InvariantCulture),
                 version);
 
-            return configuration.Architecture == Architecture.Auto
+            return _configuration.Architecture == Architecture.Auto
                 ? path
-                : Path.Combine(path, configuration.Architecture.ToString().ToLower());
+                : Path.Combine(path, _configuration.Architecture.ToString().ToLower(CultureInfo.InvariantCulture));
         }
 
         private static void ExtractDownloadedFile(string sourceFilePath, string destinationFilePath)
@@ -157,11 +158,11 @@ namespace Atata.WebDriverSetup
 
         private void SetEnvironmentVariables(string driverDirectoryPath)
         {
-            if (configuration.AddToEnvironmentPathVariable)
+            if (_configuration.AddToEnvironmentPathVariable)
                 AddToEnvironmentPathVariable(driverDirectoryPath);
 
-            if (!string.IsNullOrWhiteSpace(configuration.EnvironmentVariableName))
-                Environment.SetEnvironmentVariable(configuration.EnvironmentVariableName, driverDirectoryPath, EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrWhiteSpace(_configuration.EnvironmentVariableName))
+                Environment.SetEnvironmentVariable(_configuration.EnvironmentVariableName, driverDirectoryPath, EnvironmentVariableTarget.Process);
         }
 
         private static void AddToEnvironmentPathVariable(string path)

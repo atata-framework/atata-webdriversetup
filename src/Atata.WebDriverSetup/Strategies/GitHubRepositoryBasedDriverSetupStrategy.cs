@@ -10,11 +10,11 @@ namespace Atata.WebDriverSetup
         IDriverSetupStrategy,
         IGetsDriverLatestVersion
     {
-        private readonly IHttpRequestExecutor httpRequestExecutor;
+        private readonly IHttpRequestExecutor _httpRequestExecutor;
 
-        private readonly string versionTagPrefix;
+        private readonly string _versionTagPrefix;
 
-        private readonly string baseUrl;
+        private readonly string _baseUrl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitHubRepositoryBasedDriverSetupStrategy"/> class.
@@ -29,9 +29,9 @@ namespace Atata.WebDriverSetup
             string repositoryName,
             string versionTagPrefix = "v")
         {
-            this.httpRequestExecutor = httpRequestExecutor;
-            this.versionTagPrefix = versionTagPrefix;
-            baseUrl = $"https://github.com/{organizationName}/{repositoryName}";
+            _httpRequestExecutor = httpRequestExecutor;
+            _versionTagPrefix = versionTagPrefix;
+            _baseUrl = $"https://github.com/{organizationName}/{repositoryName}";
         }
 
         /// <inheritdoc/>
@@ -40,15 +40,15 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc/>
         public string GetDriverLatestVersion()
         {
-            string latestReleaseUrl = $"{baseUrl}/releases/latest";
-            string actualReleaseUrl = httpRequestExecutor.GetRedirectUrl(latestReleaseUrl).AbsoluteUri;
+            string latestReleaseUrl = $"{_baseUrl}/releases/latest";
+            string actualReleaseUrl = _httpRequestExecutor.GetRedirectUrl(latestReleaseUrl).AbsoluteUri;
 
-            return actualReleaseUrl.Split('/').Last().Substring(versionTagPrefix.Length);
+            return actualReleaseUrl.Split('/').Last().Substring(_versionTagPrefix.Length);
         }
 
         /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
-            new Uri($"{baseUrl}/releases/download/{versionTagPrefix}{version}/{GetDriverDownloadFileName(version, architecture)}");
+            new Uri($"{_baseUrl}/releases/download/{_versionTagPrefix}{version}/{GetDriverDownloadFileName(version, architecture)}");
 
         /// <summary>
         /// Gets the name of the driver download file.

@@ -6,55 +6,55 @@ namespace Atata.WebDriverSetup.IntegrationTests
     [TestFixture]
     public class DriverSetupConfigurationTests
     {
-        private DriverSetupOptions globalOptions;
+        private DriverSetupOptions _globalOptions;
 
-        private DriverSetupOptions defaultOptions;
+        private DriverSetupOptions _defaultOptions;
 
-        private DriverSetupConfiguration configuration;
+        private DriverSetupConfiguration _configuration;
 
         [SetUp]
         public void SetUp()
         {
-            globalOptions = new DriverSetupOptions();
-            defaultOptions = new DriverSetupOptions(globalOptions);
-            configuration = new DriverSetupConfiguration(defaultOptions);
+            _globalOptions = new DriverSetupOptions();
+            _defaultOptions = new DriverSetupOptions(_globalOptions);
+            _configuration = new DriverSetupConfiguration(_defaultOptions);
         }
 
         [Test]
         public void SetProperty()
         {
             const string testValue = "some-path";
-            configuration.StorageDirectoryPath = testValue;
+            _configuration.StorageDirectoryPath = testValue;
 
-            configuration.StorageDirectoryPath.Should().Be(testValue);
+            _configuration.StorageDirectoryPath.Should().Be(testValue);
         }
 
         [Test]
         public void SetGlobalOptionsProperty()
         {
             const string testValue = "some-path";
-            globalOptions.StorageDirectoryPath = testValue;
+            _globalOptions.StorageDirectoryPath = testValue;
 
-            configuration.StorageDirectoryPath.Should().Be(testValue);
+            _configuration.StorageDirectoryPath.Should().Be(testValue);
         }
 
         [Test]
         public void SetDefaultOptionsProperty()
         {
             const string testValue = "some-path";
-            defaultOptions.StorageDirectoryPath = testValue;
+            _defaultOptions.StorageDirectoryPath = testValue;
 
-            configuration.StorageDirectoryPath.Should().Be(testValue);
+            _configuration.StorageDirectoryPath.Should().Be(testValue);
         }
 
         [Test]
         public void SetGlobalOptionsProperty_ThenDefaultOptionsProperty()
         {
             const string testValue = "some-path";
-            globalOptions.StorageDirectoryPath = "global-path";
-            defaultOptions.StorageDirectoryPath = testValue;
+            _globalOptions.StorageDirectoryPath = "global-path";
+            _defaultOptions.StorageDirectoryPath = testValue;
 
-            configuration.StorageDirectoryPath.Should().Be(testValue);
+            _configuration.StorageDirectoryPath.Should().Be(testValue);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverSetupConfigurationBuilder, DriverSetupConfiguration>
     {
-        private readonly Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory;
+        private readonly Func<IHttpRequestExecutor, IDriverSetupStrategy> _driverSetupStrategyFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DriverSetupConfigurationBuilder"/> class.
@@ -23,7 +23,7 @@ namespace Atata.WebDriverSetup
             : base(context)
         {
             BrowserName = browserName.CheckNotNull(nameof(browserName));
-            this.driverSetupStrategyFactory = driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
+            _driverSetupStrategyFactory = driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Atata.WebDriverSetup
             {
                 IHttpRequestExecutor httpRequestExecutor = CreateHttpRequestExecutor();
 
-                IDriverSetupStrategy setupStrategy = driverSetupStrategyFactory.Invoke(httpRequestExecutor);
+                IDriverSetupStrategy setupStrategy = _driverSetupStrategyFactory.Invoke(httpRequestExecutor);
 
                 string driverVersion = ResolveDriverVersion(setupStrategy, BuildingContext.Version);
 

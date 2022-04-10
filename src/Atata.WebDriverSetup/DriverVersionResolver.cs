@@ -1,34 +1,35 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 
 namespace Atata.WebDriverSetup
 {
     internal class DriverVersionResolver
     {
-        private readonly string browserName;
+        private readonly string _browserName;
 
-        private readonly DriverSetupOptions options;
+        private readonly DriverSetupOptions _options;
 
-        private readonly IDriverSetupStrategy setupStrategy;
+        private readonly IDriverSetupStrategy _setupStrategy;
 
         internal DriverVersionResolver(
             string browserName,
             DriverSetupOptions options,
             IDriverSetupStrategy setupStrategy)
         {
-            this.browserName = browserName;
-            this.options = options;
-            this.setupStrategy = setupStrategy;
+            _browserName = browserName;
+            _options = options;
+            _setupStrategy = setupStrategy;
         }
 
         internal string ResolveByBrowserVersion(string version) =>
             GetCorrespondingVersionResolver().GetDriverVersionCorrespondingToBrowserVersion(version)
                 ?? throw new DriverSetupException(
-                    $"Failed to find {browserName} driver version corresponding to browser {version} version.");
+                    $"Failed to find {_browserName} driver version corresponding to browser {version} version.");
 
         internal string ResolveLatestVersion() =>
             GetLatestVersionResolver().GetDriverLatestVersion()
                 ?? throw new DriverSetupException(
-                    $"Failed to find {browserName} driver latest version.");
+                    $"Failed to find {_browserName} driver latest version.");
 
         internal string ResolveCorrespondingOrLatestVersion() =>
             ResolveCorrespondingVersion()
@@ -36,7 +37,7 @@ namespace Atata.WebDriverSetup
 
         private string ResolveCorrespondingVersion()
         {
-            string installedVersion = (setupStrategy as IGetsInstalledBrowserVersion)
+            string installedVersion = (_setupStrategy as IGetsInstalledBrowserVersion)
                 ?.GetInstalledBrowserVersion();
 
             return installedVersion != null
@@ -46,40 +47,40 @@ namespace Atata.WebDriverSetup
 
         private IGetsDriverLatestVersion GetLatestVersionResolver()
         {
-            if (setupStrategy is IGetsDriverLatestVersion resolver)
+            if (_setupStrategy is IGetsDriverLatestVersion resolver)
             {
-                return options.UseVersionCache
+                return _options.UseVersionCache
                     ? new CachedDriverLatestVersionResolver(
                         resolver,
                         GetDriverVersionCache(),
-                        options.LatestVersionCheckInterval)
+                        _options.LatestVersionCheckInterval)
                     : resolver;
             }
             else
             {
                 throw new DriverSetupException(
-                    $"Cannot get {browserName} driver latest version as " +
-                    $"{setupStrategy.GetType().FullName} doesn't support that feature. " +
+                    $"Cannot get {_browserName} driver latest version as " +
+                    $"{_setupStrategy.GetType().FullName} doesn't support that feature. " +
                     $"It should implement {typeof(IGetsDriverLatestVersion).FullName}.");
             }
         }
 
         private IGetsDriverVersionCorrespondingToBrowserVersion GetCorrespondingVersionResolver()
         {
-            if (setupStrategy is IGetsDriverVersionCorrespondingToBrowserVersion resolver)
+            if (_setupStrategy is IGetsDriverVersionCorrespondingToBrowserVersion resolver)
             {
-                return options.UseVersionCache
+                return _options.UseVersionCache
                     ? new CachedDriverVersionCorrespondingToBrowserVersionResolver(
                         resolver,
                         GetDriverVersionCache(),
-                        options.SpecificVersionCheckInterval)
+                        _options.SpecificVersionCheckInterval)
                     : resolver;
             }
             else
             {
                 throw new DriverSetupException(
-                    $"Cannot get {browserName} driver version corresponding to browser version as " +
-                    $"{setupStrategy.GetType().Name} doesn't support that feature. " +
+                    $"Cannot get {_browserName} driver version corresponding to browser version as " +
+                    $"{_setupStrategy.GetType().Name} doesn't support that feature. " +
                     $"It should implement {typeof(IGetsDriverVersionCorrespondingToBrowserVersion).FullName}.");
             }
         }
@@ -88,8 +89,8 @@ namespace Atata.WebDriverSetup
         {
             return new XmlFileDriverVersionCache(
                 Path.Combine(
-                    options.StorageDirectoryPath,
-                    browserName.Replace(" ", null).ToLower(),
+                    _options.StorageDirectoryPath,
+                    _browserName.Replace(" ", null).ToLower(CultureInfo.InvariantCulture),
                     "versioncache.xml"));
         }
     }

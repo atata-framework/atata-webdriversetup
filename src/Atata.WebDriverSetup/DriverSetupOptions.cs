@@ -10,9 +10,9 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public class DriverSetupOptions
     {
-        private readonly DriverSetupOptions baseOptions;
+        private readonly DriverSetupOptions _baseOptions;
 
-        private readonly Dictionary<string, object> optionValues = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _optionValues = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DriverSetupOptions"/> class.
@@ -20,7 +20,7 @@ namespace Atata.WebDriverSetup
         /// <param name="baseOptions">The base options.</param>
         public DriverSetupOptions(DriverSetupOptions baseOptions = null)
         {
-            this.baseOptions = baseOptions;
+            _baseOptions = baseOptions;
 
             if (baseOptions is null)
             {
@@ -145,10 +145,10 @@ namespace Atata.WebDriverSetup
         /// <param name="optionName">Name of the option.</param>
         /// <returns>The option value or default value.</returns>
         protected T GetOption<T>(string optionName) =>
-            optionValues.TryGetValue(optionName, out object value)
+            _optionValues.TryGetValue(optionName, out object value)
                 ? (T)value
-                : baseOptions != null
-                    ? baseOptions.GetOption<T>(optionName)
+                : _baseOptions != null
+                    ? _baseOptions.GetOption<T>(optionName)
                     : default;
 
         /// <summary>
@@ -157,6 +157,6 @@ namespace Atata.WebDriverSetup
         /// <param name="optionName">Name of the option.</param>
         /// <param name="value">The value to set.</param>
         protected void SetOption(string optionName, object value) =>
-            optionValues[optionName] = value;
+            _optionValues[optionName] = value;
     }
 }

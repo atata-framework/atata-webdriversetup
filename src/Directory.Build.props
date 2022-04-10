@@ -11,12 +11,16 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <NoWarn>$(NoWarn);IDT001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
     <PackageReference Include="SauceControl.InheritDoc" Version="1.2.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

@@ -66,7 +66,7 @@ namespace Atata.WebDriverSetup
                 if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))
                     Directory.CreateDirectory(Path.GetDirectoryName(destinationFilePath));
 
-                if (!entryName.Equals("./", StringComparison.InvariantCulture))
+                if (!entryName.Equals("./", StringComparison.Ordinal))
                 {
                     using (FileStream fileStream = File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write))
                     {
