@@ -46,11 +46,11 @@ namespace Atata.WebDriverSetup
             new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName()}");
 
         private static string GetDriverDownloadFileName() =>
-            OSInfo.IsLinux
-                ? "chromedriver_linux64.zip"
+            OSInfo.IsWindows
+                ? "chromedriver_win32.zip"
                 : OSInfo.IsOSX
-                ? "chromedriver_mac64.zip"
-                : "chromedriver_win32.zip";
+                    ? "chromedriver_mac64.zip"
+                    : "chromedriver_linux64.zip";
 
         /// <inheritdoc/>
         public string GetInstalledBrowserVersion() =>
@@ -58,9 +58,9 @@ namespace Atata.WebDriverSetup
                 ? AppVersionDetector.GetFromProgramFiles(@"Google\Chrome\Application\chrome.exe")
                     ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Google\Chrome")
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("chrome.exe")
-                : OSInfo.IsLinux
-                    ? AppVersionDetector.GetThroughCli("google-chrome", "--product-version")
-                    : AppVersionDetector.GetThroughOSXApplicationCli("Google Chrome");
+                : OSInfo.IsOSX
+                    ? AppVersionDetector.GetThroughOSXApplicationCli("Google Chrome")
+                    : AppVersionDetector.GetThroughCli("google-chrome", "--product-version");
 
         /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)

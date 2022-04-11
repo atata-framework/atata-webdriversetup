@@ -26,11 +26,11 @@
         {
             string commonNamePart = $"geckodriver-v{version}-";
 
-            return OSInfo.IsOSX
-                ? $"{commonNamePart}macos.tar.gz"
-                : OSInfo.IsLinux
-                    ? $"{commonNamePart}linux{architecture.GetBits()}.tar.gz"
-                    : $"{commonNamePart}win{architecture.GetBits()}.zip";
+            return OSInfo.IsWindows
+                ? $"{commonNamePart}win{architecture.GetBits()}.zip"
+                : OSInfo.IsOSX
+                    ? $"{commonNamePart}macos.tar.gz"
+                    : $"{commonNamePart}linux{architecture.GetBits()}.tar.gz";
         }
     }
 }

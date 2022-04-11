@@ -24,13 +24,13 @@
         /// <inheritdoc/>
         protected override string GetDriverDownloadFileName(string version, Architecture architecture)
         {
-            string commonNamePart = $"operadriver_";
+            const string commonNamePart = "operadriver_";
 
-            return OSInfo.IsOSX
-                ? $"{commonNamePart}mac64.zip"
-                : OSInfo.IsLinux
-                    ? $"{commonNamePart}linux64.zip"
-                    : $"{commonNamePart}win{architecture.GetBits()}.zip";
+            return OSInfo.IsWindows
+                ? $"{commonNamePart}win{architecture.GetBits()}.zip"
+                : OSInfo.IsOSX
+                    ? $"{commonNamePart}mac64.zip"
+                    : $"{commonNamePart}linux64.zip";
         }
     }
 }
