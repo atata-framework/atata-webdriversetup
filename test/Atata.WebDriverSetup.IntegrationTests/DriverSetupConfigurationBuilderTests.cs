@@ -6,7 +6,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
     {
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
-        [TestCase(BrowserNames.Edge, ExcludePlatform = Platforms.Linux)]
+        [TestCase(BrowserNames.Edge)]
         [TestCase(BrowserNames.Opera)]
         [TestCase(BrowserNames.InternetExplorer, IncludePlatform = Platforms.Windows)]
         public void SetUp_WithAutoVersion(string browserName)
@@ -37,7 +37,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome)]
         [TestCase(BrowserNames.Firefox)]
-        [TestCase(BrowserNames.Edge, ExcludePlatform = Platforms.Linux)]
+        [TestCase(BrowserNames.Edge)]
         [TestCase(BrowserNames.Opera)]
         [TestCase(BrowserNames.InternetExplorer, IncludePlatform = Platforms.Windows)]
         public void SetUp_WithLatestVersion(string browserName)
@@ -52,7 +52,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome, "87.0.4280.88")]
         [TestCase(BrowserNames.Firefox, "0.28.0")]
-        [TestCase(BrowserNames.Edge, "89.0.774.4", ExcludePlatform = Platforms.Linux)]
+        [TestCase(BrowserNames.Edge, "100.0.1185.36")]
         [TestCase(BrowserNames.Opera, "86.0.4240.80")]
         [TestCase(BrowserNames.InternetExplorer, "3.141.59", IncludePlatform = Platforms.Windows)]
         public void SetUp_WithVersion(string browserName, string version)
@@ -66,7 +66,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
         [TestCase(BrowserNames.Chrome, "87")]
         [TestCase(BrowserNames.Chrome, "87.0.4280")]
-        [TestCase(BrowserNames.Edge, "89.0.774.4", ExcludePlatform = Platforms.Linux)]
+        [TestCase(BrowserNames.Edge, "100.0.1185.36")]
         public void SetUp_ByBrowserVersion(string browserName, string version)
         {
             var result = DriverSetup.Configure(browserName)

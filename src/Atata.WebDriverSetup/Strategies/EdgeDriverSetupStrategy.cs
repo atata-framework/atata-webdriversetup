@@ -42,14 +42,12 @@ namespace Atata.WebDriverSetup
         public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
             new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}");
 
-        private static string GetDriverDownloadFileName(Architecture architecture)
-        {
-            return OSInfo.IsOSX
-                ? "edgedriver_mac64.zip"
-                : OSInfo.IsWindows
-                    ? $"edgedriver_win{architecture.GetBits()}.zip"
-                    : throw new DriverSetupException("Linux OS is currently unsupported for a driver setup.");
-        }
+        private static string GetDriverDownloadFileName(Architecture architecture) =>
+            OSInfo.IsWindows
+                ? $"edgedriver_win{architecture.GetBits()}.zip"
+                : OSInfo.IsOSX
+                    ? "edgedriver_mac64.zip"
+                    : "edgedriver_linux64.zip";
 
         /// <inheritdoc/>
         public string GetInstalledBrowserVersion() =>
