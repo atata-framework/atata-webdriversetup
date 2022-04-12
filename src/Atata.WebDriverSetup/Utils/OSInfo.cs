@@ -21,7 +21,7 @@ namespace Atata.WebDriverSetup
             RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         /// <summary>
-        /// Gets a value indicating whether the current OS is MacOS.
+        /// Gets a value indicating whether the current OS is macOS.
         /// </summary>
         public static bool IsOSX =>
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
