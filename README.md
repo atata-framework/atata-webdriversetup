@@ -38,7 +38,7 @@ Basically, it provides functionality similar to Java `WebDriverManager`.
 ## Features
 
 - Sets up drivers for browsers: Chrome, Firefox, Edge, Internet Explorer and Opera.
-- Supports Windows, Linux and MacOS platforms.
+- Supports Windows, Linux and macOS platforms.
 - Can download latest or specific driver versions.
 - Can auto-detect locally installed browser version and download corresponding driver version.
 - Caches the used driver versions.
