@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
 - Add support of Edge driver on Linux.
+
+### Changed
+- Upgrade Atata.Cli package to v2.0.0.
 
 ## [1.2.1] - 2021-10-26
 
@@ -21,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- #7 Add `Atata.Cli` package reference.
+- #7 Add Atata.Cli package reference.
 - #8 Add functionality of installed Chrome version detection for Linux and macOS.
 
 ## [1.1.0] - 2021-02-22
