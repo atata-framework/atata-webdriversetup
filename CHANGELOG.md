@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2022-05-24
+
+### Added
+- Add `bool UseMutex` option to use mutex for driver setup sync
+  and `WithMutex(bool isEnabled)` configuration method.
+  This functionality is disabled by default.
+
 ## [2.0.0] - 2022-05-11
 
 ### Added

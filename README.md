@@ -282,6 +282,9 @@ DriverSetup.ConfigureChrome()
   The default value is `Architecture.Auto`.
 - **`WithProxy(IWebProxy proxy)`**\
   Sets the web proxy.
+- **`WithMutex(bool isEnabled)`**\
+  Sets a value indicating whether to use mutex to sync driver setup across machine..
+  The default value is `true`.
 - **`WithVersionCache(bool isEnabled)`**\
   Sets a value indicating whether to use version cache.
   The default value is `true`.

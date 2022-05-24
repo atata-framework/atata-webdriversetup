@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Atata.WebDriverSetup
@@ -100,28 +101,67 @@ namespace Atata.WebDriverSetup
         {
             if (BuildingContext.IsEnabled)
             {
-                IHttpRequestExecutor httpRequestExecutor = CreateHttpRequestExecutor();
-
-                IDriverSetupStrategy setupStrategy = _driverSetupStrategyFactory.Invoke(httpRequestExecutor);
-
-                string driverVersion = ResolveDriverVersion(setupStrategy, BuildingContext.Version);
-
-                DriverSetupExecutor setupExecutor = new DriverSetupExecutor(
-                    BrowserName,
-                    BuildingContext,
-                    setupStrategy,
-                    httpRequestExecutor);
-
-                DriverSetupResult result = setupExecutor.SetUp(driverVersion);
-
-                DriverSetup.RemovePendingConfiguration(this);
-
-                return result;
+                return BuildingContext.UseMutex
+                    ? ExecuteSetUpUsingMutex()
+                    : ExecuteSetUp();
             }
             else
             {
                 return null;
             }
+        }
+
+        private DriverSetupResult ExecuteSetUpUsingMutex()
+        {
+            const int timeoutToWait = 600_000;
+            string mutexId = $@"Global\{{50E4E9F8-971F-440E-B7BE-D4B584350529}}-{BrowserName.ToLowerInvariant()}";
+
+            using (var mutex = new Mutex(false, mutexId, out _))
+            {
+                var hasHandle = false;
+                try
+                {
+                    try
+                    {
+                        hasHandle = mutex.WaitOne(timeoutToWait, false);
+
+                        if (!hasHandle)
+                            throw new TimeoutException("Timeout waiting for driver setup mutex.");
+                    }
+                    catch (AbandonedMutexException)
+                    {
+                        hasHandle = true;
+                    }
+
+                    return ExecuteSetUp();
+                }
+                finally
+                {
+                    if (hasHandle)
+                        mutex.ReleaseMutex();
+                }
+            }
+        }
+
+        private DriverSetupResult ExecuteSetUp()
+        {
+            IHttpRequestExecutor httpRequestExecutor = CreateHttpRequestExecutor();
+
+            IDriverSetupStrategy setupStrategy = _driverSetupStrategyFactory.Invoke(httpRequestExecutor);
+
+            string driverVersion = ResolveDriverVersion(setupStrategy, BuildingContext.Version);
+
+            DriverSetupExecutor setupExecutor = new DriverSetupExecutor(
+                BrowserName,
+                BuildingContext,
+                setupStrategy,
+                httpRequestExecutor);
+
+            DriverSetupResult result = setupExecutor.SetUp(driverVersion);
+
+            DriverSetup.RemovePendingConfiguration(this);
+
+            return result;
         }
 
         /// <inheritdoc cref="SetUp"/>

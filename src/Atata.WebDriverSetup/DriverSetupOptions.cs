@@ -25,6 +25,7 @@ namespace Atata.WebDriverSetup
             if (baseOptions is null)
             {
                 StorageDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
+                UseMutex = false;
                 UseVersionCache = true;
 
                 LatestVersionCheckInterval = TimeSpan.FromHours(2);
@@ -65,6 +66,16 @@ namespace Atata.WebDriverSetup
         {
             get => GetOption<IWebProxy>(nameof(Proxy));
             set => SetOption(nameof(Proxy), value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use mutex to sync driver setup across machine.
+        /// The default value is <see langword="false"/>.
+        /// </summary>
+        public bool UseMutex
+        {
+            get => GetOption<bool>(nameof(UseMutex));
+            set => SetOption(nameof(UseMutex), value);
         }
 
         /// <summary>

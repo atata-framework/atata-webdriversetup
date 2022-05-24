@@ -76,6 +76,18 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
+        /// Sets a value indicating whether to use mutex to sync driver setup across machine.
+        /// The default value is <see langword="false"/>.
+        /// </summary>
+        /// <param name="isEnabled">Whether to use mutex.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithMutex(bool isEnabled)
+        {
+            BuildingContext.UseMutex = isEnabled;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
         /// Sets a value indicating whether to use version cache.
         /// The default value is <see langword="true"/>.
         /// </summary>
