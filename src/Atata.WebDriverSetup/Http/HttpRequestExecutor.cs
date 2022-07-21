@@ -13,10 +13,8 @@ namespace Atata.WebDriverSetup
         /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
         /// </summary>
         /// <param name="proxy">The proxy.</param>
-        public HttpRequestExecutor(IWebProxy proxy = null)
-        {
+        public HttpRequestExecutor(IWebProxy proxy = null) =>
             _proxy = proxy;
-        }
 
         /// <inheritdoc/>
         public string DownloadString(string url)
@@ -67,9 +65,7 @@ namespace Atata.WebDriverSetup
                 AllowAutoRedirect = false,
                 CheckCertificateRevocationList = true
             };
-            HttpClient httpClient = new HttpClient(httpClientHandler, true);
-
-            return httpClient;
+            return new HttpClient(httpClientHandler, true);
         }
     }
 }
