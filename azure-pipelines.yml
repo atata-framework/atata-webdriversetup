@@ -1,6 +1,6 @@
 variables:
   buildConfiguration: 'Release'
-  resultsDirectoryPath: 'test/Atata.WebDriverSetup.IntegrationTests/bin/$(buildConfiguration)/netcoreapp3.1/results'
+  resultsDirectoryPath: 'test/Atata.WebDriverSetup.IntegrationTests/bin/$(buildConfiguration)/net6.0/results'
 
 jobs:
 - job: BuildAndRunCodeAnalysis
