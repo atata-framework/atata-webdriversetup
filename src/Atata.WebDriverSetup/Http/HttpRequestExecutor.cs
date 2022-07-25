@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 
@@ -19,25 +20,27 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc/>
         public string DownloadString(string url)
         {
-            using (var webClient = CreateWebClient())
+            using (HttpClient client = CreateHttpClientWithAutoRedirect(true))
             {
-                return webClient.DownloadString(url);
+                return client.GetStringAsync(url).GetAwaiter().GetResult();
             }
         }
 
         /// <inheritdoc/>
         public void DownloadFile(string url, string filePath)
         {
-            using (var webClient = CreateWebClient())
+            using (HttpClient client = CreateHttpClientWithAutoRedirect(true))
+            using (HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult())
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
             {
-                webClient.DownloadFile(url, filePath);
+                response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
             }
         }
 
         /// <inheritdoc/>
         public Uri GetRedirectUrl(string url)
         {
-            using (HttpClient client = CreateHttpClient())
+            using (HttpClient client = CreateHttpClientWithAutoRedirect(false))
             using (HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult())
             {
                 if (response.StatusCode != HttpStatusCode.Found)
@@ -47,22 +50,12 @@ namespace Atata.WebDriverSetup
             }
         }
 
-        private WebClient CreateWebClient()
-        {
-            WebClient webClient = new WebClient();
-
-            if (_proxy != null)
-                webClient.Proxy = _proxy;
-
-            return webClient;
-        }
-
-        private HttpClient CreateHttpClient()
+        private HttpClient CreateHttpClientWithAutoRedirect(bool allowAutoRedirect)
         {
             HttpClientHandler httpClientHandler = new HttpClientHandler
             {
                 Proxy = _proxy,
-                AllowAutoRedirect = false,
+                AllowAutoRedirect = allowAutoRedirect,
                 CheckCertificateRevocationList = true
             };
             return new HttpClient(httpClientHandler, true);
