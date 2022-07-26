@@ -16,24 +16,11 @@ namespace Atata.WebDriverSetup
         internal static void ExtractTarGz(Stream stream, string destinationDirectoryPath)
         {
             using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
+            using (var memoryStream = new MemoryStream())
             {
-                const int chunkSize = 4096;
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    byte[] buffer = new byte[chunkSize];
-                    int read;
-
-                    do
-                    {
-                        read = gzip.Read(buffer, 0, chunkSize);
-                        memoryStream.Write(buffer, 0, read);
-                    }
-                    while (read == chunkSize);
-
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    ExtractTar(memoryStream, destinationDirectoryPath);
-                }
+                gzip.CopyTo(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                ExtractTar(memoryStream, destinationDirectoryPath);
             }
         }
 
