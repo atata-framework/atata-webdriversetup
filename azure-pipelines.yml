@@ -20,9 +20,6 @@ jobs:
   pool:
     vmImage: windows-latest
   steps:
-  - task: UseDotNet@2
-    inputs:
-      version: '6.0.x'
   - task: DotNetCoreCLI@2
     displayName: Build solution
     inputs:
@@ -31,7 +28,7 @@ jobs:
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
-    timeoutInMinutes: 30
+    timeoutInMinutes: 5
     inputs:
       command: test
       projects: '**/*Tests.csproj'
@@ -48,9 +45,6 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-  - task: UseDotNet@2
-    inputs:
-      version: '6.0.x'
   - task: DotNetCoreCLI@2
     displayName: Build solution
     inputs:
@@ -59,7 +53,7 @@ jobs:
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
-    timeoutInMinutes: 30
+    timeoutInMinutes: 5
     inputs:
       command: test
       projects: '**/*Tests.csproj'
@@ -76,9 +70,6 @@ jobs:
   pool:
     vmImage: macOS-latest
   steps:
-  - task: UseDotNet@2
-    inputs:
-      version: '6.0.x'
   - task: DotNetCoreCLI@2
     displayName: Build solution
     inputs:
@@ -87,7 +78,7 @@ jobs:
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
-    timeoutInMinutes: 30
+    timeoutInMinutes: 5
     inputs:
       command: test
       projects: '**/*Tests.csproj'
