@@ -31,9 +31,25 @@ namespace Atata.WebDriverSetup
                 ?? throw new DriverSetupException(
                     $"Failed to find {_browserName} driver latest version.");
 
-        internal string ResolveCorrespondingOrLatestVersion() =>
-            ResolveCorrespondingVersion()
-                ?? ResolveLatestVersion();
+        internal string ResolveCorrespondingOrLatestVersion()
+        {
+            string version = null;
+            try
+            {
+                version = ResolveCorrespondingVersion();
+            }
+            catch (DriverSetupException) { }
+
+            if (!(version is null))
+                return version;
+            try
+            {
+                version = ResolveLatestVersion();
+            }
+            catch (DriverSetupException) { }
+
+            return version;
+        }
 
         private string ResolveCorrespondingVersion()
         {
