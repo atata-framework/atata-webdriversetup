@@ -4,7 +4,8 @@
     /// Represents the Firefox/Gecko driver (<c>geckodriver.exe</c>/<c>geckodriver</c>) setup strategy.
     /// </summary>
     public class FirefoxDriverSetupStrategy :
-        GitHubRepositoryBasedDriverSetupStrategy
+        GitHubRepositoryBasedDriverSetupStrategy,
+        IGetsInstalledBrowserVersion
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FirefoxDriverSetupStrategy"/> class.
@@ -20,6 +21,16 @@
             OSInfo.IsWindows
                 ? "geckodriver.exe"
                 : "geckodriver";
+
+        /// <inheritdoc/>
+        public string GetInstalledBrowserVersion() =>
+            OSInfo.IsWindows
+                ? AppVersionDetector.GetFromProgramFiles(@"Mozilla Firefox\firefox.exe")
+                    ?? AppVersionDetector.GetFromApplicationKeyInRegistry(@"Mozilla\Mozilla Firefox")
+                    ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
+                : OSInfo.IsOSX
+                    ? AppVersionDetector.GetThroughOSXApplicationCli("Mozilla Firefox")
+                    : AppVersionDetector.GetThroughCli("firefox", "--version");
 
         /// <inheritdoc/>
         protected override string GetDriverDownloadFileName(string version, Architecture architecture)

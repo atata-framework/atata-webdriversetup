@@ -61,6 +61,15 @@ namespace Atata.WebDriverSetup
                 "version");
 
         /// <summary>
+        /// Gets the application version from application key in registry.
+        /// </summary>
+        /// <param name="applicationRelativePathInSoftwareSection">The application relative path in software section.</param>
+        /// <returns>The version or <see langword="null"/>.</returns>
+        public static string GetFromApplicationKeyInRegistry(string applicationRelativePathInSoftwareSection) =>
+            RegistryUtils.GetValue(
+                $@"HKEY_LOCAL_MACHINE\Software\{applicationRelativePathInSoftwareSection}");
+
+        /// <summary>
         /// Gets the application version by application path in registry.
         /// </summary>
         /// <param name="applicationName">Name of the application.</param>
