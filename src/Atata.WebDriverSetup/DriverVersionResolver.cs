@@ -38,7 +38,10 @@ namespace Atata.WebDriverSetup
             {
                 version = ResolveCorrespondingVersion();
             }
-            catch (DriverSetupException) { }
+            catch (DriverSetupException)
+            {
+                // Ignore, an exception is thrown if the functionality is not supported
+            }
 
             if (!(version is null))
                 return version;
@@ -46,7 +49,10 @@ namespace Atata.WebDriverSetup
             {
                 version = ResolveLatestVersion();
             }
-            catch (DriverSetupException) { }
+            catch (DriverSetupException)
+            {
+                // Ignore, an exception is thrown if the functionality is not supported
+            }
 
             return version;
         }
