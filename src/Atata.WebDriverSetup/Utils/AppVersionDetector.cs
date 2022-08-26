@@ -109,7 +109,7 @@ namespace Atata.WebDriverSetup
             try
             {
                 var output = new ProgramCli(fileNameOrCommand).Execute(arguments).Output;
-                output = postprocess?.Invoke(output);
+                output = postprocess?.Invoke(output) ?? output;
                 return output;
             }
             catch
