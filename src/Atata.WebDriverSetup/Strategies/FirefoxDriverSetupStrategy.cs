@@ -35,7 +35,7 @@ namespace Atata.WebDriverSetup
                     : AppVersionDetector.GetThroughCli(
                         "firefox",
                         "--version",
-                        (output) => new Regex(@"(?:^|\s)\d\S+").Match(output).Value);
+                        (output) => new Regex(@"(?<=^|\s)\d\S+").Match(output).Value);
 
         /// <inheritdoc/>
         protected override string GetDriverDownloadFileName(string version, Architecture architecture)
