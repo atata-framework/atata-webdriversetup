@@ -1,4 +1,6 @@
-﻿namespace Atata.WebDriverSetup
+﻿using System.Text.RegularExpressions;
+
+namespace Atata.WebDriverSetup
 {
     /// <summary>
     /// Represents the Firefox/Gecko driver (<c>geckodriver.exe</c>/<c>geckodriver</c>) setup strategy.
@@ -30,7 +32,10 @@
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
                 : OSInfo.IsOSX
                     ? AppVersionDetector.GetThroughOSXApplicationCli("Mozilla Firefox")
-                    : AppVersionDetector.GetThroughCli("firefox", "--version");
+                    : AppVersionDetector.GetThroughCli(
+                        "firefox",
+                        "--version",
+                        (output) => new Regex(@"(?:^|\s)\d\S+").Match(output).Value);
 
         /// <inheritdoc/>
         protected override string GetDriverDownloadFileName(string version, Architecture architecture)

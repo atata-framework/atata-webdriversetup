@@ -102,12 +102,15 @@ namespace Atata.WebDriverSetup
         /// </summary>
         /// <param name="fileNameOrCommand">The file name or command.</param>
         /// <param name="arguments">The command arguments.</param>
+        /// <param name="postprocess">Output postprocessing code if needed.</param>
         /// <returns>The version or <see langword="null"/>.</returns>
-        public static string GetThroughCli(string fileNameOrCommand, string arguments)
+        public static string GetThroughCli(string fileNameOrCommand, string arguments, Func<string, string> postprocess = null)
         {
             try
             {
-                return new ProgramCli(fileNameOrCommand).Execute(arguments).Output;
+                var output = new ProgramCli(fileNameOrCommand).Execute(arguments).Output;
+                output = postprocess?.Invoke(output);
+                return output;
             }
             catch
             {
