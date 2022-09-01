@@ -28,10 +28,8 @@ namespace Atata.WebDriverSetup
         /// </summary>
         /// <param name="browserVersion">The browser version.</param>
         /// <returns>The version string.</returns>
-        public static string CreateCorrespondingToBrowser(string browserVersion)
-        {
-            return $"{BrowserVersionPrefix}{browserVersion}";
-        }
+        public static string CreateCorrespondingToBrowser(string browserVersion) =>
+            $"{BrowserVersionPrefix}{browserVersion}";
 
         /// <summary>
         /// Tries to extract browser version from version string.

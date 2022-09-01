@@ -23,10 +23,8 @@ namespace Atata.WebDriverSetup
         /// Initializes a new instance of the <see cref="EdgeDriverSetupStrategy"/> class.
         /// </summary>
         /// <param name="httpRequestExecutor">The HTTP request executor.</param>
-        public EdgeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
-        {
+        public EdgeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor) =>
             _httpRequestExecutor = httpRequestExecutor;
-        }
 
         /// <inheritdoc/>
         public string DriverBinaryFileName { get; } =

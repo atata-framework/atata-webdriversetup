@@ -31,28 +31,22 @@ namespace Atata.WebDriverSetup
         }
 
         /// <inheritdoc/>
-        public void DownloadFile(string url, string filePath)
-        {
+        public void DownloadFile(string url, string filePath) =>
             ExecuteWithRetries(() =>
             {
                 _httpRequestExecutor.DownloadFile(url, filePath);
                 return true;
             });
-        }
 
         /// <inheritdoc/>
-        public string DownloadString(string url)
-        {
-            return ExecuteWithRetries(() =>
+        public string DownloadString(string url) =>
+            ExecuteWithRetries(() =>
                 _httpRequestExecutor.DownloadString(url));
-        }
 
         /// <inheritdoc/>
-        public Uri GetRedirectUrl(string url)
-        {
-            return ExecuteWithRetries(() =>
+        public Uri GetRedirectUrl(string url) =>
+            ExecuteWithRetries(() =>
                 _httpRequestExecutor.GetRedirectUrl(url));
-        }
 
         private TResult ExecuteWithRetries<TResult>(Func<TResult> operation)
         {

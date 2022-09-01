@@ -26,10 +26,8 @@ namespace Atata.WebDriverSetup
         /// Initializes a new instance of the <see cref="ChromeDriverSetupStrategy"/> class.
         /// </summary>
         /// <param name="httpRequestExecutor">The HTTP request executor.</param>
-        public ChromeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
-        {
+        public ChromeDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor) =>
             _httpRequestExecutor = httpRequestExecutor;
-        }
 
         /// <inheritdoc/>
         public string DriverBinaryFileName { get; } =

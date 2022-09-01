@@ -19,11 +19,9 @@ namespace Atata.WebDriverSetup
         /// </summary>
         /// <param name="applicationName">Name of the application.</param>
         /// <returns>The path or <see langword="null"/>.</returns>
-        public static string GetApplicationPath(string applicationName)
-        {
-            return GetValue(string.Format(CurrentUserRegistryAppPathFormat, applicationName))
+        public static string GetApplicationPath(string applicationName) =>
+            GetValue(string.Format(CurrentUserRegistryAppPathFormat, applicationName))
                 ?? GetValue(string.Format(LocalMachineRegistryAppPathFormat, applicationName));
-        }
 
         /// <summary>
         /// Gets the registry value by key name and optionally by value name.

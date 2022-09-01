@@ -16,10 +16,8 @@ namespace Atata.WebDriverSetup
         /// Initializes a new instance of the <see cref="DriverSetupOptionsBuilder{TBuilder, TContext}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        protected DriverSetupOptionsBuilder(TContext context)
-        {
+        protected DriverSetupOptionsBuilder(TContext context) =>
             BuildingContext = context.CheckNotNull(nameof(context));
-        }
 
         /// <summary>
         /// Gets the building context.

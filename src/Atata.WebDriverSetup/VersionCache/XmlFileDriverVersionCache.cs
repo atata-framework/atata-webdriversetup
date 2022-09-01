@@ -29,10 +29,8 @@ namespace Atata.WebDriverSetup
         /// Initializes a new instance of the <see cref="XmlFileDriverVersionCache"/> class.
         /// </summary>
         /// <param name="filePath">The file path.</param>
-        public XmlFileDriverVersionCache(string filePath)
-        {
+        public XmlFileDriverVersionCache(string filePath) =>
             _filePath = filePath;
-        }
 
         /// <inheritdoc/>
         public string GetOrAddLatest(DateTime minimumAcceptableTimestamp, Func<string> latestVersionResolveFunction)

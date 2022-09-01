@@ -85,13 +85,11 @@ namespace Atata.WebDriverSetup
             }
         }
 
-        private IDriverVersionCache GetDriverVersionCache()
-        {
-            return new XmlFileDriverVersionCache(
+        private IDriverVersionCache GetDriverVersionCache() =>
+            new XmlFileDriverVersionCache(
                 Path.Combine(
                     _options.StorageDirectoryPath,
                     _browserName.Replace(" ", null).ToLower(CultureInfo.InvariantCulture),
                     "versioncache.xml"));
-        }
     }
 }
