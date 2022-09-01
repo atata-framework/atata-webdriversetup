@@ -47,7 +47,7 @@ namespace Atata.WebDriverSetup
         /// <returns>The version or <see langword="null"/>.</returns>
         public static string GetFromExecutableFileVersion(string filePath) =>
             File.Exists(filePath)
-                ? FileVersionInfo.GetVersionInfo(filePath).FileVersion
+                ? GetFileVersion(filePath)
                 : null;
 
         /// <summary>
@@ -71,7 +71,19 @@ namespace Atata.WebDriverSetup
 
             return string.IsNullOrEmpty(applicationPath)
                 ? null
-                : FileVersionInfo.GetVersionInfo(applicationPath).FileVersion;
+                : GetFileVersion(applicationPath);
+        }
+
+        private static string GetFileVersion(string filePath)
+        {
+            try
+            {
+                return FileVersionInfo.GetVersionInfo(filePath).FileVersion;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
