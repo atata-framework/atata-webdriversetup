@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Installed Firefox browser version auto-detect and resolve of corresponding driver version.
+- Auto-detect of installed Firefox browser version and resolve of corresponding driver version.
 
 ### Changed
 
