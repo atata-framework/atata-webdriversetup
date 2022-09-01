@@ -64,20 +64,20 @@ namespace Atata.WebDriverSetup.IntegrationTests
             AssertDriverIsSetUp(result, browserName, version);
         }
 
-        [TestCase(BrowserNames.Chrome, "87")]
-        [TestCase(BrowserNames.Chrome, "87.0.4280")]
-        [TestCase(BrowserNames.Edge, "100.0.1185.36")]
-        public void SetUp_ByBrowserVersion(string browserName, string version)
+        [TestCase(BrowserNames.Chrome, "87", "87")]
+        [TestCase(BrowserNames.Chrome, "87.0.4280", "87.0.4280")]
+        [TestCase(BrowserNames.Firefox, "101", "0.31.0")]
+        [TestCase(BrowserNames.Edge, "100.0.1185.36", "100.0.1185.36")]
+        public void SetUp_ByBrowserVersion(string browserName, string browserVersion, string driverVersion)
         {
             var result = DriverSetup.Configure(browserName)
-                .ByBrowserVersion(version)
+                .ByBrowserVersion(browserVersion)
                 .SetUp();
 
-            AssertDriverIsSetUp(result, browserName, version);
-            AssertVersionCache(browserName, version);
+            AssertDriverIsSetUp(result, browserName, driverVersion);
+            AssertVersionCache(browserName, browserVersion);
         }
 
-        [TestCase(BrowserNames.Firefox, "84")]
         [TestCase(BrowserNames.Opera, "73.0.3856.329")]
         [TestCase(BrowserNames.InternetExplorer, "11.0.0.4", IncludePlatform = Platforms.Windows)]
         public void SetUp_ByBrowserVersion_Unsupported(string browserName, string version)
