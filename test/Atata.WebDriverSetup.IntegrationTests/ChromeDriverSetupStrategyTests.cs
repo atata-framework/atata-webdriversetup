@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 
 namespace Atata.WebDriverSetup.IntegrationTests
@@ -7,15 +6,18 @@ namespace Atata.WebDriverSetup.IntegrationTests
     [TestFixture]
     public class ChromeDriverSetupStrategyTests
     {
+        private readonly ChromeDriverSetupStrategy _sut = new ChromeDriverSetupStrategy(
+            new HttpRequestExecutor());
+
         [Test]
-        public void GetInstalledBrowserVersion()
-        {
-            var sut = new ChromeDriverSetupStrategy(
-                Mock.Of<IHttpRequestExecutor>());
+        public void GetInstalledBrowserVersion() =>
+            _sut.GetInstalledBrowserVersion()
+                .Should().MatchRegex(@"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$");
 
-            string result = sut.GetInstalledBrowserVersion();
-
-            result.Should().MatchRegex(@"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$");
-        }
+        [TestCase("101.0.4951.41", ExpectedResult = "101.0.4951.41")]
+        [TestCase("97.0", ExpectedResult = "97.0.4692.71")]
+        [TestCase("94", ExpectedResult = "94.0.4606.113")]
+        public string GetDriverVersionCorrespondingToBrowserVersion(string version) =>
+            _sut.GetDriverVersionCorrespondingToBrowserVersion(version);
     }
 }
