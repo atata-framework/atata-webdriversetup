@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## Changed
+### Added
+
+- Installed Firefox browser version auto-detect and resolve of corresponding driver version.
+
+### Changed
 
 - Catch possible exceptions of `Registry.GetValue()` method call and return `null`.
 - Catch possible exceptions of `FileVersionInfo.GetVersionInfo()` method call and return `null`.
