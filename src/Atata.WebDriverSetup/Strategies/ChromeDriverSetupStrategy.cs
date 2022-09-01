@@ -65,6 +65,8 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
         {
+            browserVersion.CheckNotNullOrWhitespace(browserVersion);
+
             int browserVersionNumbersCount = VersionUtils.GetNumbersCount(browserVersion);
 
             string browserVersionToUse = browserVersionNumbersCount == 1
