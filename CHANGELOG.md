@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Catch possible exceptions of `Registry.GetValue()` method call and return `null`.
 - Catch possible exceptions of `FileVersionInfo.GetVersionInfo()` method call and return `null`.
 - Update `AppVersionDetector.GetThroughOSXApplicationCli` method to handle possible `null` result of `GetThroughCli` method.
+- Update `AppVersionDetector.GetThroughCli` method to trim result string.
 
 ## [2.3.0] - 2022-07-26
 

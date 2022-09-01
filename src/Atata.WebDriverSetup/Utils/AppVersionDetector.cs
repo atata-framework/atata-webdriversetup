@@ -110,7 +110,7 @@ namespace Atata.WebDriverSetup
         {
             try
             {
-                return new ProgramCli(fileNameOrCommand).Execute(arguments).Output;
+                return new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
             }
             catch
             {
