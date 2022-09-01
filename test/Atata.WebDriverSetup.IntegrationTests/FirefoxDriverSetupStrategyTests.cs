@@ -13,7 +13,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
         [Test]
         public void GetInstalledBrowserVersion() =>
             _sut.GetInstalledBrowserVersion()
-                .Should().MatchRegex(@"^[0-9]+\.[0-9]+\.[0-9]+$");
+                .Should().MatchRegex(@"^[0-9]+\.[0-9]+");
 
         [TestCase("100.0.0", ExpectedResult = "0.31.0")]
         [TestCase("80.0-beta", ExpectedResult = "0.30.0")]
