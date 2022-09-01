@@ -33,7 +33,14 @@ namespace Atata.WebDriverSetup
         /// <returns>The value or <see langword="null"/>.</returns>
         public static string GetValue(string keyName, string valueName = null)
         {
-            return Registry.GetValue(keyName, valueName, null) as string;
+            try
+            {
+                return Registry.GetValue(keyName, valueName, null) as string;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
