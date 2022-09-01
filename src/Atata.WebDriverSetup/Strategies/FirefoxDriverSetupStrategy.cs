@@ -43,7 +43,9 @@
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
                 : OSInfo.IsOSX
                     ? AppVersionDetector.GetThroughOSXApplicationCli("Firefox")
-                    : AppVersionDetector.GetThroughCli("firefox", "-v");
+                        ?.Replace("Mozilla Firefox ", null)
+                    : AppVersionDetector.GetThroughCli("firefox", "-v")
+                        ?.Replace("Mozilla Firefox ", null);
 
         /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)

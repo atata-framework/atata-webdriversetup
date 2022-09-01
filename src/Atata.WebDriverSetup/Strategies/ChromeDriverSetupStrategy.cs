@@ -60,6 +60,7 @@ namespace Atata.WebDriverSetup
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("chrome.exe")
                 : OSInfo.IsOSX
                     ? AppVersionDetector.GetThroughOSXApplicationCli("Google Chrome")
+                        ?.Replace("Google Chrome ", null)
                     : AppVersionDetector.GetThroughCli("google-chrome", "--product-version");
 
         /// <inheritdoc/>

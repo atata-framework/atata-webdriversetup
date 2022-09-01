@@ -95,9 +95,7 @@ namespace Atata.WebDriverSetup
         {
             string filePath = $"/Applications/{applicationName}.app/Contents/MacOS/{applicationName}";
 
-            string versionString = GetThroughCli(filePath, "--version");
-
-            return versionString?.Replace($"{applicationName} ", null);
+            return GetThroughCli(filePath, "--version");
         }
 
         /// <summary>
