@@ -15,8 +15,7 @@ namespace Atata.WebDriverSetup.IntegrationTests
 
             string result = sut.GetInstalledBrowserVersion();
 
-            result.Should().NotBeNullOrWhiteSpace();
-            result[0].Should().BeInRange('1', '9');
+            result.Should().MatchRegex(@"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$");
         }
     }
 }
