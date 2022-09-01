@@ -5,22 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## Changed
+
+- Catch possible exceptions of `Registry.GetValue()` method call and return `null`.
+- Update `AppVersionDetector.GetThroughOSXApplicationCli` method to handle possible `null` result of `GetThroughCli` method.
+
 ## [2.3.0] - 2022-07-26
 
 ### Changed
+
 - Update `HttpRequestExecutor` to use `HttpClient` instead of `WebClient`.
 
 ### Fixed
+
 - Fix unzipping of ".tar.gz" archives. Fixes Firefox driver setup for .NET 6.0 on Linux and macOS.
 
 ## [2.2.0] - 2022-07-21
 
 ### Changed
+
 - Upgrade Atata.Cli package to v2.1.0.
 
 ## [2.1.0] - 2022-05-24
 
 ### Added
+
 - Add `bool UseMutex` option to use mutex for driver setup sync
   and `WithMutex(bool isEnabled)` configuration method.
   This functionality is disabled by default.
@@ -28,9 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2022-05-11
 
 ### Added
+
 - Add support of Edge driver on Linux.
 
 ### Changed
+
 - Upgrade Atata.Cli package to v2.0.0.
 
 ## [1.2.1] - 2021-10-26

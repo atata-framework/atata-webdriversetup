@@ -85,7 +85,7 @@ namespace Atata.WebDriverSetup
 
             string versionString = GetThroughCli(filePath, "--version");
 
-            return versionString.Replace($"{applicationName} ", null);
+            return versionString?.Replace($"{applicationName} ", null);
         }
 
         /// <summary>
