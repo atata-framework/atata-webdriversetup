@@ -53,7 +53,10 @@ namespace Atata.WebDriverSetup
                 ? AppVersionDetector.GetFromProgramFiles(@"Microsoft\Edge\Application\msedge.exe")
                     ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Microsoft\Edge")
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("msedge.exe")
-                : null;
+                : (OSInfo.IsOSX
+                    ? AppVersionDetector.GetThroughOSXApplicationCli("Microsoft Edge")
+                    : AppVersionDetector.GetThroughCli("microsoft-edge", "--version"))
+                    ?.Replace("Microsoft Edge ", null);
 
         /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion) =>

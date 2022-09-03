@@ -41,11 +41,10 @@
                 ? AppVersionDetector.GetFromProgramFiles(@"Mozilla Firefox\firefox.exe")
                     ?? RegistryUtils.GetValue(@"HKEY_CURRENT_USER\Software\Mozilla\Mozilla Firefox")
                     ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
-                : OSInfo.IsOSX
+                : (OSInfo.IsOSX
                     ? AppVersionDetector.GetThroughOSXApplicationCli("Firefox")
-                        ?.Replace("Mozilla Firefox ", null)
-                    : AppVersionDetector.GetThroughCli("firefox", "-v")
-                        ?.Replace("Mozilla Firefox ", null);
+                    : AppVersionDetector.GetThroughCli("firefox", "-v"))
+                    ?.Replace("Mozilla Firefox ", null);
 
         /// <inheritdoc/>
         public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
