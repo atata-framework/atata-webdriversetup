@@ -279,6 +279,12 @@ namespace Atata.WebDriverSetup
             }
         }
 
+        internal static string GetInstalledBrowserVersion(string browserName) =>
+            s_browserDriverSetupDataMap.TryGetValue(browserName, out var driverSetupData)
+                ? (driverSetupData.StrategyFactory.Invoke(new HttpRequestExecutor()) as IGetsInstalledBrowserVersion)
+                    ?.GetInstalledBrowserVersion()
+                : null;
+
         private sealed class DriverSetupData
         {
             public DriverSetupData(

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Auto-detect of installed Firefox browser version and resolve of corresponding driver version.
+- Add `BrowserDetector` static class for a detection of browser installations.
 
 ### Changed
 
