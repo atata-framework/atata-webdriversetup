@@ -32,6 +32,9 @@ Basically, it provides functionality similar to Java `WebDriverManager`.
   - [Driver-Specific Configuration](#driver-specific-configuration)
   - [Configuration Methods](#configuration-methods)
 - [Feedback](#feedback)
+- [BrowserDetector](#browserdetector)
+  - [BrowserDetector Methods](#browserdetector-methods)
+  - [BrowserDetector Usage](#browserdetector-usage)
 - [SemVer](#semver)
 - [License](#license)
 
@@ -111,7 +114,7 @@ DriverSetup.AutoSetUp(BrowserNames.Chrome, BrowserNames.Edge);
 
 **Note:**
 If the version of browser cannot be detected automatically, latest driver version is used.
-Version auto-detection is currently supported only for Chrome and Edge browsers.
+Version auto-detection is currently supported for Chrome, Firefox and Edge browsers.
 
 ### Set Up Latest Version
 
@@ -145,10 +148,11 @@ DriverSetup.ConfigureChrome()
 ```
 
 **Note:**
-This feature is currently supported only for Chrome and Edge browsers.
+This feature is currently supported for Chrome, Firefox and Edge browsers.
 
 **Version format:**
 - Chrome: `"87"` or `"87.0.4280"`
+- Firefox: `"104"`, `"104.0"` or `"104.0.1"`
 - Edge: `"89.0.774.4"`
 
 ## DriverSetup Members
@@ -307,6 +311,50 @@ DriverSetup.ConfigureChrome()
   Sets a value indicating whether to add the driver directory path
   to environment "Path" variable.
   The default value is `true`.
+
+## BrowserDetector
+
+`BrowserDetector` - provides a set of static methods for a detection of browser installations.
+Browser detection is supported for Chrome, Firefox and Edge,
+so as a browser name the following constants can be used:
+
+- `BrowserNames.Chrome`
+- `BrowserNames.Firefox`
+- `BrowserNames.Edge`
+
+### BrowserDetector Methods
+
+- **`string GetInstalledBrowserVersion(string browserName)`**\
+  Gets the installed browser version by the browser name.
+- **`bool IsBrowserInstalled(string browserName)`**\
+  Determines whether the browser with the specified name is installed.
+- **`string GetFirstInstalledBrowserName(params string[] browserNames)`**\
+ Gets the name of the first installed browser among the `browserNames`.
+- **`string GetFirstInstalledBrowserName(IEnumerable<string> browserNames)`**\
+ Gets the name of the first installed browser among the `browserNames`.
+
+### BrowserDetector Usage
+
+#### Get First Installed Browser Name
+
+```cs
+string browserName = BrowserDetector.GetFirstInstalledBrowserName(
+    BrowserNames.Chrome,
+    BrowserNames.Firefox,
+    BrowserNames.Edge);
+```
+
+#### Is Browser Installed
+
+```cs
+bool isChromeInstalled = BrowserDetector.IsBrowserInstalled(BrowserNames.Chrome);
+```
+
+#### Get Installed Browser Version
+
+```cs
+string chromeVersion = BrowserDetector.GetInstalledBrowserVersion(BrowserNames.Chrome);
+```
 
 ## Feedback
 
