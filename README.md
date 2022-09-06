@@ -31,10 +31,10 @@ Basically, it provides functionality similar to Java `WebDriverManager`.
   - [Global Configuration](#global-configuration)
   - [Driver-Specific Configuration](#driver-specific-configuration)
   - [Configuration Methods](#configuration-methods)
-- [Feedback](#feedback)
 - [BrowserDetector](#browserdetector)
   - [BrowserDetector Methods](#browserdetector-methods)
   - [BrowserDetector Usage](#browserdetector-usage)
+- [Feedback](#feedback)
 - [SemVer](#semver)
 - [License](#license)
 
