@@ -2,7 +2,7 @@
 
 namespace Atata.WebDriverSetup
 {
-    internal class CachedDriverLatestVersionResolver : IGetsDriverLatestVersion
+    internal sealed class CachedDriverLatestVersionResolver : IGetsDriverLatestVersion
     {
         private readonly IGetsDriverLatestVersion _actualResolver;
 

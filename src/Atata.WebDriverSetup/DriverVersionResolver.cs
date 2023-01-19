@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Atata.WebDriverSetup
 {
-    internal class DriverVersionResolver
+    internal sealed class DriverVersionResolver
     {
         private readonly string _browserName;
 

@@ -2,7 +2,7 @@
 
 namespace Atata.WebDriverSetup
 {
-    internal class CachedDriverVersionCorrespondingToBrowserVersionResolver
+    internal sealed class CachedDriverVersionCorrespondingToBrowserVersionResolver
         : IGetsDriverVersionCorrespondingToBrowserVersion
     {
         private readonly IGetsDriverVersionCorrespondingToBrowserVersion _actualResolver;

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Atata.WebDriverSetup
 {
-    internal class DriverSetupExecutor
+    internal sealed class DriverSetupExecutor
     {
         private readonly string _browserName;
 
