@@ -51,6 +51,13 @@ namespace Atata.WebDriverSetup
             WithArchitecture(Architecture.X64);
 
         /// <summary>
+        /// Sets the ARM64 architecture.
+        /// </summary>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithArm64Architecture() =>
+            WithArchitecture(Architecture.Arm64);
+
+        /// <summary>
         /// Sets the architecture.
         /// The default value is <see cref="Architecture.Auto"/>.
         /// </summary>

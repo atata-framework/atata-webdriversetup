@@ -1,4 +1,6 @@
-﻿namespace Atata.WebDriverSetup
+﻿using System;
+
+namespace Atata.WebDriverSetup
 {
     /// <summary>
     /// Represents the Firefox/Gecko driver (<c>geckodriver.exe</c>/<c>geckodriver</c>) setup strategy.
@@ -29,10 +31,25 @@
             string commonNamePart = $"geckodriver-v{version}-";
 
             return OSInfo.IsWindows
-                ? $"{commonNamePart}win{architecture.GetBits()}.zip"
+                ? $"{commonNamePart}win{GetArchitectureSuffix(architecture)}.zip"
                 : OSInfo.IsOSX
-                    ? $"{commonNamePart}macos.tar.gz"
-                    : $"{commonNamePart}linux{architecture.GetBits()}.tar.gz";
+                    ? $"{commonNamePart}macos{(architecture == Architecture.Arm64 ? GetArchitectureSuffix(Architecture.Arm64) : null)}.tar.gz"
+                    : $"{commonNamePart}linux{GetArchitectureSuffix(architecture)}.tar.gz";
+        }
+
+        private static string GetArchitectureSuffix(Architecture architecture)
+        {
+            switch (architecture)
+            {
+                case Architecture.X32:
+                    return "32";
+                case Architecture.X64:
+                    return "64";
+                case Architecture.Arm64:
+                    return "-aarch64";
+                default:
+                    throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture));
+            }
         }
 
         /// <inheritdoc/>

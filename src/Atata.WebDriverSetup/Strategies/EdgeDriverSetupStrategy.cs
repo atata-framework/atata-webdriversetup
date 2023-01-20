@@ -42,10 +42,25 @@ namespace Atata.WebDriverSetup
 
         private static string GetDriverDownloadFileName(Architecture architecture) =>
             OSInfo.IsWindows
-                ? $"edgedriver_win{architecture.GetBits()}.zip"
+                ? $"edgedriver_{GetWindowsArchitectureSuffix(architecture)}.zip"
                 : OSInfo.IsOSX
-                    ? "edgedriver_mac64.zip"
+                    ? $"edgedriver_mac64{(architecture == Architecture.Arm64 ? "_m1" : null)}.zip"
                     : "edgedriver_linux64.zip";
+
+        private static string GetWindowsArchitectureSuffix(Architecture architecture)
+        {
+            switch (architecture)
+            {
+                case Architecture.X32:
+                    return "win32";
+                case Architecture.X64:
+                    return "win64";
+                case Architecture.Arm64:
+                    return "arm64";
+                default:
+                    throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture));
+            }
+        }
 
         /// <inheritdoc/>
         public string GetInstalledBrowserVersion() =>

@@ -41,13 +41,13 @@ namespace Atata.WebDriverSetup
 
         /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
-            new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName()}");
+            new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}");
 
-        private static string GetDriverDownloadFileName() =>
+        private static string GetDriverDownloadFileName(Architecture architecture) =>
             OSInfo.IsWindows
                 ? "chromedriver_win32.zip"
                 : OSInfo.IsOSX
-                    ? "chromedriver_mac64.zip"
+                    ? $"chromedriver_mac{(architecture == Architecture.Arm64 ? "_arm" : null)}64.zip"
                     : "chromedriver_linux64.zip";
 
         /// <inheritdoc/>

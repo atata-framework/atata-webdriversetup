@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace Atata.WebDriverSetup
@@ -87,10 +88,21 @@ namespace Atata.WebDriverSetup
 
         private Architecture ResolveArchitecture() =>
             _configuration.Architecture != Architecture.Auto
-            ? _configuration.Architecture
-            : OSInfo.Is64Bit
-                ? Architecture.X64
-                : Architecture.X32;
+                ? _configuration.Architecture
+                : DetectArchitecture();
+
+        private static Architecture DetectArchitecture()
+        {
+            switch (RuntimeInformation.OSArchitecture)
+            {
+                case System.Runtime.InteropServices.Architecture.Arm64:
+                    return Architecture.Arm64;
+                case System.Runtime.InteropServices.Architecture.X64:
+                    return Architecture.X64;
+                default:
+                    return Architecture.X32;
+            }
+        }
 
         private string BuildDriverDestinationDirectoryPath(string version)
         {

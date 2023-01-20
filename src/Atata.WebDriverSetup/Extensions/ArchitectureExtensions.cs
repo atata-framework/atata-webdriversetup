@@ -13,7 +13,7 @@
         public static int GetBits(this Architecture architecture) =>
             architecture == Architecture.X32
                 ? 32
-                : architecture == Architecture.X64
+                : architecture == Architecture.X64 || architecture == Architecture.Arm64
                     ? 64
                     : OSInfo.Bits;
     }

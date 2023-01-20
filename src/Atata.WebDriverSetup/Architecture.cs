@@ -18,6 +18,11 @@
         /// <summary>
         /// The x64 architecture.
         /// </summary>
-        X64
+        X64,
+
+        /// <summary>
+        /// The ARM64 architecture.
+        /// </summary>
+        Arm64
     }
 }
