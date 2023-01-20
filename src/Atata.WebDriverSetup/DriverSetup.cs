@@ -21,7 +21,7 @@ namespace Atata.WebDriverSetup
             RegisterStrategyFactory(BrowserNames.Firefox, hre => new FirefoxDriverSetupStrategy(hre));
             RegisterStrategyFactory(BrowserNames.Edge, hre => new EdgeDriverSetupStrategy(hre));
             RegisterStrategyFactory(BrowserNames.Opera, hre => new OperaDriverSetupStrategy(hre));
-            RegisterStrategyFactory(BrowserNames.InternetExplorer, hre => new InternetExplorerDriverSetupStrategy());
+            RegisterStrategyFactory(BrowserNames.InternetExplorer, hre => new InternetExplorerDriverSetupStrategy(hre));
         }
 
         /// <summary>

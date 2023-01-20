@@ -1,29 +1,23 @@
-﻿using System;
-
-namespace Atata.WebDriverSetup
+﻿namespace Atata.WebDriverSetup
 {
     /// <summary>
     /// Represents the Internet Explorer driver (<c>IEDriverServer.exe</c>) setup strategy.
     /// </summary>
-    public class InternetExplorerDriverSetupStrategy :
-        IDriverSetupStrategy,
-        IGetsDriverLatestVersion
+    public class InternetExplorerDriverSetupStrategy : GitHubRepositoryBasedDriverSetupStrategy
     {
-        /// <inheritdoc/>
-        public string DriverBinaryFileName { get; } = "IEDriverServer.exe";
-
-        /// <inheritdoc/>
-        public string GetDriverLatestVersion() => "3.150.1";
-
-        /// <inheritdoc/>
-        public Uri GetDriverDownloadUrl(string version, Architecture architecture)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InternetExplorerDriverSetupStrategy"/> class.
+        /// </summary>
+        /// <param name="httpRequestExecutor">The HTTP request executor.</param>
+        public InternetExplorerDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
+            : base(httpRequestExecutor, "SeleniumHQ", "selenium", "selenium-")
         {
-            string versionTillPatch = VersionUtils.TrimRevision(version);
-            string versionTillMinor = VersionUtils.TrimPatch(version);
-
-            string architectureNamePart = architecture == Architecture.X64 ? "x64" : "Win32";
-
-            return new Uri($"http://selenium-release.storage.googleapis.com/{versionTillMinor}/IEDriverServer_{architectureNamePart}_{versionTillPatch}.zip");
         }
+
+        /// <inheritdoc/>
+        public override string DriverBinaryFileName { get; } = "IEDriverServer.exe";
+
+        protected override string GetDriverDownloadFileName(string version, Architecture architecture) =>
+            $"IEDriverServer_{(architecture == Architecture.X32 ? "Win32" : "x64")}_{version}.zip";
     }
 }

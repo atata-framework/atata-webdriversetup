@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `Arm64` value to `Architecture` enum.
 - Add `WithArm64Architecture` method to `DriverSetupOptionsBuilder<TBuilder, TContext>`.
 - Add support of ARM64 driver versions for different operation systems for Chrome, Firefox and Edge.
+- Add support of Internet Explorer driver v4.x.
 
 ## [2.4.0] - 2022-09-06
 
