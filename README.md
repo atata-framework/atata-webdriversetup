@@ -279,8 +279,10 @@ DriverSetup.ConfigureChrome()
   The default value is `"{basedir}/drivers")`.
 - **`WithX32Architecture()`**\
   Sets the x32 (x86) architecture.
-- **`WithX64Architecture`**\
+- **`WithX64Architecture()`**\
   Sets the x64 architecture.
+- **`WithArm64Architecture()`**\
+  Sets the ARM64 architecture.
 - **`WithArchitecture(Architecture architecture)`**\
   Sets the architecture.
   The default value is `Architecture.Auto`.
