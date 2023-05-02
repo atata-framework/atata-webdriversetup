@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 
 namespace Atata.WebDriverSetup
 {
@@ -95,6 +96,19 @@ namespace Atata.WebDriverSetup
         public TBuilder WithCheckCertificateRevocationList(bool checkCertificateRevocationList)
         {
             BuildingContext.CheckCertificateRevocationList = checkCertificateRevocationList;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
+        /// Sets the configuration action of <see cref="HttpClientHandler"/>.
+        /// The <see cref="HttpClientHandler"/> instance is used to get a driver version information
+        /// and to download a driver archive.
+        /// </summary>
+        /// <param name="httpClientHandlerConfigurationAction">The configuration action of <see cref="HttpClientHandler"/>.</param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithHttpClientHandlerConfiguration(Action<HttpClientHandler> httpClientHandlerConfigurationAction)
+        {
+            BuildingContext.HttpClientHandlerConfigurationAction += httpClientHandlerConfigurationAction;
             return (TBuilder)this;
         }
 

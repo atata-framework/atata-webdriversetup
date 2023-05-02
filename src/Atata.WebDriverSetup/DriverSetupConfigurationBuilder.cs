@@ -170,7 +170,10 @@ namespace Atata.WebDriverSetup
 
         private IHttpRequestExecutor CreateHttpRequestExecutor() =>
             new ReliableHttpRequestExecutor(
-                new HttpRequestExecutor(BuildingContext.Proxy, BuildingContext.CheckCertificateRevocationList),
+                new HttpRequestExecutor(
+                    BuildingContext.Proxy,
+                    BuildingContext.CheckCertificateRevocationList,
+                    BuildingContext.HttpClientHandlerConfigurationAction),
                 BuildingContext.HttpRequestTryCount,
                 BuildingContext.HttpRequestRetryInterval);
 

@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `bool CheckCertificateRevocationList` option to disable check of certificate revocation
-  and `WithCheckCertificateRevocationList(bool checkCertificateRevocationList)` configuration method.
+  and `WithCheckCertificateRevocationList(bool)` configuration method.
+- Add `Action<HttpClientHandler> HttpClientHandlerConfigurationAction` option to configure `HttpClientHandler`
+  and `WithHttpClientHandlerConfiguration(Action<HttpClientHandler>)` configuration method.
 
 ### Fixed
 

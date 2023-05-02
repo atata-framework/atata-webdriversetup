@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 
 namespace Atata.WebDriverSetup
 {
@@ -79,6 +80,20 @@ namespace Atata.WebDriverSetup
         {
             get => GetOption<bool>(nameof(CheckCertificateRevocationList));
             set => SetOption(nameof(CheckCertificateRevocationList), value);
+        }
+
+        /// <summary>
+        /// Gets or sets the configuration action of <see cref="HttpClientHandler"/>.
+        /// The <see cref="HttpClientHandler"/> instance is used to get a driver version information
+        /// and to download a driver archive.
+        /// </summary>
+        /// <value>
+        /// The HTTP client handler configuration action.
+        /// </value>
+        public Action<HttpClientHandler> HttpClientHandlerConfigurationAction
+        {
+            get => GetOption<Action<HttpClientHandler>>(nameof(HttpClientHandlerConfigurationAction));
+            set => SetOption(nameof(HttpClientHandlerConfigurationAction), value);
         }
 
         /// <summary>
