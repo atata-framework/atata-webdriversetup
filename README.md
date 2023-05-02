@@ -288,6 +288,15 @@ DriverSetup.ConfigureChrome()
   The default value is `Architecture.Auto`.
 - **`WithProxy(IWebProxy proxy)`**\
   Sets the web proxy.
+- **`WithCheckCertificateRevocationList(bool checkCertificateRevocationList)`**\
+  Sets a value indicating whether the certificate is automatically picked
+  from the certificate store or if the caller is allowed to pass in a specific
+  client certificate.
+  The default value is `true`.
+- **`WithHttpClientHandlerConfiguration(Action<HttpClientHandler> httpClientHandlerConfigurationAction)`**\
+  Sets the configuration action of `HttpClientHandler`.
+  The `HttpClientHandler` instance is used to get a driver version information
+  and to download a driver archive.
 - **`WithMutex(bool isEnabled)`**\
   Sets a value indicating whether to use mutex to sync driver setup across machine..
   The default value is `true`.
