@@ -25,7 +25,7 @@ namespace Atata.WebDriverSetup
             if (baseOptions is null)
             {
                 StorageDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
-                CheckCertificateRevocationList = false;
+                CheckCertificateRevocationList = true;
                 UseMutex = false;
                 UseVersionCache = true;
 
