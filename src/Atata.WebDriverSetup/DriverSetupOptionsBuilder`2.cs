@@ -81,6 +81,24 @@ namespace Atata.WebDriverSetup
         }
 
         /// <summary>
+        /// Sets a value indicating whether the certificate is automatically picked
+        /// from the certificate store or if the caller is allowed to pass in a specific
+        /// client certificate.
+        /// The default value is <see langword="true"/>.
+        /// </summary>
+        /// <param name="checkCertificateRevocationList">
+        /// A value indicating whether the certificate is automatically picked
+        /// from the certificate store or if the caller is allowed to pass in a specific
+        /// client certificate.
+        /// </param>
+        /// <returns>The same builder instance.</returns>
+        public TBuilder WithCheckCertificateRevocationList(bool checkCertificateRevocationList)
+        {
+            BuildingContext.CheckCertificateRevocationList = checkCertificateRevocationList;
+            return (TBuilder)this;
+        }
+
+        /// <summary>
         /// Sets a value indicating whether to use mutex to sync driver setup across machine.
         /// The default value is <see langword="false"/>.
         /// </summary>

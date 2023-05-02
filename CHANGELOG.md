@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `bool CheckCertificateRevocationList` option to disable check of certificate revocation
+  and `WithCheckCertificateRevocationList(bool checkCertificateRevocationList)` configuration method.
+
 ### Fixed
 
 - Fix downloading of Internet Explorer driver v4.8.1 (latest)

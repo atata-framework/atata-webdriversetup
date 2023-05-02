@@ -25,6 +25,7 @@ namespace Atata.WebDriverSetup
             if (baseOptions is null)
             {
                 StorageDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
+                CheckCertificateRevocationList = false;
                 UseMutex = false;
                 UseVersionCache = true;
 
@@ -66,6 +67,18 @@ namespace Atata.WebDriverSetup
         {
             get => GetOption<IWebProxy>(nameof(Proxy));
             set => SetOption(nameof(Proxy), value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the certificate is automatically picked
+        /// from the certificate store or if the caller is allowed to pass in a specific
+        /// client certificate.
+        /// The default value is <see langword="true"/>.
+        /// </summary>
+        public bool CheckCertificateRevocationList
+        {
+            get => GetOption<bool>(nameof(CheckCertificateRevocationList));
+            set => SetOption(nameof(CheckCertificateRevocationList), value);
         }
 
         /// <summary>

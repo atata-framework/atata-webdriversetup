@@ -10,12 +10,22 @@ namespace Atata.WebDriverSetup
     {
         private readonly IWebProxy _proxy;
 
+        private readonly bool _checkCertificateRevocationList;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
         /// </summary>
         /// <param name="proxy">The proxy.</param>
-        public HttpRequestExecutor(IWebProxy proxy = null) =>
+        /// <param name="checkCertificateRevocationList">
+        /// A value indicating whether the certificate is automatically picked
+        /// from the certificate store or if the caller is allowed to pass in a specific
+        /// client certificate.
+        /// </param>
+        public HttpRequestExecutor(IWebProxy proxy = null, bool checkCertificateRevocationList = true)
+        {
             _proxy = proxy;
+            _checkCertificateRevocationList = checkCertificateRevocationList;
+        }
 
         /// <inheritdoc/>
         public string DownloadString(string url)
@@ -55,9 +65,12 @@ namespace Atata.WebDriverSetup
             HttpClientHandler httpClientHandler = new HttpClientHandler
             {
                 Proxy = _proxy,
-                AllowAutoRedirect = allowAutoRedirect,
-                CheckCertificateRevocationList = true
+                AllowAutoRedirect = allowAutoRedirect
             };
+
+            if (_checkCertificateRevocationList)
+                httpClientHandler.CheckCertificateRevocationList = true;
+
             return new HttpClient(httpClientHandler, true);
         }
     }
