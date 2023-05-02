@@ -55,10 +55,8 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version, Architecture architecture)
         {
-            string releaseVersion;
-
             if (_driverVersionToReleaseVersionMappings is null
-                || !_driverVersionToReleaseVersionMappings.TryGetValue(version, out releaseVersion))
+                || !_driverVersionToReleaseVersionMappings.TryGetValue(version, out string releaseVersion))
                 releaseVersion = version;
 
             return BuildDriverDownloadUrl(releaseVersion, version, architecture);
