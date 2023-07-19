@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Atata.WebDriverSetup
 {
@@ -49,7 +48,8 @@ namespace Atata.WebDriverSetup
             string latestReleaseUrl = $"{_baseUrl}/releases/latest";
             string actualReleaseUrl = _httpRequestExecutor.GetRedirectUrl(latestReleaseUrl).AbsoluteUri;
 
-            return actualReleaseUrl.Split('/').Last().Substring(_versionTagPrefix.Length);
+            var urlParts = actualReleaseUrl.Split('/');
+            return urlParts[urlParts.Length - 1].Substring(_versionTagPrefix.Length);
         }
 
         /// <inheritdoc/>
