@@ -27,6 +27,7 @@ Features:
   <ItemGroup>
     <PackageReference Include="Atata.Cli" Version="2.2.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
 
 </Project>

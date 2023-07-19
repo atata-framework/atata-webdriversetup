@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Atata.WebDriverSetup
@@ -42,6 +43,11 @@ namespace Atata.WebDriverSetup
         public string DownloadString(string url) =>
             ExecuteWithRetries(() =>
                 _httpRequestExecutor.DownloadString(url));
+
+        /// <inheritdoc/>
+        public Stream DownloadStream(string url) =>
+            ExecuteWithRetries(() =>
+                _httpRequestExecutor.DownloadStream(url));
 
         /// <inheritdoc/>
         public Uri GetRedirectUrl(string url) =>

@@ -44,6 +44,15 @@ namespace Atata.WebDriverSetup
         }
 
         /// <inheritdoc/>
+        public Stream DownloadStream(string url)
+        {
+            using (HttpClient client = CreateHttpClientWithAutoRedirect(true))
+            {
+                return client.GetStreamAsync(url).GetAwaiter().GetResult();
+            }
+        }
+
+        /// <inheritdoc/>
         public void DownloadFile(string url, string filePath)
         {
             using (HttpClient client = CreateHttpClientWithAutoRedirect(true))

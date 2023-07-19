@@ -41,6 +41,17 @@ namespace Atata.WebDriverSetup
         public static string TrimMinor(string version) =>
             CutVersion(version, 1);
 
+        /// <summary>
+        /// Gets the major number.
+        /// </summary>
+        /// <example>
+        /// <c>"1.2.3.4"</c> -> <c>1</c>.
+        /// </example>
+        /// <param name="version">The version.</param>
+        /// <returns>The major version number.</returns>
+        public static int GetMajorNumber(string version) =>
+            int.Parse(TrimMinor(version));
+
         private static string CutVersion(string version, int versionNumbersToLeave)
         {
             version.CheckNotNullOrWhitespace(nameof(version));

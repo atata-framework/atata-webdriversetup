@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Atata.WebDriverSetup
 {
@@ -20,6 +21,13 @@ namespace Atata.WebDriverSetup
         /// <param name="url">The URL.</param>
         /// <returns>The downloaded string.</returns>
         string DownloadString(string url);
+
+        /// <summary>
+        /// Downloads the stream.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>The response stream.</returns>
+        Stream DownloadStream(string url);
 
         /// <summary>
         /// Gets the redirect location URL.
