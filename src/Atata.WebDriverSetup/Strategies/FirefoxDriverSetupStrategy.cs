@@ -37,20 +37,14 @@ namespace Atata.WebDriverSetup
                     : $"{commonNamePart}linux{GetArchitectureSuffix(architecture)}.tar.gz";
         }
 
-        private static string GetArchitectureSuffix(Architecture architecture)
-        {
-            switch (architecture)
+        private static string GetArchitectureSuffix(Architecture architecture) =>
+            architecture switch
             {
-                case Architecture.X32:
-                    return "32";
-                case Architecture.X64:
-                    return "64";
-                case Architecture.Arm64:
-                    return "-aarch64";
-                default:
-                    throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture));
-            }
-        }
+                Architecture.X32 => "32",
+                Architecture.X64 => "64",
+                Architecture.Arm64 => "-aarch64",
+                _ => throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture)),
+            };
 
         /// <inheritdoc/>
         public string GetInstalledBrowserVersion() =>

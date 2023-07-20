@@ -37,43 +37,39 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc/>
         public string DownloadString(string url)
         {
-            using (HttpClient client = CreateHttpClientWithAutoRedirect(true))
-            {
-                return client.GetStringAsync(url).GetAwaiter().GetResult();
-            }
+            using HttpClient client = CreateHttpClientWithAutoRedirect(true);
+
+            return client.GetStringAsync(url).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
         public Stream DownloadStream(string url)
         {
-            using (HttpClient client = CreateHttpClientWithAutoRedirect(true))
-            {
-                return client.GetStreamAsync(url).GetAwaiter().GetResult();
-            }
+            using HttpClient client = CreateHttpClientWithAutoRedirect(true);
+
+            return client.GetStreamAsync(url).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
         public void DownloadFile(string url, string filePath)
         {
-            using (HttpClient client = CreateHttpClientWithAutoRedirect(true))
-            using (HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult())
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
-            }
+            using HttpClient client = CreateHttpClientWithAutoRedirect(true);
+            using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
+            using FileStream fileStream = new FileStream(filePath, FileMode.Create);
+
+            response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
         public Uri GetRedirectUrl(string url)
         {
-            using (HttpClient client = CreateHttpClientWithAutoRedirect(false))
-            using (HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult())
-            {
-                if (response.StatusCode != HttpStatusCode.Found)
-                    throw new HttpRequestException($@"Unexpected HTTP response status for ""{url}"". Expected 302, but was {(int)response.StatusCode}.");
+            using HttpClient client = CreateHttpClientWithAutoRedirect(false);
+            using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
 
-                return response.Headers.Location;
-            }
+            if (response.StatusCode != HttpStatusCode.Found)
+                throw new HttpRequestException($@"Unexpected HTTP response status for ""{url}"". Expected 302, but was {(int)response.StatusCode}.");
+
+            return response.Headers.Location;
         }
 
         private HttpClient CreateHttpClientWithAutoRedirect(bool allowAutoRedirect)

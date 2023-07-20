@@ -9,25 +9,26 @@ namespace Atata.WebDriverSetup
     {
         internal static void ExtractTarGz(string filePath, string destinationDirectoryPath)
         {
-            using (var stream = File.OpenRead(filePath))
-                ExtractTarGz(stream, destinationDirectoryPath);
+            using var stream = File.OpenRead(filePath);
+
+            ExtractTarGz(stream, destinationDirectoryPath);
         }
 
         internal static void ExtractTarGz(Stream stream, string destinationDirectoryPath)
         {
-            using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
-            using (var memoryStream = new MemoryStream())
-            {
-                gzip.CopyTo(memoryStream);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                ExtractTar(memoryStream, destinationDirectoryPath);
-            }
+            using var gzip = new GZipStream(stream, CompressionMode.Decompress);
+            using var memoryStream = new MemoryStream();
+
+            gzip.CopyTo(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            ExtractTar(memoryStream, destinationDirectoryPath);
         }
 
         internal static void ExtractTar(string filePath, string destinationDirectoryPath)
         {
-            using (var stream = File.OpenRead(filePath))
-                ExtractTar(stream, destinationDirectoryPath);
+            using var stream = File.OpenRead(filePath);
+
+            ExtractTar(stream, destinationDirectoryPath);
         }
 
         internal static void ExtractTar(Stream stream, string destinationDirectoryPath)
@@ -55,12 +56,11 @@ namespace Atata.WebDriverSetup
 
                 if (!entryName.Equals("./", StringComparison.Ordinal))
                 {
-                    using (FileStream fileStream = File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        byte[] fileBuffer = new byte[size];
-                        stream.Read(fileBuffer, 0, fileBuffer.Length);
-                        fileStream.Write(fileBuffer, 0, fileBuffer.Length);
-                    }
+                    using FileStream fileStream = File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write);
+                    byte[] fileBuffer = new byte[size];
+
+                    stream.Read(fileBuffer, 0, fileBuffer.Length);
+                    fileStream.Write(fileBuffer, 0, fileBuffer.Length);
                 }
 
                 long offset = 512 - (stream.Position % 512);

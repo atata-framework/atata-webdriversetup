@@ -47,20 +47,14 @@ namespace Atata.WebDriverSetup
                     ? $"edgedriver_mac64{(architecture == Architecture.Arm64 ? "_m1" : null)}.zip"
                     : "edgedriver_linux64.zip";
 
-        private static string GetWindowsArchitectureSuffix(Architecture architecture)
-        {
-            switch (architecture)
+        private static string GetWindowsArchitectureSuffix(Architecture architecture) =>
+            architecture switch
             {
-                case Architecture.X32:
-                    return "win32";
-                case Architecture.X64:
-                    return "win64";
-                case Architecture.Arm64:
-                    return "arm64";
-                default:
-                    throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture));
-            }
-        }
+                Architecture.X32 => "win32",
+                Architecture.X64 => "win64",
+                Architecture.Arm64 => "arm64",
+                _ => throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture)),
+            };
 
         /// <inheritdoc/>
         public string GetInstalledBrowserVersion() =>

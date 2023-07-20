@@ -91,18 +91,13 @@ namespace Atata.WebDriverSetup
                 ? _configuration.Architecture
                 : DetectArchitecture();
 
-        private static Architecture DetectArchitecture()
-        {
-            switch (RuntimeInformation.OSArchitecture)
+        private static Architecture DetectArchitecture() =>
+            RuntimeInformation.OSArchitecture switch
             {
-                case System.Runtime.InteropServices.Architecture.Arm64:
-                    return Architecture.Arm64;
-                case System.Runtime.InteropServices.Architecture.X64:
-                    return Architecture.X64;
-                default:
-                    return Architecture.X32;
-            }
-        }
+                System.Runtime.InteropServices.Architecture.Arm64 => Architecture.Arm64,
+                System.Runtime.InteropServices.Architecture.X64 => Architecture.X64,
+                _ => Architecture.X32,
+            };
 
         private string BuildDriverDestinationDirectoryPath(string version)
         {
@@ -149,15 +144,13 @@ namespace Atata.WebDriverSetup
         {
             string destinationFileName = Path.GetFileName(destinationFilePath);
 
-            using (var zip = ZipFile.OpenRead(archiveFilePath))
-            {
-                var foundEntry = zip.Entries.FirstOrDefault(x => x.Name == destinationFileName);
+            using var zip = ZipFile.OpenRead(archiveFilePath);
+            var foundEntry = zip.Entries.FirstOrDefault(x => x.Name == destinationFileName);
 
-                if (foundEntry != null)
-                    foundEntry.ExtractToFile(destinationFilePath, true);
-                else
-                    throw new FileNotFoundException($@"Failed to find ""{destinationFileName}"" file in ""{archiveFilePath}"" archive.");
-            }
+            if (foundEntry != null)
+                foundEntry.ExtractToFile(destinationFilePath, true);
+            else
+                throw new FileNotFoundException($@"Failed to find ""{destinationFileName}"" file in ""{archiveFilePath}"" archive.");
         }
 
         private static void ExtractFromTarGz(string archiveFilePath, string destinationFilePath)

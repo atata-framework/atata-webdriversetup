@@ -48,13 +48,12 @@ namespace Atata.WebDriverSetup
         /// <inheritdoc/>
         public string GetDriverLatestVersion()
         {
-            using (var versionsStream = _httpRequestExecutor.DownloadStream(CftApiBaseUrl + "/last-known-good-versions.json"))
-            using (JsonDocument jsonDocument = JsonDocument.Parse(versionsStream))
-            {
-                return jsonDocument.RootElement
-                    .GetPropertyByChain("channels", "Stable", "version")
-                    .GetString();
-            }
+            using Stream versionsStream = _httpRequestExecutor.DownloadStream(CftApiBaseUrl + "/last-known-good-versions.json");
+            using JsonDocument jsonDocument = JsonDocument.Parse(versionsStream);
+
+            return jsonDocument.RootElement
+                .GetPropertyByChain("channels", "Stable", "version")
+                .GetString();
         }
 
         /// <inheritdoc/>
@@ -131,13 +130,12 @@ namespace Atata.WebDriverSetup
 
         private string GetDriverVersionFromCftEndpoint(string relativeEndpoint, string subRootPropertyName, string incompleteBrowserVersion)
         {
-            using (Stream stream = _httpRequestExecutor.DownloadStream(CftApiBaseUrl + relativeEndpoint))
-            using (JsonDocument jsonDocument = JsonDocument.Parse(stream))
-            {
-                return jsonDocument.RootElement
-                    .GetPropertyByChain(subRootPropertyName, incompleteBrowserVersion, "version")
-                    .GetString();
-            }
+            using Stream versionsStream = _httpRequestExecutor.DownloadStream(CftApiBaseUrl + relativeEndpoint);
+            using JsonDocument jsonDocument = JsonDocument.Parse(versionsStream);
+
+            return jsonDocument.RootElement
+                .GetPropertyByChain(subRootPropertyName, incompleteBrowserVersion, "version")
+                .GetString();
         }
     }
 }

@@ -116,30 +116,29 @@ namespace Atata.WebDriverSetup
             const int timeoutToWait = 600_000;
             string mutexId = $@"Global\{{50E4E9F8-971F-440E-B7BE-D4B584350529}}-{BrowserName.ToLowerInvariant()}";
 
-            using (var mutex = new Mutex(false, mutexId, out _))
+            using var mutex = new Mutex(false, mutexId, out _);
+            var hasHandle = false;
+
+            try
             {
-                var hasHandle = false;
                 try
                 {
-                    try
-                    {
-                        hasHandle = mutex.WaitOne(timeoutToWait, false);
+                    hasHandle = mutex.WaitOne(timeoutToWait, false);
 
-                        if (!hasHandle)
-                            throw new TimeoutException("Timeout waiting for driver setup mutex.");
-                    }
-                    catch (AbandonedMutexException)
-                    {
-                        hasHandle = true;
-                    }
-
-                    return ExecuteSetUp();
+                    if (!hasHandle)
+                        throw new TimeoutException("Timeout waiting for driver setup mutex.");
                 }
-                finally
+                catch (AbandonedMutexException)
                 {
-                    if (hasHandle)
-                        mutex.ReleaseMutex();
+                    hasHandle = true;
                 }
+
+                return ExecuteSetUp();
+            }
+            finally
+            {
+                if (hasHandle)
+                    mutex.ReleaseMutex();
             }
         }
 
