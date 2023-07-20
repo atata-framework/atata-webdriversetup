@@ -10,10 +10,9 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public static class DriverSetup
     {
-        private static readonly Dictionary<string, DriverSetupData> s_browserDriverSetupDataMap =
-            new Dictionary<string, DriverSetupData>();
+        private static readonly Dictionary<string, DriverSetupData> s_browserDriverSetupDataMap = new();
 
-        private static readonly object s_pendingConfigurationsSyncLock = new object();
+        private static readonly object s_pendingConfigurationsSyncLock = new();
 
         static DriverSetup()
         {
@@ -174,7 +173,7 @@ namespace Atata.WebDriverSetup
         private static DriverSetupConfiguration CreateConfiguration(
             string browserName,
             DriverSetupOptions driverSetupOptions) =>
-            new DriverSetupConfiguration(driverSetupOptions)
+            new(driverSetupOptions)
             {
                 EnvironmentVariableName = $"{browserName.Replace(" ", null)}Driver"
             };

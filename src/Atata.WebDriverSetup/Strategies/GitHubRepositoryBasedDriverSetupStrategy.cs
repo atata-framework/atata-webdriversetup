@@ -70,7 +70,7 @@ namespace Atata.WebDriverSetup
         /// <param name="architecture">The architecture.</param>
         /// <returns>The driver download URL.</returns>
         protected virtual Uri BuildDriverDownloadUrl(string releaseVersion, string driverVersion, Architecture architecture) =>
-            new Uri($"{_baseUrl}/releases/download/{_versionTagPrefix}{releaseVersion}/{GetDriverDownloadFileName(driverVersion, architecture)}");
+            new($"{_baseUrl}/releases/download/{_versionTagPrefix}{releaseVersion}/{GetDriverDownloadFileName(driverVersion, architecture)}");
 
         /// <summary>
         /// Gets the name of the driver download file.

@@ -7,7 +7,7 @@ namespace Atata.WebDriverSetup
     /// </summary>
     public class InternetExplorerDriverSetupStrategy : GitHubRepositoryBasedDriverSetupStrategy
     {
-        private static readonly Dictionary<string, string> s_driverVersionToReleaseVersionMappings = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> s_driverVersionToReleaseVersionMappings = new()
         {
             ["4.8.1"] = "4.8.0"
         };

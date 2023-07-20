@@ -12,10 +12,8 @@
         public DriverSetupConfiguration(DriverSetupOptions baseOptions)
             : base(baseOptions)
         {
-            if (!(baseOptions is DriverSetupConfiguration))
-            {
+            if (baseOptions is not DriverSetupConfiguration)
                 Version = DriverVersions.Auto;
-            }
         }
 
         /// <summary>

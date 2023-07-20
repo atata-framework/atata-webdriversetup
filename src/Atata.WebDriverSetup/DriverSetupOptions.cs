@@ -13,7 +13,7 @@ namespace Atata.WebDriverSetup
     {
         private readonly DriverSetupOptions _baseOptions;
 
-        private readonly Dictionary<string, object> _optionValues = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _optionValues = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DriverSetupOptions"/> class.

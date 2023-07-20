@@ -38,7 +38,7 @@ namespace Atata.WebDriverSetup
 
         /// <inheritdoc/>
         public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
-            new Uri($"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}");
+            new($"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}");
 
         private static string GetDriverDownloadFileName(Architecture architecture) =>
             OSInfo.IsWindows

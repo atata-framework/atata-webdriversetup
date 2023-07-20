@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Version>2.7.0</Version>
     <Description>.NET library that sets up browser drivers for Selenium WebDriver, e.g. chromedriver, geckodriver, etc.
 
