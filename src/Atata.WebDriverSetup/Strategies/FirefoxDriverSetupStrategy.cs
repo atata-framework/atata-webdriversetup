@@ -1,75 +1,72 @@
-﻿using System;
+﻿namespace Atata.WebDriverSetup;
 
-namespace Atata.WebDriverSetup
+/// <summary>
+/// Represents the Firefox/Gecko driver (<c>geckodriver.exe</c>/<c>geckodriver</c>) setup strategy.
+/// </summary>
+public class FirefoxDriverSetupStrategy :
+    GitHubRepositoryBasedDriverSetupStrategy,
+    IGetsInstalledBrowserVersion,
+    IGetsDriverVersionCorrespondingToBrowserVersion
 {
     /// <summary>
-    /// Represents the Firefox/Gecko driver (<c>geckodriver.exe</c>/<c>geckodriver</c>) setup strategy.
+    /// Initializes a new instance of the <see cref="FirefoxDriverSetupStrategy"/> class.
     /// </summary>
-    public class FirefoxDriverSetupStrategy :
-        GitHubRepositoryBasedDriverSetupStrategy,
-        IGetsInstalledBrowserVersion,
-        IGetsDriverVersionCorrespondingToBrowserVersion
+    /// <param name="httpRequestExecutor">The HTTP request executor.</param>
+    public FirefoxDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
+        : base(httpRequestExecutor, "mozilla", "geckodriver")
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FirefoxDriverSetupStrategy"/> class.
-        /// </summary>
-        /// <param name="httpRequestExecutor">The HTTP request executor.</param>
-        public FirefoxDriverSetupStrategy(IHttpRequestExecutor httpRequestExecutor)
-            : base(httpRequestExecutor, "mozilla", "geckodriver")
+    }
+
+    /// <inheritdoc/>
+    public override string DriverBinaryFileName { get; } =
+        OSInfo.IsWindows
+            ? "geckodriver.exe"
+            : "geckodriver";
+
+    /// <inheritdoc/>
+    protected override string GetDriverDownloadFileName(string version, Architecture architecture)
+    {
+        string commonNamePart = $"geckodriver-v{version}-";
+
+        return OSInfo.IsWindows
+            ? $"{commonNamePart}win{GetArchitectureSuffix(architecture)}.zip"
+            : OSInfo.IsOSX
+                ? $"{commonNamePart}macos{(architecture == Architecture.Arm64 ? GetArchitectureSuffix(Architecture.Arm64) : null)}.tar.gz"
+                : $"{commonNamePart}linux{GetArchitectureSuffix(architecture)}.tar.gz";
+    }
+
+    private static string GetArchitectureSuffix(Architecture architecture) =>
+        architecture switch
         {
-        }
+            Architecture.X32 => "32",
+            Architecture.X64 => "64",
+            Architecture.Arm64 => "-aarch64",
+            _ => throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture)),
+        };
 
-        /// <inheritdoc/>
-        public override string DriverBinaryFileName { get; } =
-            OSInfo.IsWindows
-                ? "geckodriver.exe"
-                : "geckodriver";
+    /// <inheritdoc/>
+    public string GetInstalledBrowserVersion() =>
+        OSInfo.IsWindows
+            ? AppVersionDetector.GetFromProgramFiles(@"Mozilla Firefox\firefox.exe")
+                ?? RegistryUtils.GetValue(@"HKEY_CURRENT_USER\Software\Mozilla\Mozilla Firefox")
+                ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
+            : (OSInfo.IsOSX
+                ? AppVersionDetector.GetThroughOSXApplicationCli("Firefox")
+                : AppVersionDetector.GetThroughCli("firefox", "-v"))
+                ?.Replace("Mozilla Firefox ", null);
 
-        /// <inheritdoc/>
-        protected override string GetDriverDownloadFileName(string version, Architecture architecture)
-        {
-            string commonNamePart = $"geckodriver-v{version}-";
+    /// <inheritdoc/>
+    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
+    {
+        browserVersion.CheckNotNullOrWhitespace(browserVersion);
 
-            return OSInfo.IsWindows
-                ? $"{commonNamePart}win{GetArchitectureSuffix(architecture)}.zip"
-                : OSInfo.IsOSX
-                    ? $"{commonNamePart}macos{(architecture == Architecture.Arm64 ? GetArchitectureSuffix(Architecture.Arm64) : null)}.tar.gz"
-                    : $"{commonNamePart}linux{GetArchitectureSuffix(architecture)}.tar.gz";
-        }
+        string browserMajorVersion = VersionUtils.TrimMinor(browserVersion);
+        int browserMajorVersionNumber = int.Parse(browserMajorVersion);
 
-        private static string GetArchitectureSuffix(Architecture architecture) =>
-            architecture switch
-            {
-                Architecture.X32 => "32",
-                Architecture.X64 => "64",
-                Architecture.Arm64 => "-aarch64",
-                _ => throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture)),
-            };
-
-        /// <inheritdoc/>
-        public string GetInstalledBrowserVersion() =>
-            OSInfo.IsWindows
-                ? AppVersionDetector.GetFromProgramFiles(@"Mozilla Firefox\firefox.exe")
-                    ?? RegistryUtils.GetValue(@"HKEY_CURRENT_USER\Software\Mozilla\Mozilla Firefox")
-                    ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
-                : (OSInfo.IsOSX
-                    ? AppVersionDetector.GetThroughOSXApplicationCli("Firefox")
-                    : AppVersionDetector.GetThroughCli("firefox", "-v"))
-                    ?.Replace("Mozilla Firefox ", null);
-
-        /// <inheritdoc/>
-        public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
-        {
-            browserVersion.CheckNotNullOrWhitespace(browserVersion);
-
-            string browserMajorVersion = VersionUtils.TrimMinor(browserVersion);
-            int browserMajorVersionNumber = int.Parse(browserMajorVersion);
-
-            return browserMajorVersionNumber >= 91
-                ? "0.31.0"
-                : browserMajorVersionNumber >= 78
-                    ? "0.30.0"
-                    : "0.29.1";
-        }
+        return browserMajorVersionNumber >= 91
+            ? "0.31.0"
+            : browserMajorVersionNumber >= 78
+                ? "0.30.0"
+                : "0.29.1";
     }
 }

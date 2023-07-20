@@ -1,91 +1,85 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
+﻿namespace Atata.WebDriverSetup;
 
-namespace Atata.WebDriverSetup
+/// <inheritdoc/>
+public class HttpRequestExecutor : IHttpRequestExecutor
 {
-    /// <inheritdoc/>
-    public class HttpRequestExecutor : IHttpRequestExecutor
+    private readonly IWebProxy _proxy;
+
+    private readonly bool _checkCertificateRevocationList;
+
+    private readonly Action<HttpClientHandler> _httpClientHandlerConfigurationAction;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
+    /// </summary>
+    /// <param name="proxy">The proxy.</param>
+    /// <param name="checkCertificateRevocationList">
+    /// A value indicating whether the certificate is automatically picked
+    /// from the certificate store or if the caller is allowed to pass in a specific
+    /// client certificate.
+    /// </param>
+    /// <param name="httpClientHandlerConfigurationAction">The configuration action of <see cref="HttpClientHandler"/>.</param>
+    public HttpRequestExecutor(
+        IWebProxy proxy = null,
+        bool checkCertificateRevocationList = true,
+        Action<HttpClientHandler> httpClientHandlerConfigurationAction = null)
     {
-        private readonly IWebProxy _proxy;
+        _proxy = proxy;
+        _checkCertificateRevocationList = checkCertificateRevocationList;
+        _httpClientHandlerConfigurationAction = httpClientHandlerConfigurationAction;
+    }
 
-        private readonly bool _checkCertificateRevocationList;
+    /// <inheritdoc/>
+    public string DownloadString(string url)
+    {
+        using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
-        private readonly Action<HttpClientHandler> _httpClientHandlerConfigurationAction;
+        return client.GetStringAsync(url).GetAwaiter().GetResult();
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
-        /// </summary>
-        /// <param name="proxy">The proxy.</param>
-        /// <param name="checkCertificateRevocationList">
-        /// A value indicating whether the certificate is automatically picked
-        /// from the certificate store or if the caller is allowed to pass in a specific
-        /// client certificate.
-        /// </param>
-        /// <param name="httpClientHandlerConfigurationAction">The configuration action of <see cref="HttpClientHandler"/>.</param>
-        public HttpRequestExecutor(
-            IWebProxy proxy = null,
-            bool checkCertificateRevocationList = true,
-            Action<HttpClientHandler> httpClientHandlerConfigurationAction = null)
+    /// <inheritdoc/>
+    public Stream DownloadStream(string url)
+    {
+        using HttpClient client = CreateHttpClientWithAutoRedirect(true);
+
+        return client.GetStreamAsync(url).GetAwaiter().GetResult();
+    }
+
+    /// <inheritdoc/>
+    public void DownloadFile(string url, string filePath)
+    {
+        using HttpClient client = CreateHttpClientWithAutoRedirect(true);
+        using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
+        using FileStream fileStream = new FileStream(filePath, FileMode.Create);
+
+        response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
+    }
+
+    /// <inheritdoc/>
+    public Uri GetRedirectUrl(string url)
+    {
+        using HttpClient client = CreateHttpClientWithAutoRedirect(false);
+        using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
+
+        if (response.StatusCode != HttpStatusCode.Found)
+            throw new HttpRequestException($@"Unexpected HTTP response status for ""{url}"". Expected 302, but was {(int)response.StatusCode}.");
+
+        return response.Headers.Location;
+    }
+
+    private HttpClient CreateHttpClientWithAutoRedirect(bool allowAutoRedirect)
+    {
+        HttpClientHandler httpClientHandler = new HttpClientHandler
         {
-            _proxy = proxy;
-            _checkCertificateRevocationList = checkCertificateRevocationList;
-            _httpClientHandlerConfigurationAction = httpClientHandlerConfigurationAction;
-        }
+            Proxy = _proxy,
+            AllowAutoRedirect = allowAutoRedirect
+        };
 
-        /// <inheritdoc/>
-        public string DownloadString(string url)
-        {
-            using HttpClient client = CreateHttpClientWithAutoRedirect(true);
+        if (_checkCertificateRevocationList)
+            httpClientHandler.CheckCertificateRevocationList = true;
 
-            return client.GetStringAsync(url).GetAwaiter().GetResult();
-        }
+        _httpClientHandlerConfigurationAction?.Invoke(httpClientHandler);
 
-        /// <inheritdoc/>
-        public Stream DownloadStream(string url)
-        {
-            using HttpClient client = CreateHttpClientWithAutoRedirect(true);
-
-            return client.GetStreamAsync(url).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public void DownloadFile(string url, string filePath)
-        {
-            using HttpClient client = CreateHttpClientWithAutoRedirect(true);
-            using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
-            using FileStream fileStream = new FileStream(filePath, FileMode.Create);
-
-            response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public Uri GetRedirectUrl(string url)
-        {
-            using HttpClient client = CreateHttpClientWithAutoRedirect(false);
-            using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
-
-            if (response.StatusCode != HttpStatusCode.Found)
-                throw new HttpRequestException($@"Unexpected HTTP response status for ""{url}"". Expected 302, but was {(int)response.StatusCode}.");
-
-            return response.Headers.Location;
-        }
-
-        private HttpClient CreateHttpClientWithAutoRedirect(bool allowAutoRedirect)
-        {
-            HttpClientHandler httpClientHandler = new HttpClientHandler
-            {
-                Proxy = _proxy,
-                AllowAutoRedirect = allowAutoRedirect
-            };
-
-            if (_checkCertificateRevocationList)
-                httpClientHandler.CheckCertificateRevocationList = true;
-
-            _httpClientHandlerConfigurationAction?.Invoke(httpClientHandler);
-
-            return new HttpClient(httpClientHandler, true);
-        }
+        return new HttpClient(httpClientHandler, true);
     }
 }

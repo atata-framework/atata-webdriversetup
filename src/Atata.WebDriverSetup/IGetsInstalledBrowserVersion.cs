@@ -1,14 +1,13 @@
-﻿namespace Atata.WebDriverSetup
+﻿namespace Atata.WebDriverSetup;
+
+/// <summary>
+/// Provides a method that resolves the installed browser version.
+/// </summary>
+public interface IGetsInstalledBrowserVersion
 {
     /// <summary>
-    /// Provides a method that resolves the installed browser version.
+    /// Gets the installed browser version.
     /// </summary>
-    public interface IGetsInstalledBrowserVersion
-    {
-        /// <summary>
-        /// Gets the installed browser version.
-        /// </summary>
-        /// <returns>The version number.</returns>
-        string GetInstalledBrowserVersion();
-    }
+    /// <returns>The version number.</returns>
+    string GetInstalledBrowserVersion();
 }
