@@ -1,12 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using FluentAssertions;
-using NUnit.Framework;
-using NUnit.Framework.Internal;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 [TestFixture]
 [Parallelizable(ParallelScope.None)]

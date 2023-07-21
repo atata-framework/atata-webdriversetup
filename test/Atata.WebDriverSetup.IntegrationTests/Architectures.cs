@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 internal static class Architectures
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using NUnit.Framework;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 public static class BrowserDetectorTests
 {

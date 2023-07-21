@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 public static class PathSanitizer
 {

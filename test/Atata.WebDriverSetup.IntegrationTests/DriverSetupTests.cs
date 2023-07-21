@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
-using NUnit.Framework;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 public class DriverSetupTests : IntegrationTestFixture
 {

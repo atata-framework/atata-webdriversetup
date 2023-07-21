@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using FluentAssertions;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 internal static class Assertions
 {

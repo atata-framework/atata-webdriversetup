@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace Atata.WebDriverSetup.IntegrationTests;
+﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
 public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
 {
