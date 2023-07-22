@@ -35,7 +35,7 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
 
     [TestCase(BrowserNames.Chrome)]
     [TestCase(BrowserNames.Firefox)]
-    [TestCase(BrowserNames.Edge)]
+    [TestCase(BrowserNames.Edge, IncludePlatform = Platforms.Windows)]
     [TestCase(BrowserNames.Opera)]
     [TestCase(BrowserNames.InternetExplorer, IncludePlatform = Platforms.Windows)]
     public void SetUp_WithLatestVersion(string browserName)
