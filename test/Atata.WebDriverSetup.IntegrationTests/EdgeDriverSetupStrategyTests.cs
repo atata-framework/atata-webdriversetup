@@ -75,8 +75,8 @@ public class EdgeDriverSetupStrategyTests
     }
 
     [TestCase(Architecture.X32, IncludePlatform = Platforms.Windows)]
-    [TestCase(Architecture.X64)]
-    [TestCase(Architecture.Arm64)]
+    [TestCase(Architecture.X64, IncludePlatform = Platforms.Windows)]
+    [TestCase(Architecture.Arm64, IncludePlatform = Platforms.Windows)]
     public void GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
     {
         string latestVersion = _sut.GetDriverLatestVersion();
