@@ -30,6 +30,7 @@ Basically, it provides functionality similar to Java `WebDriverManager`.
   - [Global Configuration](#global-configuration)
   - [Driver-Specific Configuration](#driver-specific-configuration)
   - [Configuration Methods](#configuration-methods)
+  - [Handle HTTPS Certificate Errors](#handle-https-certificate-errors)
 - [BrowserDetector](#browserdetector)
   - [BrowserDetector Methods](#browserdetector-methods)
   - [BrowserDetector Usage](#browserdetector-usage)
@@ -321,6 +322,17 @@ DriverSetup.ConfigureChrome()
   Sets a value indicating whether to add the driver directory path
   to environment "Path" variable.
   The default value is `true`.
+
+### Handle HTTPS Certificate Errors
+
+Rarely you can get HTTP certificate errors during driver setup.
+In order to handle such errors you can try one or both of the configuration settings below.
+
+```cs
+DriverSetup.GlobalConfiguration
+    .WithCheckCertificateRevocationList(false)
+    .WithHttpClientHandlerConfiguration(x => x.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator);
+```
 
 ## BrowserDetector
 
