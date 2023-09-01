@@ -23,14 +23,8 @@ public class InternetExplorerDriverSetupStrategy : GitHubRepositoryBasedDriverSe
     public override string DriverBinaryFileName { get; } = "IEDriverServer.exe";
 
     /// <inheritdoc/>
-    public override string GetDriverLatestVersion()
-    {
-        string version = base.GetDriverLatestVersion();
-
-        return version == "4.9.0"
-            ? "4.8.1"
-            : version;
-    }
+    public override string GetDriverLatestVersion() =>
+        "4.11.0"; // Temporary workaround, as IEDriver and Selenium releases are not synchronized.
 
     protected override string GetDriverDownloadFileName(string version, Architecture architecture) =>
         $"IEDriverServer_{(architecture == Architecture.X32 ? "Win32" : "x64")}_{version}.zip";

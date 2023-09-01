@@ -56,6 +56,7 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
     [TestCase(BrowserNames.Edge, "100.0.1185.36")]
     [TestCase(BrowserNames.Opera, "86.0.4240.80")]
     [TestCase(BrowserNames.InternetExplorer, "3.141.59", IncludePlatform = Platforms.Windows)]
+    [TestCase(BrowserNames.InternetExplorer, "4.11.0", IncludePlatform = Platforms.Windows)]
     public void SetUp_WithVersion(string browserName, string version)
     {
         var result = DriverSetup.Configure(browserName)
