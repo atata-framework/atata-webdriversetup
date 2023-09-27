@@ -3,10 +3,10 @@
 [TestFixture]
 public class EdgeDriverSetupStrategyTests
 {
-    private const string TestVerion = "116.0.1938.81";
+    private const string TestVersion = "116.0.1938.81";
 
     private const string ExpectedDriverDownloadUrlBase =
-        $"https://msedgedriver.azureedge.net/{TestVerion}/edgedriver_";
+        $"https://msedgedriver.azureedge.net/{TestVersion}/edgedriver_";
 
     private const string ExpectedWindowsX32DriverDownloadUrl =
         $"{ExpectedDriverDownloadUrlBase}win32.zip";
@@ -67,7 +67,7 @@ public class EdgeDriverSetupStrategyTests
         ExpectedResult = ExpectedLinuxX64DriverDownloadUrl)]
     public string GetDriverDownloadUrl(Architecture architecture)
     {
-        var url = _sut.GetDriverDownloadUrl(TestVerion, architecture);
+        var url = _sut.GetDriverDownloadUrl(TestVersion, architecture);
 
         Assertions.AssertUrlReturnsOK(url);
 

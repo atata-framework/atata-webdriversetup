@@ -3,10 +3,10 @@
 [TestFixture]
 public class ChromeDriverSetupStrategyTests
 {
-    private const string TestVerion = "110.0.5481.30";
+    private const string TestVersion = "110.0.5481.30";
 
     private const string ExpectedDriverDownloadUrlBase =
-        $"https://chromedriver.storage.googleapis.com/{TestVerion}/chromedriver_";
+        $"https://chromedriver.storage.googleapis.com/{TestVersion}/chromedriver_";
 
     private const string ExpectedWindowsX32DriverDownloadUrl =
         $"{ExpectedDriverDownloadUrlBase}win32.zip";
@@ -61,7 +61,7 @@ public class ChromeDriverSetupStrategyTests
         ExpectedResult = ExpectedLinuxX64DriverDownloadUrl)]
     public string GetDriverDownloadUrl(Architecture architecture)
     {
-        var url = _sut.GetDriverDownloadUrl(TestVerion, architecture);
+        var url = _sut.GetDriverDownloadUrl(TestVersion, architecture);
 
         Assertions.AssertUrlReturnsOK(url);
 
