@@ -3,10 +3,10 @@
 [TestFixture]
 public class FirefoxDriverSetupStrategyTests
 {
-    private const string TestVerion = "0.32.0";
+    private const string TestVersion = "0.33.0";
 
     private const string ExpectedDriverDownloadUrlBase =
-        $"https://github.com/mozilla/geckodriver/releases/download/v{TestVerion}/geckodriver-v{TestVerion}-";
+        $"https://github.com/mozilla/geckodriver/releases/download/v{TestVersion}/geckodriver-v{TestVersion}-";
 
     private const string ExpectedWindowsX32DriverDownloadUrl =
         $"{ExpectedDriverDownloadUrlBase}win32.zip";
@@ -73,7 +73,7 @@ public class FirefoxDriverSetupStrategyTests
         ExpectedResult = ExpectedLinuxArm64DriverDownloadUrl)]
     public string GetDriverDownloadUrl(Architecture architecture)
     {
-        var url = _sut.GetDriverDownloadUrl(TestVerion, architecture);
+        var url = _sut.GetDriverDownloadUrl(TestVersion, architecture);
 
         Assertions.AssertUrlReturnsOK(url);
 
