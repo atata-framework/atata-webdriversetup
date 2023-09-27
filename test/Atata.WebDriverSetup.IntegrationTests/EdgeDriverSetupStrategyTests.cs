@@ -3,7 +3,7 @@
 [TestFixture]
 public class EdgeDriverSetupStrategyTests
 {
-    private const string TestVerion = "110.0.1587.15";
+    private const string TestVerion = "116.0.1938.81";
 
     private const string ExpectedDriverDownloadUrlBase =
         $"https://msedgedriver.azureedge.net/{TestVerion}/edgedriver_";
