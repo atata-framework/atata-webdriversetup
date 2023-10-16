@@ -24,7 +24,7 @@ public class InternetExplorerDriverSetupStrategy : GitHubRepositoryBasedDriverSe
 
     /// <inheritdoc/>
     public override string GetDriverLatestVersion() =>
-        "4.11.0"; // Temporary workaround, as IEDriver and Selenium releases are not synchronized.
+        "4.14.0"; // Temporary workaround, as IEDriver and Selenium releases are not synchronized.
 
     protected override string GetDriverDownloadFileName(string version, Architecture architecture) =>
         $"IEDriverServer_{(architecture == Architecture.X32 ? "Win32" : "x64")}_{version}.zip";
