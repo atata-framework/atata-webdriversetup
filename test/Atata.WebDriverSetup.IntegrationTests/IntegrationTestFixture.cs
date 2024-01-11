@@ -4,14 +4,14 @@
 [Parallelizable(ParallelScope.None)]
 public abstract class IntegrationTestFixture
 {
-    private static readonly string[] s_validBrowserNames = new[]
-    {
+    private static readonly string[] s_validBrowserNames =
+    [
         BrowserNames.Chrome,
         BrowserNames.Firefox,
         BrowserNames.Edge,
         BrowserNames.Opera,
         BrowserNames.InternetExplorer
-    };
+    ];
 
     [SetUp]
     public void SetUp()

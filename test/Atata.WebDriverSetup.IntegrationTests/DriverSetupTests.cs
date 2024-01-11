@@ -129,24 +129,24 @@ public class DriverSetupTests : IntegrationTestFixture
 
     public static class BrowserNameSets
     {
-        public static readonly IEnumerable<string[]> Valid = new[]
-        {
-            new[] { BrowserNames.Chrome },
-            new[] { BrowserNames.Chrome, BrowserNames.Chrome },
-            new[] { BrowserNames.Chrome, BrowserNames.Firefox }
-        };
+        public static readonly IEnumerable<string[]> Valid =
+        [
+            [BrowserNames.Chrome],
+            [BrowserNames.Chrome, BrowserNames.Chrome],
+            [BrowserNames.Chrome, BrowserNames.Firefox]
+        ];
 
-        public static readonly IEnumerable<string[]> ContainsNullValue = new string[][]
-        {
+        public static readonly IEnumerable<string[]> ContainsNullValue =
+        [
             null,
-            new[] { null as string },
-            new[] { BrowserNames.Chrome, null }
-        };
+            [null as string],
+            [BrowserNames.Chrome, null]
+        ];
 
-        public static readonly IEnumerable<string[]> ContainsUnsupportedValue = new string[][]
-        {
-            new[] { "Unknown" },
-            new[] { BrowserNames.Chrome, "Unknown" }
-        };
+        public static readonly IEnumerable<string[]> ContainsUnsupportedValue =
+        [
+            ["Unknown"],
+            [BrowserNames.Chrome, "Unknown"]
+        ];
     }
 }
