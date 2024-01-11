@@ -7,7 +7,7 @@ public class DriverSetupOptions
 {
     private readonly DriverSetupOptions _baseOptions;
 
-    private readonly Dictionary<string, object> _optionValues = new();
+    private readonly Dictionary<string, object> _optionValues = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DriverSetupOptions"/> class.

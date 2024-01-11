@@ -22,11 +22,11 @@ public static class AppVersionDetector
     /// <returns>The version or <see langword="null"/>.</returns>
     public static string GetFromProgramFiles(IEnumerable<string> applicationRelativePaths)
     {
-        string[] programFilesFolders = new[]
-        {
+        string[] programFilesFolders =
+        [
             Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
             Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
-        };
+        ];
 
         return programFilesFolders
             .Where(path => !string.IsNullOrEmpty(path))

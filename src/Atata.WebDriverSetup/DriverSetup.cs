@@ -5,7 +5,7 @@
 /// </summary>
 public static class DriverSetup
 {
-    private static readonly Dictionary<string, DriverSetupData> s_browserDriverSetupDataMap = new();
+    private static readonly Dictionary<string, DriverSetupData> s_browserDriverSetupDataMap = [];
 
     private static readonly object s_pendingConfigurationsSyncLock = new();
 
@@ -21,22 +21,19 @@ public static class DriverSetup
     /// <summary>
     /// Gets the global setup options.
     /// </summary>
-    public static DriverSetupOptions GlobalOptions { get; } =
-        new DriverSetupOptions();
+    public static DriverSetupOptions GlobalOptions { get; } = new();
 
     /// <summary>
     /// Gets the global setup configuration builder.
     /// Configures <see cref="GlobalOptions"/>.
     /// </summary>
-    public static DriverSetupOptionsBuilder GlobalConfiguration { get; } =
-        new DriverSetupOptionsBuilder(GlobalOptions);
+    public static DriverSetupOptionsBuilder GlobalConfiguration { get; } = new(GlobalOptions);
 
     /// <summary>
     /// Gets the pending driver setup configurations,
     /// the configurations that were created but were not set up.
     /// </summary>
-    public static List<DriverSetupConfigurationBuilder> PendingConfigurations { get; } =
-        new List<DriverSetupConfigurationBuilder>();
+    public static List<DriverSetupConfigurationBuilder> PendingConfigurations { get; } = [];
 
     /// <summary>
     /// Registers the driver setup strategy factory.
@@ -255,7 +252,7 @@ public static class DriverSetup
 
         lock (s_pendingConfigurationsSyncLock)
         {
-            pendingConfigurations = PendingConfigurations.ToArray();
+            pendingConfigurations = [.. PendingConfigurations];
         }
 
         var tasks = pendingConfigurations.Select(conf => conf.SetUpAsync());
