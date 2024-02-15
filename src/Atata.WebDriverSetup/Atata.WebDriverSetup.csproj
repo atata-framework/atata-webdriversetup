@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>12.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>2.9.0</Version>
+    <Version>2.10.0</Version>
     <Description>.NET library that sets up browser drivers for Selenium WebDriver, e.g. chromedriver, geckodriver, etc.
 
 The package targets .NET Standard 2.0, which supports .NET 5+, .NET Framework 4.6.1+ and .NET Core/Standard 2.0+.
