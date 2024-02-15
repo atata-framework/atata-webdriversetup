@@ -4,7 +4,8 @@
 
 [assembly: SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.HttpRequestExecutor.CreateHttpClientWithAutoRedirect(System.Boolean)~System.Net.Http.HttpClient")]
 [assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.ChromeDriverSetupStrategy.CftApiBaseUrl")]
-[assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.ChromeDriverSetupStrategy.CftDownloadsBaseUrl")]
+[assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.ChromeDriverSetupStrategy.Cft1DownloadsBaseUrl")]
+[assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.ChromeDriverSetupStrategy.Cft2DownloadsBaseUrl")]
 [assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.ChromeDriverSetupStrategy.OldBaseUrl")]
 [assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.EdgeDriverSetupStrategy.BaseUrl")]
 [assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetupExecutor.AddToEnvironmentPathVariable(System.String)")]

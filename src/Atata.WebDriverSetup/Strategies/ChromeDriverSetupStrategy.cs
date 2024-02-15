@@ -12,8 +12,11 @@ public class ChromeDriverSetupStrategy :
     private const string CftApiBaseUrl =
         "https://googlechromelabs.github.io/chrome-for-testing";
 
-    private const string CftDownloadsBaseUrl =
+    private const string Cft1DownloadsBaseUrl =
         "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing";
+
+    private const string Cft2DownloadsBaseUrl =
+        "https://storage.googleapis.com/chrome-for-testing-public";
 
     private const string OldBaseUrl =
         "https://chromedriver.storage.googleapis.com";
@@ -24,7 +27,9 @@ public class ChromeDriverSetupStrategy :
     private const string OldDriverSpecificVersionUrlFormat =
         OldDriverLatestVersionUrl + "_{0}";
 
-    private const int CftStartingVersionNumber = 115;
+    private const int Cft1StartingVersionMajorNumber = 115;
+
+    private static readonly Version s_cft2StartingVersion = new(121, 0, 6167, 85);
 
     private readonly IHttpRequestExecutor _httpRequestExecutor;
 
@@ -60,8 +65,9 @@ public class ChromeDriverSetupStrategy :
 
         if (IsCftVersion(version))
         {
+            string baseUrl = GetCftDownloadsBaseUrl(version);
             string platform = GetCftDriverDownloadPlatform(architecture);
-            return new Uri($"{CftDownloadsBaseUrl}/{version}/{platform}/chromedriver-{platform}.zip");
+            return new Uri($"{baseUrl}/{version}/{platform}/chromedriver-{platform}.zip");
         }
         else
         {
@@ -70,7 +76,26 @@ public class ChromeDriverSetupStrategy :
     }
 
     private static bool IsCftVersion(string version) =>
-        VersionUtils.GetMajorNumber(version) >= CftStartingVersionNumber;
+        VersionUtils.GetMajorNumber(version) >= Cft1StartingVersionMajorNumber;
+
+    private static string GetCftDownloadsBaseUrl(string version)
+    {
+        Version parsedVersion;
+
+        try
+        {
+            parsedVersion = VersionUtils.Parse(version);
+        }
+        catch
+        {
+            // In case of possible future version number style change.
+            return Cft2DownloadsBaseUrl;
+        }
+
+        return parsedVersion < s_cft2StartingVersion
+            ? Cft1DownloadsBaseUrl
+            : Cft2DownloadsBaseUrl;
+    }
 
     private static string GetOldDriverDownloadFileName(Architecture architecture) =>
         OSInfo.IsWindows

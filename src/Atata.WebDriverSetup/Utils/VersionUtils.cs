@@ -49,16 +49,34 @@ public static class VersionUtils
     public static int GetMajorNumber(string version) =>
         int.Parse(TrimMinor(version));
 
+    internal static Version Parse(string version)
+    {
+        var parts = GetParts(version, 4);
+
+        return new Version(
+            int.Parse(parts[0]),
+            int.Parse(parts[1]),
+            int.Parse(parts[2]),
+            int.Parse(parts[3]));
+    }
+
     private static string CutVersion(string version, int versionNumbersToLeave)
+    {
+        var parts = GetParts(version, versionNumbersToLeave);
+
+        return string.Join(".", parts.Take(versionNumbersToLeave));
+    }
+
+    private static string[] GetParts(string version, int count)
     {
         version.CheckNotNullOrWhitespace(nameof(version));
 
         string[] parts = version.Split('.');
 
-        if (parts.Length < versionNumbersToLeave)
-            throw new ArgumentException($@"Inappropriate ""{version}"" {nameof(version)} format. Version should consist at least of {versionNumbersToLeave} numbers.", nameof(version));
+        if (parts.Length < count)
+            throw new ArgumentException($@"Inappropriate ""{version}"" {nameof(version)} format. Version should consist at least of {count} numbers.", nameof(version));
 
-        return string.Join(".", parts.Take(versionNumbersToLeave));
+        return parts;
     }
 
     /// <summary>
