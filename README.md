@@ -65,6 +65,7 @@ The package depends on:
 
 - [`Microsoft.Win32.Registry`](https://www.nuget.org/packages/Microsoft.Win32.Registry/) - is used to detect locally installed browser version through Windows Registry.
 - [`Atata.Cli`](https://www.nuget.org/packages/Atata.Cli/) - is used to detect locally installed browser version through CLI on Linux and macOS.
+- [`System.Text.Json`](https://www.nuget.org/packages/System.Text.Json/) - is used to read JSON HTTP responses.
 
 ## Usage
 
