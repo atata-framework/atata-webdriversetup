@@ -236,7 +236,7 @@ public static class DriverSetup
                     .Where(name => name is not null)
                     .Distinct()
                     .Where(s_browserDriverSetupDataMap.ContainsKey))
-            : new DriverSetupResult[0];
+            : [];
 
     /// <summary>
     /// Sets up pending configurations that are stored in <see cref="PendingConfigurations" /> property.

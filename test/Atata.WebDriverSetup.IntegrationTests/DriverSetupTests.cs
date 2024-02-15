@@ -71,7 +71,7 @@ public class DriverSetupTests : IntegrationTestFixture
     {
         var results = DriverSetup.AutoSetUpSafely(browserNames);
 
-        AssertAutoSetUpDriverResults(results, browserNames?.Where(IsValidBrowserName) ?? new string[0]);
+        AssertAutoSetUpDriverResults(results, browserNames?.Where(IsValidBrowserName) ?? []);
     }
 
     [TestCaseSource(typeof(BrowserNameSets), nameof(BrowserNameSets.Valid))]
@@ -81,7 +81,7 @@ public class DriverSetupTests : IntegrationTestFixture
     {
         var results = await DriverSetup.AutoSetUpSafelyAsync(browserNames);
 
-        AssertAutoSetUpDriverResults(results, browserNames?.Where(IsValidBrowserName) ?? new string[0]);
+        AssertAutoSetUpDriverResults(results, browserNames?.Where(IsValidBrowserName) ?? []);
     }
 
     [Test]
@@ -92,7 +92,7 @@ public class DriverSetupTests : IntegrationTestFixture
             DriverSetup.ConfigureFirefox().SetUpAsync(),
             DriverSetup.ConfigureEdge().SetUpAsync());
 
-        AssertAutoSetUpDriverResults(results, new[] { BrowserNames.Chrome, BrowserNames.Firefox, BrowserNames.Edge });
+        AssertAutoSetUpDriverResults(results, [BrowserNames.Chrome, BrowserNames.Firefox, BrowserNames.Edge]);
     }
 
     [Test]
