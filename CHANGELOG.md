@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix downloading of Chrome driver starting v121.0.6167.85.
+  Fixes issue [#15](https://github.com/atata-framework/atata-webdriversetup/issues/15).
 
 ## [2.9.0] - 2023-10-16
 
