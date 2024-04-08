@@ -159,7 +159,7 @@ public static class DriverSetup
 
         return s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData setupData)
             ? setupData
-            : throw new ArgumentException($@"Unsupported ""{browserName}"" browser name.", nameof(browserName));
+            : throw new ArgumentException($"""Unsupported "{browserName}" browser name.""", nameof(browserName));
     }
 
     private static DriverSetupConfiguration CreateConfiguration(
@@ -248,7 +248,7 @@ public static class DriverSetup
     /// <inheritdoc cref="SetUpPendingConfigurations"/>
     public static async Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync()
     {
-        DriverSetupConfigurationBuilder[] pendingConfigurations = null;
+        DriverSetupConfigurationBuilder[] pendingConfigurations;
 
         lock (s_pendingConfigurationsSyncLock)
         {

@@ -129,11 +129,12 @@ public class ChromeDriverSetupStrategy :
 
         int browserVersionNumbersCount = VersionUtils.GetNumbersCount(browserVersion);
 
-        string browserVersionToUse = browserVersionNumbersCount == 1
-            ? browserVersion
-            : browserVersionNumbersCount == 2
-                ? VersionUtils.TrimMinor(browserVersion)
-                : VersionUtils.TrimRevision(browserVersion);
+        string browserVersionToUse = browserVersionNumbersCount switch
+        {
+            1 => browserVersion,
+            2 => VersionUtils.TrimMinor(browserVersion),
+            _ => VersionUtils.TrimRevision(browserVersion)
+        };
 
         if (IsCftVersion(browserVersionToUse))
         {

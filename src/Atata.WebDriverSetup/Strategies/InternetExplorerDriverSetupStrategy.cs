@@ -20,7 +20,7 @@ public class InternetExplorerDriverSetupStrategy : GitHubRepositoryBasedDriverSe
     }
 
     /// <inheritdoc/>
-    public override string DriverBinaryFileName { get; } = "IEDriverServer.exe";
+    public override string DriverBinaryFileName => "IEDriverServer.exe";
 
     /// <inheritdoc/>
     public override string GetDriverLatestVersion() =>

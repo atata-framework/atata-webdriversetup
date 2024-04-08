@@ -74,7 +74,7 @@ public static class VersionUtils
         string[] parts = version.Split('.');
 
         if (parts.Length < count)
-            throw new ArgumentException($@"Inappropriate ""{version}"" {nameof(version)} format. Version should consist at least of {count} numbers.", nameof(version));
+            throw new ArgumentException($"""Inappropriate "{version}" {nameof(version)} format. Version should consist at least of {count} numbers.""", nameof(version));
 
         return parts;
     }

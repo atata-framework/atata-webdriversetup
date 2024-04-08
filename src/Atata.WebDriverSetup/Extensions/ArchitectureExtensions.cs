@@ -11,9 +11,10 @@ public static class ArchitectureExtensions
     /// <param name="architecture">The architecture.</param>
     /// <returns>Either <c>64</c> or <c>32</c> value.</returns>
     public static int GetBits(this Architecture architecture) =>
-        architecture == Architecture.X32
-            ? 32
-            : architecture is Architecture.X64 or Architecture.Arm64
-                ? 64
-                : OSInfo.Bits;
+        architecture switch
+        {
+            Architecture.X32 => 32,
+            Architecture.X64 or Architecture.Arm64 => 64,
+            _ => OSInfo.Bits
+        };
 }

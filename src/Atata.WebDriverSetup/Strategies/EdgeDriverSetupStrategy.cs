@@ -51,7 +51,7 @@ public class EdgeDriverSetupStrategy :
             Architecture.X32 => "win32",
             Architecture.X64 => "win64",
             Architecture.Arm64 => "arm64",
-            _ => throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture)),
+            _ => throw new ArgumentException($"""Unsupported "{architecture}" architecture.""", nameof(architecture))
         };
 
     /// <inheritdoc/>

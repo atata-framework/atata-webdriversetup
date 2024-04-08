@@ -139,7 +139,7 @@ public class DriverSetupTests : IntegrationTestFixture
         public static readonly IEnumerable<string[]> ContainsNullValue =
         [
             null,
-            [null as string],
+            [null],
             [BrowserNames.Chrome, null]
         ];
 

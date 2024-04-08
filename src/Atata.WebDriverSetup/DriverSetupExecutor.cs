@@ -87,7 +87,7 @@ internal sealed class DriverSetupExecutor
         {
             System.Runtime.InteropServices.Architecture.Arm64 => Architecture.Arm64,
             System.Runtime.InteropServices.Architecture.X64 => Architecture.X64,
-            _ => Architecture.X32,
+            _ => Architecture.X32
         };
 
     private string BuildDriverDestinationDirectoryPath(string version)
@@ -127,7 +127,7 @@ internal sealed class DriverSetupExecutor
                 .WaitForExit(15000);
 
             if (!isChmodExecuted)
-                throw new TimeoutException($@"Timed out waiting for ""chmod {chmodArguments}"" command.");
+                throw new TimeoutException($"""Timed out waiting for "chmod {chmodArguments}" command.""");
         }
     }
 
@@ -141,7 +141,7 @@ internal sealed class DriverSetupExecutor
         if (foundEntry != null)
             foundEntry.ExtractToFile(destinationFilePath, true);
         else
-            throw new FileNotFoundException($@"Failed to find ""{destinationFileName}"" file in ""{archiveFilePath}"" archive.");
+            throw new FileNotFoundException($"""Failed to find "{destinationFileName}" file in "{archiveFilePath}" archive.""");
     }
 
     private static void ExtractFromTarGz(string archiveFilePath, string destinationFilePath)

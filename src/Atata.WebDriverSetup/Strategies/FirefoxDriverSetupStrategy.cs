@@ -41,7 +41,7 @@ public class FirefoxDriverSetupStrategy :
             Architecture.X32 => "32",
             Architecture.X64 => "64",
             Architecture.Arm64 => "-aarch64",
-            _ => throw new ArgumentException($@"Unsupported ""{architecture}"" architecture.", nameof(architecture)),
+            _ => throw new ArgumentException($"""Unsupported "{architecture}" architecture.""", nameof(architecture))
         };
 
     /// <inheritdoc/>

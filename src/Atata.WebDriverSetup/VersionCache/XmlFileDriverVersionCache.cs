@@ -34,7 +34,7 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
     {
         latestVersionResolveFunction.CheckNotNull(nameof(latestVersionResolveFunction));
 
-        return GetOrAdd(DriverVersions.Latest, minimumAcceptableTimestamp, v => latestVersionResolveFunction());
+        return GetOrAdd(DriverVersions.Latest, minimumAcceptableTimestamp, _ => latestVersionResolveFunction());
     }
 
     /// <inheritdoc/>

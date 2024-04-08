@@ -62,7 +62,7 @@ public class HttpRequestExecutor : IHttpRequestExecutor
         using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
 
         if (response.StatusCode != HttpStatusCode.Found)
-            throw new HttpRequestException($@"Unexpected HTTP response status for ""{url}"". Expected 302, but was {(int)response.StatusCode}.");
+            throw new HttpRequestException($"""Unexpected HTTP response status for "{url}". Expected 302, but was {(int)response.StatusCode}.""");
 
         return response.Headers.Location;
     }
