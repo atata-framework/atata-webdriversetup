@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgrade System.Text.Json package reference to v8.0.4.
+- Add `ConfigureAwait(false)` to all `await` calls.
 
 ## [2.10.0] - 2024-02-15
 

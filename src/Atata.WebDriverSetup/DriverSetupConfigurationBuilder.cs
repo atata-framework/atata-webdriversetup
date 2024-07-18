@@ -161,7 +161,7 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
 
     /// <inheritdoc cref="SetUp"/>
     public async Task<DriverSetupResult> SetUpAsync() =>
-        await Task.Run(SetUp);
+        await Task.Run(SetUp).ConfigureAwait(false);
 
     private IHttpRequestExecutor CreateHttpRequestExecutor() =>
         new ReliableHttpRequestExecutor(

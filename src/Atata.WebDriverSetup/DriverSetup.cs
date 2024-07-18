@@ -198,11 +198,11 @@ public static class DriverSetup
 
     /// <inheritdoc cref="AutoSetUp(string)"/>
     public static async Task<DriverSetupResult> AutoSetUpAsync(string browserName) =>
-        await Configure(browserName).WithAutoVersion().SetUpAsync();
+        await Configure(browserName).WithAutoVersion().SetUpAsync().ConfigureAwait(false);
 
     /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
     public static async Task<DriverSetupResult[]> AutoSetUpAsync(params string[] browserNames) =>
-        await AutoSetUpAsync(browserNames?.AsEnumerable());
+        await AutoSetUpAsync(browserNames?.AsEnumerable()).ConfigureAwait(false);
 
     /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
     public static async Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames)
@@ -213,9 +213,9 @@ public static class DriverSetup
             .Distinct()
             .Select(AutoSetUpAsync);
 
-        return (await Task.WhenAll(tasks))
-            .Where(res => res != null)
-            .ToArray();
+        var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+        return results.Where(res => res != null).ToArray();
     }
 
     /// <summary>
@@ -236,6 +236,7 @@ public static class DriverSetup
                     .Where(name => name is not null)
                     .Distinct()
                     .Where(s_browserDriverSetupDataMap.ContainsKey))
+                .ConfigureAwait(false)
             : [];
 
     /// <summary>
@@ -257,9 +258,9 @@ public static class DriverSetup
 
         var tasks = pendingConfigurations.Select(conf => conf.SetUpAsync());
 
-        return (await Task.WhenAll(tasks))
-            .Where(res => res != null)
-            .ToArray();
+        var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+        return results.Where(res => res != null).ToArray();
     }
 
     internal static void RemovePendingConfiguration(DriverSetupConfigurationBuilder configurationBuilder)
