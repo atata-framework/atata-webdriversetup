@@ -50,8 +50,10 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
         using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
-        using FileStream fileStream = new FileStream(filePath, FileMode.Create);
 
+        response.EnsureSuccessStatusCode();
+
+        using FileStream fileStream = new FileStream(filePath, FileMode.Create);
         response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
     }
 
