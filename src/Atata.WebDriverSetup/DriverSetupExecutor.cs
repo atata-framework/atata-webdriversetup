@@ -63,7 +63,17 @@ internal sealed class DriverSetupExecutor
             string downloadFileName = Path.GetFileName(downloadUrl);
 
             string downloadFilePath = Path.Combine(downloadDestinationDirectoryPath, downloadFileName);
-            _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
+
+            try
+            {
+                _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
+            }
+            catch (Exception exception)
+            {
+                throw new DriverSetupException(
+                    $"Failed to download {_browserName} driver v{version} by URL '{downloadUrl}'.",
+                    exception);
+            }
 
             try
             {
