@@ -103,10 +103,13 @@ public static class AppVersionDetector
     {
         try
         {
-            return new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
+            string result = new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
+            Log.Trace($"AppVersionDetector.GetThroughCli(\"{fileNameOrCommand}\", \"{arguments}\") => \"{result}\"");
+            return result;
         }
-        catch
+        catch (Exception exception)
         {
+            Log.Trace($"AppVersionDetector.GetThroughCli(\"{fileNameOrCommand}\", \"{arguments}\") => \"{exception}\"");
             return null;
         }
     }
