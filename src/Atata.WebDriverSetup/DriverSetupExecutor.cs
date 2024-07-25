@@ -68,6 +68,8 @@ internal sealed class DriverSetupExecutor
             {
                 Debug.WriteLine("Test Debug.WriteLine");
                 Console.WriteLine("Test Console.WriteLine");
+                Trace.TraceInformation("Test Trace.TraceInformation");
+                Trace.TraceWarning("Test Trace.TraceWarning");
 
                 _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
             }
