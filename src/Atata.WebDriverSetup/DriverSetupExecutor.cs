@@ -66,6 +66,9 @@ internal sealed class DriverSetupExecutor
 
             try
             {
+                Debug.WriteLine("Test Debug.WriteLine");
+                Console.WriteLine("Test Console.WriteLine");
+
                 _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
             }
             catch (Exception exception)
