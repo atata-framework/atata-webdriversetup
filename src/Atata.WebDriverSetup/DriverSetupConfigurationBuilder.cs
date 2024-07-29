@@ -203,15 +203,22 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
     public async Task<DriverSetupResult> SetUpAsync() =>
         await Task.Run(SetUp).ConfigureAwait(false);
 
-    internal static IHttpRequestExecutor CreateDefaultHttpRequestExecutor(DriverSetupConfiguration configuration) =>
-        new ReliableHttpRequestExecutor(
-            new LoggingHttpRequestExecutor(
-                new HttpRequestExecutor(
-                    configuration.Proxy,
-                    configuration.CheckCertificateRevocationList,
-                    configuration.HttpClientHandlerConfigurationAction)),
+    internal static IHttpRequestExecutor CreateDefaultHttpRequestExecutor(DriverSetupConfiguration configuration)
+    {
+        IHttpRequestExecutor executor = new HttpRequestExecutor(
+            configuration.Proxy,
+            configuration.CheckCertificateRevocationList,
+            configuration.HttpClientHandlerConfigurationAction);
+
+#if DEBUG
+        executor = new LoggingHttpRequestExecutor(executor);
+#endif
+
+        return new ReliableHttpRequestExecutor(
+            executor,
             configuration.HttpRequestTryCount,
             configuration.HttpRequestRetryInterval);
+    }
 
     private string ResolveDriverVersion(DriverVersionResolver driverVersionResolver)
     {
