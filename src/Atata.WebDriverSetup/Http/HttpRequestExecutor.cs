@@ -32,8 +32,6 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     /// <inheritdoc/>
     public string DownloadString(string url)
     {
-        Log.Trace($"Downloading string by URL {url}");
-
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
         return client.GetStringAsync(url).GetAwaiter().GetResult();
@@ -42,8 +40,6 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     /// <inheritdoc/>
     public Stream DownloadStream(string url)
     {
-        Log.Trace($"Downloading stream by URL {url}");
-
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
         return client.GetStreamAsync(url).GetAwaiter().GetResult();
@@ -52,8 +48,6 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     /// <inheritdoc/>
     public void DownloadFile(string url, string filePath)
     {
-        Log.Trace($"Downloading file by URL {url}");
-
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
         using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
 
@@ -66,8 +60,6 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     /// <inheritdoc/>
     public Uri GetRedirectUrl(string url)
     {
-        Log.Trace($"Getting redirect URL for {url}");
-
         using HttpClient client = CreateHttpClientWithAutoRedirect(false);
         using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
 

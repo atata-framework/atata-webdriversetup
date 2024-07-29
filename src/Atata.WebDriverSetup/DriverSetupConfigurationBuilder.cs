@@ -205,10 +205,11 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
 
     internal static IHttpRequestExecutor CreateDefaultHttpRequestExecutor(DriverSetupConfiguration configuration) =>
         new ReliableHttpRequestExecutor(
-            new HttpRequestExecutor(
-                configuration.Proxy,
-                configuration.CheckCertificateRevocationList,
-                configuration.HttpClientHandlerConfigurationAction),
+            new LoggingHttpRequestExecutor(
+                new HttpRequestExecutor(
+                    configuration.Proxy,
+                    configuration.CheckCertificateRevocationList,
+                    configuration.HttpClientHandlerConfigurationAction)),
             configuration.HttpRequestTryCount,
             configuration.HttpRequestRetryInterval);
 
