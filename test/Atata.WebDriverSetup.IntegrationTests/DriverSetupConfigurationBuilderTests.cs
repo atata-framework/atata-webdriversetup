@@ -113,6 +113,7 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
         builderConfiguration.Invoke(builder);
 
         var result = builder
+            .WithCheckCertificateRevocationList(false)
             .WithHttpRequestTryCount(1)
             .WithHttpRequestExecutor(
                 config => fakeHttpRequestExecutorProxy = new FakeHttpRequestExecutorProxy(
