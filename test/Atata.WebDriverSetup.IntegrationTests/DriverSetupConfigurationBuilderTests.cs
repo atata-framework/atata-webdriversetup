@@ -96,12 +96,23 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
     }
 
     [Test]
-    public void SetUp_Edge_WithAutoVersion_WhichFailsToDownloadAndPreviousVersionIsDownloaded()
+    public void SetUp_Edge_WithAutoVersion_WhichFailsToDownloadAndPreviousVersionIsDownloaded() =>
+        TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(x => x.WithAutoVersion());
+
+    [Test]
+    public void SetUp_Edge_WithLatestVersion_WhichFailsToDownloadAndPreviousVersionIsDownloaded() =>
+        TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(x => x.WithLatestVersion());
+
+    private static void TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(
+        Action<DriverSetupConfigurationBuilder> builderConfiguration)
     {
         FakeHttpRequestExecutorProxy fakeHttpRequestExecutorProxy = null;
 
-        var result = DriverSetup.Configure(BrowserNames.Edge)
-            .WithAutoVersion()
+        var builder = DriverSetup.Configure(BrowserNames.Edge);
+
+        builderConfiguration.Invoke(builder);
+
+        var result = builder
             .WithHttpRequestTryCount(1)
             .WithHttpRequestExecutor(
                 config => fakeHttpRequestExecutorProxy = new FakeHttpRequestExecutorProxy(
