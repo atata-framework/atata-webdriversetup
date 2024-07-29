@@ -7,13 +7,16 @@ public class EdgeDriverSetupStrategy :
     IDriverSetupStrategy,
     IGetsDriverLatestVersion,
     IGetsInstalledBrowserVersion,
-    IGetsDriverVersionCorrespondingToBrowserVersion
+    IGetsDriverVersionCorrespondingToBrowserVersion,
+    IGetsDriverPreviousVersion
 {
     private const string BaseUrl =
         "https://msedgedriver.azureedge.net";
 
     private const string DriverLatestVersionUrl =
         BaseUrl + "/LATEST_STABLE";
+
+    private const string DownloadsPage = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/";
 
     private readonly IHttpRequestExecutor _httpRequestExecutor;
 
@@ -36,7 +39,10 @@ public class EdgeDriverSetupStrategy :
 
     /// <inheritdoc/>
     public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
-        new($"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}");
+        new(GetDriverDownloadUrlString(version, architecture));
+
+    private static string GetDriverDownloadUrlString(string version, Architecture architecture) =>
+        $"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}";
 
     private static string GetDriverDownloadFileName(Architecture architecture) =>
         OSInfo.IsWindows
@@ -68,4 +74,30 @@ public class EdgeDriverSetupStrategy :
     /// <inheritdoc/>
     public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion) =>
         browserVersion;
+
+    /// <inheritdoc/>
+    public bool TryGetDriverPreviousVersion(string version, Architecture architecture, out string previousVersion)
+    {
+        string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
+
+        string originalVersionUrl = GetDriverDownloadUrlString(version, architecture);
+
+        int index = downloadsPageHtml.LastIndexOf(originalVersionUrl, StringComparison.Ordinal);
+
+        if (index >= 0)
+        {
+            Regex previousVersionRegex = new($"href=\"{GetDriverDownloadUrlString("(.+)", architecture)}\"");
+
+            Match regexMatch = previousVersionRegex.Match(downloadsPageHtml, index + originalVersionUrl.Length);
+
+            if (regexMatch.Success)
+            {
+                previousVersion = regexMatch.Groups[1].Value;
+                return true;
+            }
+        }
+
+        previousVersion = null;
+        return false;
+    }
 }

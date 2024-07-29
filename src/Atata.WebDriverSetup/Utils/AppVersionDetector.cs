@@ -104,12 +104,12 @@ public static class AppVersionDetector
         try
         {
             string result = new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
-            Log.Trace($"AppVersionDetector.GetThroughCli(\"{fileNameOrCommand}\", \"{arguments}\") => \"{result}\"");
+            Log.Trace($"Command \"{fileNameOrCommand} {arguments}\" => \"{result}\"");
             return result;
         }
         catch (Exception exception)
         {
-            Log.Trace($"AppVersionDetector.GetThroughCli(\"{fileNameOrCommand}\", \"{arguments}\") => \"{exception}\"");
+            Log.Trace($"Command \"{fileNameOrCommand} {arguments}\" => \"{exception}\"");
             return null;
         }
     }

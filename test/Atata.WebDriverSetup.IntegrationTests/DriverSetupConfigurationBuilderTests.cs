@@ -94,4 +94,27 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
         Assert.Throws<DriverSetupException>(() =>
             builder.SetUp());
     }
+
+    [Test]
+    public void SetUp_Edge_WithAutoVersion_WhichFailsToDownloadAndPreviousVersionIsDownloaded()
+    {
+        FakeHttpRequestExecutorProxy fakeHttpRequestExecutorProxy = null;
+
+        var result = DriverSetup.Configure(BrowserNames.Edge)
+            .WithAutoVersion()
+            .WithHttpRequestTryCount(1)
+            .WithHttpRequestExecutor(
+                config => fakeHttpRequestExecutorProxy = new FakeHttpRequestExecutorProxy(
+                    DriverSetupConfigurationBuilder.CreateDefaultHttpRequestExecutor(config))
+                {
+                    DownloadFileFailuresCount = 1
+                })
+            .SetUp();
+
+        AssertDriverIsSetUp(result, BrowserNames.Edge);
+        AssertVersionCache(BrowserNames.Edge);
+        fakeHttpRequestExecutorProxy.DownloadFileCalls.Count.Should().Be(2);
+        fakeHttpRequestExecutorProxy.DownloadFileCalls[1].Should().NotBe(
+            fakeHttpRequestExecutorProxy.DownloadFileCalls[0]);
+    }
 }

@@ -32,6 +32,27 @@ internal sealed class DriverVersionResolver
         ResolveCorrespondingVersion()
             ?? ResolveLatestVersion();
 
+    internal bool TryResolvePreviousVersion(string version, out string previousVersion)
+    {
+        if (_setupStrategy is IGetsDriverPreviousVersion previousVersionResolver)
+        {
+            try
+            {
+                Architecture architecture = _options.Architecture.ResolveConcreteArchitecture();
+
+                if (previousVersionResolver.TryGetDriverPreviousVersion(version, architecture, out previousVersion))
+                    return true;
+            }
+            catch (Exception exception)
+            {
+                Log.Warn(exception, $"Failed to resolve driver version previous to {version}.");
+            }
+        }
+
+        previousVersion = null;
+        return false;
+    }
+
     private string ResolveCorrespondingVersion()
     {
         string installedVersion = (_setupStrategy as IGetsInstalledBrowserVersion)

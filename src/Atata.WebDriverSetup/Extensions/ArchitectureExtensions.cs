@@ -17,4 +17,23 @@ public static class ArchitectureExtensions
             Architecture.X64 or Architecture.Arm64 => 64,
             _ => OSInfo.Bits
         };
+
+    /// <summary>
+    /// Resolves the concrete architecture.
+    /// If it is <see cref="Architecture.Auto"/>, detects the actual current one.
+    /// </summary>
+    /// <param name="architecture">The architecture.</param>
+    /// <returns>The architecture resolved.</returns>
+    public static Architecture ResolveConcreteArchitecture(this Architecture architecture) =>
+        architecture != Architecture.Auto
+            ? architecture
+            : DetectArchitecture();
+
+    private static Architecture DetectArchitecture() =>
+        RuntimeInformation.OSArchitecture switch
+        {
+            System.Runtime.InteropServices.Architecture.Arm64 => Architecture.Arm64,
+            System.Runtime.InteropServices.Architecture.X64 => Architecture.X64,
+            _ => Architecture.X32
+        };
 }
