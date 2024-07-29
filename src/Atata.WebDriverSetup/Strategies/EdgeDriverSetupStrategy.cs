@@ -42,7 +42,10 @@ public class EdgeDriverSetupStrategy :
         new(GetDriverDownloadUrlString(version, architecture));
 
     private static string GetDriverDownloadUrlString(string version, Architecture architecture) =>
-        $"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}";
+        GetDriverDownloadUrlVersionPart(version) + GetDriverDownloadFileName(architecture);
+
+    private static string GetDriverDownloadUrlVersionPart(string version) =>
+        $"{BaseUrl}/{version}/";
 
     private static string GetDriverDownloadFileName(Architecture architecture) =>
         OSInfo.IsWindows
@@ -80,15 +83,15 @@ public class EdgeDriverSetupStrategy :
     {
         string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
 
-        string originalVersionUrl = GetDriverDownloadUrlString(version, architecture);
+        string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
 
-        int index = downloadsPageHtml.LastIndexOf(originalVersionUrl, StringComparison.Ordinal);
+        int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
 
-        if (index >= 0)
+        if (lastIndexOfOriginalVersion >= 0)
         {
             Regex previousVersionRegex = new($"href=\"{GetDriverDownloadUrlString("(.+)", architecture)}\"");
 
-            Match regexMatch = previousVersionRegex.Match(downloadsPageHtml, index + originalVersionUrl.Length);
+            Match regexMatch = previousVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionPart.Length);
 
             if (regexMatch.Success)
             {
