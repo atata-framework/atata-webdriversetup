@@ -81,11 +81,18 @@ public class EdgeDriverSetupStrategy :
     /// <inheritdoc/>
     public bool TryGetDriverPreviousVersion(string version, Architecture architecture, out string previousVersion)
     {
-        string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
-
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
 
+        string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
         int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
+
+        if (lastIndexOfOriginalVersion == -1)
+        {
+            Log.Warn($"Failed to find original version URL part {originalVersionUrlVersionPart} in HTML of {DownloadsPage}. Retrying.");
+
+            downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
+            lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
+        }
 
         if (lastIndexOfOriginalVersion >= 0)
         {

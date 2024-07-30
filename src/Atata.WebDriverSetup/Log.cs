@@ -15,7 +15,16 @@ internal static class Log
     {
 #if DEBUG
 #pragma warning disable IDE0022 // Use expression body for method
-        Console.Out.WriteLine($"{message} {exception}");
+        Warn($"{message} {exception}");
+#pragma warning restore IDE0022 // Use expression body for method
+#endif
+    }
+
+    internal static void Warn(string message)
+    {
+#if DEBUG
+#pragma warning disable IDE0022 // Use expression body for method
+        Console.Out.WriteLine(message);
 #pragma warning restore IDE0022 // Use expression body for method
 #endif
     }
