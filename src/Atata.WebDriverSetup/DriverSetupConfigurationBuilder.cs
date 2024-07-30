@@ -7,6 +7,8 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
 {
     private readonly Func<IHttpRequestExecutor, IDriverSetupStrategy> _driverSetupStrategyFactory;
 
+    private Func<DriverSetupConfiguration, IHttpRequestExecutor> _httpRequestExecutorFactory = CreateDefaultHttpRequestExecutor;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DriverSetupConfigurationBuilder"/> class.
     /// </summary>
@@ -107,6 +109,13 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         }
     }
 
+    internal DriverSetupConfigurationBuilder WithHttpRequestExecutor(
+        Func<DriverSetupConfiguration, IHttpRequestExecutor> httpRequestExecutorFactory)
+    {
+        _httpRequestExecutorFactory = httpRequestExecutorFactory.CheckNotNull(nameof(httpRequestExecutorFactory));
+        return this;
+    }
+
     private DriverSetupResult ExecuteSetUpUsingMutex()
     {
         const int timeoutToWait = 600_000;
@@ -140,11 +149,14 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
 
     private DriverSetupResult ExecuteSetUp()
     {
-        IHttpRequestExecutor httpRequestExecutor = CreateHttpRequestExecutor();
+        IHttpRequestExecutor httpRequestExecutor = _httpRequestExecutorFactory.Invoke(BuildingContext);
 
         IDriverSetupStrategy setupStrategy = _driverSetupStrategyFactory.Invoke(httpRequestExecutor);
 
-        string driverVersion = ResolveDriverVersion(setupStrategy, BuildingContext.Version);
+        DriverVersionResolver driverVersionResolver = new DriverVersionResolver(
+            BrowserName, BuildingContext, setupStrategy);
+
+        string driverVersion = ResolveDriverVersion(driverVersionResolver);
 
         DriverSetupExecutor setupExecutor = new DriverSetupExecutor(
             BrowserName,
@@ -152,30 +164,65 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
             setupStrategy,
             httpRequestExecutor);
 
-        DriverSetupResult result = setupExecutor.SetUp(driverVersion);
+        DriverSetupResult result = SetUpDriver(driverVersionResolver, setupExecutor, driverVersion);
 
         DriverSetup.RemovePendingConfiguration(this);
 
         return result;
     }
 
+    private DriverSetupResult SetUpDriver(
+        DriverVersionResolver driverVersionResolver,
+        DriverSetupExecutor setupExecutor,
+        string driverVersion)
+    {
+        try
+        {
+            return setupExecutor.SetUp(driverVersion);
+        }
+        catch (Exception e) when (e.InnerException is HttpRequestException)
+        {
+            if (BuildingContext.Version is DriverVersions.Auto or DriverVersions.Latest
+                && driverVersionResolver.TryResolvePreviousVersion(driverVersion, out string previousDriverVersion))
+            {
+                try
+                {
+                    return setupExecutor.SetUp(previousDriverVersion);
+                }
+                catch (Exception exception)
+                {
+                    Log.Warn(exception, $"Failed to set-up driver with version {previousDriverVersion} previous to {driverVersion}.");
+                }
+            }
+
+            throw;
+        }
+    }
+
     /// <inheritdoc cref="SetUp"/>
     public async Task<DriverSetupResult> SetUpAsync() =>
         await Task.Run(SetUp).ConfigureAwait(false);
 
-    private IHttpRequestExecutor CreateHttpRequestExecutor() =>
-        new ReliableHttpRequestExecutor(
-            new HttpRequestExecutor(
-                BuildingContext.Proxy,
-                BuildingContext.CheckCertificateRevocationList,
-                BuildingContext.HttpClientHandlerConfigurationAction),
-            BuildingContext.HttpRequestTryCount,
-            BuildingContext.HttpRequestRetryInterval);
-
-    private string ResolveDriverVersion(IDriverSetupStrategy setupStrategy, string version)
+    internal static IHttpRequestExecutor CreateDefaultHttpRequestExecutor(DriverSetupConfiguration configuration)
     {
-        DriverVersionResolver driverVersionResolver = new DriverVersionResolver(
-            BrowserName, BuildingContext, setupStrategy);
+        IHttpRequestExecutor executor = new HttpRequestExecutor(
+            configuration.Proxy,
+            configuration.CheckCertificateRevocationList,
+            configuration.HttpClientHandlerConfigurationAction);
+
+#if DEBUG
+        executor = new LoggingHttpRequestExecutor(executor);
+#endif
+
+        return new ReliableHttpRequestExecutor(
+            executor,
+            configuration.HttpRequestTryCount,
+            configuration.HttpRequestRetryInterval);
+    }
+
+    private string ResolveDriverVersion(DriverVersionResolver driverVersionResolver)
+    {
+        string version = BuildingContext.Version;
 
         if (version == DriverVersions.Auto)
             return driverVersionResolver.ResolveCorrespondingOrLatestVersion();

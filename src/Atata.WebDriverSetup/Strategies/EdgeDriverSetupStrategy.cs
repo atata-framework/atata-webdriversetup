@@ -7,13 +7,16 @@ public class EdgeDriverSetupStrategy :
     IDriverSetupStrategy,
     IGetsDriverLatestVersion,
     IGetsInstalledBrowserVersion,
-    IGetsDriverVersionCorrespondingToBrowserVersion
+    IGetsDriverVersionCorrespondingToBrowserVersion,
+    IGetsDriverPreviousVersion
 {
     private const string BaseUrl =
         "https://msedgedriver.azureedge.net";
 
     private const string DriverLatestVersionUrl =
         BaseUrl + "/LATEST_STABLE";
+
+    private const string DownloadsPage = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/";
 
     private readonly IHttpRequestExecutor _httpRequestExecutor;
 
@@ -36,7 +39,13 @@ public class EdgeDriverSetupStrategy :
 
     /// <inheritdoc/>
     public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
-        new($"{BaseUrl}/{version}/{GetDriverDownloadFileName(architecture)}");
+        new(GetDriverDownloadUrlString(version, architecture));
+
+    private static string GetDriverDownloadUrlString(string version, Architecture architecture) =>
+        GetDriverDownloadUrlVersionPart(version) + GetDriverDownloadFileName(architecture);
+
+    private static string GetDriverDownloadUrlVersionPart(string version) =>
+        $"{BaseUrl}/{version}/";
 
     private static string GetDriverDownloadFileName(Architecture architecture) =>
         OSInfo.IsWindows
@@ -68,4 +77,37 @@ public class EdgeDriverSetupStrategy :
     /// <inheritdoc/>
     public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion) =>
         browserVersion;
+
+    /// <inheritdoc/>
+    public bool TryGetDriverPreviousVersion(string version, Architecture architecture, out string previousVersion)
+    {
+        string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
+
+        string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
+        int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
+
+        if (lastIndexOfOriginalVersion == -1)
+        {
+            Log.Warn($"Failed to find original version URL part {originalVersionUrlVersionPart} in HTML of {DownloadsPage}. Retrying.");
+
+            downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
+            lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
+        }
+
+        if (lastIndexOfOriginalVersion >= 0)
+        {
+            Regex previousVersionRegex = new($"href=\"{GetDriverDownloadUrlString("(.+)", architecture)}\"");
+
+            Match regexMatch = previousVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionPart.Length);
+
+            if (regexMatch.Success)
+            {
+                previousVersion = regexMatch.Groups[1].Value;
+                return true;
+            }
+        }
+
+        previousVersion = null;
+        return false;
+    }
 }

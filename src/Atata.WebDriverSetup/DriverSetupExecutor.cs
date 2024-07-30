@@ -40,6 +40,18 @@ internal sealed class DriverSetupExecutor
             driverDestinationFileName);
     }
 
+    private static void DeleteDirectorySafely(string path)
+    {
+        try
+        {
+            Directory.Delete(path, true);
+        }
+        catch
+        {
+            // Do nothing.
+        }
+    }
+
     private void DownloadDriverIfMissing(
         string version,
         string driverDestinationDirectoryPath,
@@ -49,7 +61,9 @@ internal sealed class DriverSetupExecutor
 
         if (!File.Exists(driverDestinationFilePath))
         {
-            if (!Directory.Exists(driverDestinationDirectoryPath))
+            bool doesDriverDestinationDirectoryExists = Directory.Exists(driverDestinationDirectoryPath);
+
+            if (!doesDriverDestinationDirectoryExists)
                 Directory.CreateDirectory(driverDestinationDirectoryPath);
 
             string downloadDestinationDirectoryPath = Path.Combine(driverDestinationDirectoryPath, "dl");
@@ -57,13 +71,26 @@ internal sealed class DriverSetupExecutor
             if (!Directory.Exists(downloadDestinationDirectoryPath))
                 Directory.CreateDirectory(downloadDestinationDirectoryPath);
 
-            Architecture architecture = ResolveArchitecture();
+            Architecture architecture = _configuration.Architecture.ResolveConcreteArchitecture();
 
             string downloadUrl = _setupStrategy.GetDriverDownloadUrl(version, architecture).AbsoluteUri;
             string downloadFileName = Path.GetFileName(downloadUrl);
 
             string downloadFilePath = Path.Combine(downloadDestinationDirectoryPath, downloadFileName);
-            _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
+
+            try
+            {
+                _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
+            }
+            catch (Exception exception)
+            {
+                if (!doesDriverDestinationDirectoryExists)
+                    DeleteDirectorySafely(driverDestinationDirectoryPath);
+
+                throw new DriverSetupException(
+                    $"Failed to download {_browserName} driver v{version} by URL '{downloadUrl}'.",
+                    exception);
+            }
 
             try
             {
@@ -72,23 +99,10 @@ internal sealed class DriverSetupExecutor
             }
             finally
             {
-                Directory.Delete(downloadDestinationDirectoryPath, true);
+                DeleteDirectorySafely(downloadDestinationDirectoryPath);
             }
         }
     }
-
-    private Architecture ResolveArchitecture() =>
-        _configuration.Architecture != Architecture.Auto
-            ? _configuration.Architecture
-            : DetectArchitecture();
-
-    private static Architecture DetectArchitecture() =>
-        RuntimeInformation.OSArchitecture switch
-        {
-            System.Runtime.InteropServices.Architecture.Arm64 => Architecture.Arm64,
-            System.Runtime.InteropServices.Architecture.X64 => Architecture.X64,
-            _ => Architecture.X32
-        };
 
     private string BuildDriverDestinationDirectoryPath(string version)
     {
