@@ -32,24 +32,24 @@ internal sealed class DriverVersionResolver
         ResolveCorrespondingVersion()
             ?? ResolveLatestVersion();
 
-    internal bool TryResolvePreviousVersion(string version, out string previousVersion)
+    internal bool TryResolveClosestVersion(string version, out string closestVersion)
     {
-        if (_setupStrategy is IGetsDriverPreviousVersion previousVersionResolver)
+        if (_setupStrategy is IGetsDriverClosestVersion closestVersionResolver)
         {
             try
             {
                 Architecture architecture = _options.Architecture.ResolveConcreteArchitecture();
 
-                if (previousVersionResolver.TryGetDriverPreviousVersion(version, architecture, out previousVersion))
+                if (closestVersionResolver.TryGetDriverClosestVersion(version, architecture, out closestVersion))
                     return true;
             }
             catch (Exception exception)
             {
-                Log.Warn(exception, $"Failed to resolve driver version previous to {version}.");
+                Log.Warn(exception, $"Failed to resolve driver version closest to {version}.");
             }
         }
 
-        previousVersion = null;
+        closestVersion = null;
         return false;
     }
 

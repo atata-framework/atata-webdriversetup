@@ -183,15 +183,15 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         catch (Exception e) when (e.InnerException is HttpRequestException)
         {
             if (BuildingContext.Version is DriverVersions.Auto or DriverVersions.Latest
-                && driverVersionResolver.TryResolvePreviousVersion(driverVersion, out string previousDriverVersion))
+                && driverVersionResolver.TryResolveClosestVersion(driverVersion, out string closestDriverVersion))
             {
                 try
                 {
-                    return setupExecutor.SetUp(previousDriverVersion);
+                    return setupExecutor.SetUp(closestDriverVersion);
                 }
                 catch (Exception exception)
                 {
-                    Log.Warn(exception, $"Failed to set-up driver with version {previousDriverVersion} previous to {driverVersion}.");
+                    Log.Warn(exception, $"Failed to set-up driver with version {closestDriverVersion} closest to {driverVersion}.");
                 }
             }
 

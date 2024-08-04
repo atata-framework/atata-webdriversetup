@@ -8,7 +8,7 @@ public class EdgeDriverSetupStrategy :
     IGetsDriverLatestVersion,
     IGetsInstalledBrowserVersion,
     IGetsDriverVersionCorrespondingToBrowserVersion,
-    IGetsDriverPreviousVersion
+    IGetsDriverClosestVersion
 {
     private const string BaseUrl =
         "https://msedgedriver.azureedge.net";
@@ -79,35 +79,37 @@ public class EdgeDriverSetupStrategy :
         browserVersion;
 
     /// <inheritdoc/>
-    public bool TryGetDriverPreviousVersion(string version, Architecture architecture, out string previousVersion)
+    public bool TryGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion)
     {
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
 
         string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
         int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
 
-        if (lastIndexOfOriginalVersion == -1)
-        {
-            Log.Warn($"Failed to find original version URL part {originalVersionUrlVersionPart} in HTML of {DownloadsPage}. Retrying.");
-
-            downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
-            lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
-        }
-
         if (lastIndexOfOriginalVersion >= 0)
         {
-            Regex previousVersionRegex = new($"href=\"{GetDriverDownloadUrlString("(.+)", architecture)}\"");
+            Regex anyVersionRegex = new($"href=\"{GetDriverDownloadUrlString("(.+)", architecture)}\"");
 
-            Match regexMatch = previousVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionPart.Length);
+            Match previousVersionRegexMatch = anyVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionPart.Length);
 
-            if (regexMatch.Success)
+            if (previousVersionRegexMatch.Success)
             {
-                previousVersion = regexMatch.Groups[1].Value;
+                closestVersion = previousVersionRegexMatch.Groups[1].Value;
                 return true;
             }
         }
 
-        previousVersion = null;
+        string majorVersion = VersionUtils.TrimMinor(version);
+        Regex majorVersionRegex = new($"href=\"{GetDriverDownloadUrlString($"({majorVersion}\\..+)", architecture)}\"");
+        MatchCollection majorVersionRegexMatches = majorVersionRegex.Matches(downloadsPageHtml);
+
+        if (majorVersionRegexMatches.Count > 0)
+        {
+            closestVersion = majorVersionRegexMatches[majorVersionRegexMatches.Count - 1].Groups[1].Value;
+            return true;
+        }
+
+        closestVersion = null;
         return false;
     }
 }

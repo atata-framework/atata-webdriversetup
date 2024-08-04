@@ -96,11 +96,11 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
     }
 
     [Test]
-    public void SetUp_Edge_WithAutoVersion_WhichFailsToDownloadAndPreviousVersionIsDownloaded() =>
+    public void SetUp_Edge_WithAutoVersion_WhichFailsToDownloadAndClosestVersionIsDownloaded() =>
         TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(x => x.WithAutoVersion());
 
     [Test]
-    public void SetUp_Edge_WithLatestVersion_WhichFailsToDownloadAndPreviousVersionIsDownloaded() =>
+    public void SetUp_Edge_WithLatestVersion_WhichFailsToDownloadAndClosestVersionIsDownloaded() =>
         TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(x => x.WithLatestVersion());
 
     private static void TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(
