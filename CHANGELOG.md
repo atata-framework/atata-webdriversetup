@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.13.0] - 2024-08-04
+
 ### Changed
 
 - Improve fallback functionality for Edge driver that in case of failure of downloading auto/latest driver tries to download driver of the closest version.
@@ -153,6 +155,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial version release.
 
 [Unreleased]: https://github.com/atata-framework/atata-templates/compare/v2.12.0...HEAD
+[2.12.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.12.0...v2.13.0
 [2.12.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.9.0...v2.10.0
