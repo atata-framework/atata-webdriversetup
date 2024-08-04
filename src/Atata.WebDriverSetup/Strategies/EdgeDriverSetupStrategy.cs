@@ -79,7 +79,11 @@ public class EdgeDriverSetupStrategy :
         browserVersion;
 
     /// <inheritdoc/>
-    public bool TryGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion)
+    public bool TryGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion) =>
+        TryAttemptToGetDriverClosestVersion(version, architecture, out closestVersion)
+            || TryAttemptToGetDriverClosestVersion(version, architecture, out closestVersion);
+
+    private bool TryAttemptToGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion)
     {
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
 
