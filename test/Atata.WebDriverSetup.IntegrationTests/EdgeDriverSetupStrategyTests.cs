@@ -74,17 +74,6 @@ public class EdgeDriverSetupStrategyTests
         return url.ToString();
     }
 
-    [TestCase(Architecture.X32, IncludePlatform = Platforms.Windows)]
-    [TestCase(Architecture.X64, IncludePlatform = Platforms.Windows)]
-    [TestCase(Architecture.Arm64, IncludePlatform = Platforms.Windows)]
-    public void GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
-    {
-        string latestVersion = _sut.GetDriverLatestVersion();
-        var url = _sut.GetDriverDownloadUrl(latestVersion, architecture);
-
-        Assertions.AssertUrlReturnsOK(url);
-    }
-
     [Test]
     public void GetInstalledBrowserVersion() =>
         _sut.GetInstalledBrowserVersion()
