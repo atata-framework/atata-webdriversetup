@@ -32,6 +32,7 @@ internal static class Tar
 
         while (true)
         {
+#pragma warning disable S2674 // The length returned from a stream read should be checked
             stream.Read(buffer, 0, 100);
             string entryName = Encoding.ASCII.GetString(buffer).Trim('\0');
 
@@ -63,6 +64,7 @@ internal static class Tar
                 offset = 0;
 
             stream.Seek(offset, SeekOrigin.Current);
+#pragma warning restore S2674 // The length returned from a stream read should be checked
         }
     }
 }
