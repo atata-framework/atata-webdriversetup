@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.14.0] - 2024-10-09
+
 ### Changed
 
 - Upgrade System.Text.Json package reference to v8.0.5.
@@ -163,7 +165,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial version release.
 
 [Unreleased]: https://github.com/atata-framework/atata-templates/compare/v2.12.0...HEAD
-[2.12.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.12.0...v2.13.0
+[2.14.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.13.0...v2.14.0
+[2.13.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.12.0...v2.13.0
 [2.12.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.9.0...v2.10.0
