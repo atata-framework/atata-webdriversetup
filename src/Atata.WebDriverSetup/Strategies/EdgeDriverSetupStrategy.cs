@@ -86,31 +86,42 @@ public class EdgeDriverSetupStrategy :
     private bool TryAttemptToGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion)
     {
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
+        string originalVersionUrlVersionHrefStart = $"href=\"{originalVersionUrlVersionPart}";
 
         string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
-        int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionPart, StringComparison.Ordinal);
+        int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionHrefStart, StringComparison.Ordinal);
 
         if (lastIndexOfOriginalVersion >= 0)
         {
-            Regex anyVersionRegex = new($"href=\"{GetDriverDownloadUrlString("(.+)", architecture)}\"");
+            Regex anyVersionRegex = new($"href=\"{GetDriverDownloadUrlString("([^\"]+)", architecture)}\"");
 
-            Match previousVersionRegexMatch = anyVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionPart.Length);
+            Match previousVersionRegexMatch = anyVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionHrefStart.Length);
 
             if (previousVersionRegexMatch.Success)
             {
-                closestVersion = previousVersionRegexMatch.Groups[1].Value;
-                return true;
+                string versionFound = previousVersionRegexMatch.Groups[1].Value;
+
+                if (versionFound != version)
+                {
+                    closestVersion = versionFound;
+                    return true;
+                }
             }
         }
 
         string majorVersion = VersionUtils.TrimMinor(version);
-        Regex majorVersionRegex = new($"href=\"{GetDriverDownloadUrlString($"({majorVersion}\\..+)", architecture)}\"");
+        Regex majorVersionRegex = new($"href=\"{GetDriverDownloadUrlString($"({majorVersion}\\.[^\"]+)", architecture)}\"");
         MatchCollection majorVersionRegexMatches = majorVersionRegex.Matches(downloadsPageHtml);
 
         if (majorVersionRegexMatches.Count > 0)
         {
-            closestVersion = majorVersionRegexMatches[majorVersionRegexMatches.Count - 1].Groups[1].Value;
-            return true;
+            string versionFound = majorVersionRegexMatches[majorVersionRegexMatches.Count - 1].Groups[1].Value;
+
+            if (versionFound != version)
+            {
+                closestVersion = versionFound;
+                return true;
+            }
         }
 
         closestVersion = null;
