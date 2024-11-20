@@ -37,7 +37,7 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
     }
 
     /// <inheritdoc/>
-    public abstract string DriverBinaryFileName { get; }
+    public abstract string GetDriverBinaryFileName(TargetOSPlatform platform);
 
     /// <inheritdoc/>
     public virtual string GetDriverLatestVersion()
@@ -50,13 +50,13 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
     }
 
     /// <inheritdoc/>
-    public Uri GetDriverDownloadUrl(string version, Architecture architecture)
+    public Uri GetDriverDownloadUrl(string version, TargetOSPlatform platform)
     {
         if (_driverVersionToReleaseVersionMappings is null
             || !_driverVersionToReleaseVersionMappings.TryGetValue(version, out string releaseVersion))
             releaseVersion = version;
 
-        return BuildDriverDownloadUrl(releaseVersion, version, architecture);
+        return BuildDriverDownloadUrl(releaseVersion, version, platform);
     }
 
     /// <summary>
@@ -64,16 +64,16 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
     /// </summary>
     /// <param name="releaseVersion">The release version.</param>
     /// <param name="driverVersion">The driver version.</param>
-    /// <param name="architecture">The architecture.</param>
+    /// <param name="platform">The target OS platform.</param>
     /// <returns>The driver download URL.</returns>
-    protected virtual Uri BuildDriverDownloadUrl(string releaseVersion, string driverVersion, Architecture architecture) =>
-        new($"{_baseUrl}/releases/download/{_versionTagPrefix}{releaseVersion}/{GetDriverDownloadFileName(driverVersion, architecture)}");
+    protected virtual Uri BuildDriverDownloadUrl(string releaseVersion, string driverVersion, TargetOSPlatform platform) =>
+        new($"{_baseUrl}/releases/download/{_versionTagPrefix}{releaseVersion}/{GetDriverDownloadFileName(driverVersion, platform)}");
 
     /// <summary>
     /// Gets the name of the driver download file.
     /// </summary>
     /// <param name="version">The version.</param>
-    /// <param name="architecture">The architecture.</param>
+    /// <param name="platform">The target OS platform.</param>
     /// <returns>The file name.</returns>
-    protected abstract string GetDriverDownloadFileName(string version, Architecture architecture);
+    protected abstract string GetDriverDownloadFileName(string version, TargetOSPlatform platform);
 }

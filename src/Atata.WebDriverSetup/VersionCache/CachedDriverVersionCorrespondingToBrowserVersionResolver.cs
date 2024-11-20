@@ -19,9 +19,9 @@ internal sealed class CachedDriverVersionCorrespondingToBrowserVersionResolver
         _versionCheckInterval = versionCheckInterval;
     }
 
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion) =>
+    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform) =>
         _driverVersionCache.GetOrAdd(
             browserVersion,
             DateTime.UtcNow - _versionCheckInterval,
-            _actualResolver.GetDriverVersionCorrespondingToBrowserVersion);
+            v => _actualResolver.GetDriverVersionCorrespondingToBrowserVersion(v, platform));
 }

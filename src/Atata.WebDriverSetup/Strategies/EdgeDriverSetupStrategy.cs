@@ -28,8 +28,8 @@ public class EdgeDriverSetupStrategy :
         _httpRequestExecutor = httpRequestExecutor;
 
     /// <inheritdoc/>
-    public string DriverBinaryFileName { get; } =
-        OSInfo.IsWindows
+    public string GetDriverBinaryFileName(TargetOSPlatform platform) =>
+        platform.OSFamily == TargetOSFamily.Windows
             ? "msedgedriver.exe"
             : "msedgedriver";
 
@@ -38,28 +38,29 @@ public class EdgeDriverSetupStrategy :
         _httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
 
     /// <inheritdoc/>
-    public Uri GetDriverDownloadUrl(string version, Architecture architecture) =>
-        new(GetDriverDownloadUrlString(version, architecture));
+    public Uri GetDriverDownloadUrl(string version, TargetOSPlatform platform) =>
+        new(GetDriverDownloadUrlString(version, platform));
 
-    private static string GetDriverDownloadUrlString(string version, Architecture architecture) =>
-        GetDriverDownloadUrlVersionPart(version) + GetDriverDownloadFileName(architecture);
+    private static string GetDriverDownloadUrlString(string version, TargetOSPlatform platform) =>
+        GetDriverDownloadUrlVersionPart(version) + GetDriverDownloadFileName(platform);
 
     private static string GetDriverDownloadUrlVersionPart(string version) =>
         $"{BaseUrl}/{version}/";
 
-    private static string GetDriverDownloadFileName(Architecture architecture) =>
-        OSInfo.IsWindows
-            ? $"edgedriver_{GetWindowsArchitectureSuffix(architecture)}.zip"
-            : OSInfo.IsOSX
-                ? $"edgedriver_mac64{(architecture == Architecture.Arm64 ? "_m1" : null)}.zip"
-                : "edgedriver_linux64.zip";
+    private static string GetDriverDownloadFileName(TargetOSPlatform platform) =>
+        platform.OSFamily switch
+        {
+            TargetOSFamily.Windows => $"edgedriver_{GetWindowsArchitectureSuffix(platform.Architecture)}.zip",
+            TargetOSFamily.Mac => $"edgedriver_mac64{(platform.Architecture == TargetArchitecture.Arm64 ? "_m1" : null)}.zip",
+            _ => "edgedriver_linux64.zip"
+        };
 
-    private static string GetWindowsArchitectureSuffix(Architecture architecture) =>
+    private static string GetWindowsArchitectureSuffix(TargetArchitecture architecture) =>
         architecture switch
         {
-            Architecture.X32 => "win32",
-            Architecture.X64 => "win64",
-            Architecture.Arm64 => "arm64",
+            TargetArchitecture.X32 => "win32",
+            TargetArchitecture.X64 => "win64",
+            TargetArchitecture.Arm64 => "arm64",
             _ => throw new ArgumentException($"""Unsupported "{architecture}" architecture.""", nameof(architecture))
         };
 
@@ -75,15 +76,21 @@ public class EdgeDriverSetupStrategy :
                 ?.Replace("Microsoft Edge ", null);
 
     /// <inheritdoc/>
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion) =>
-        browserVersion;
+    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform) =>
+        EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            browserVersion,
+            platform.ToOSPlatform(),
+            out string driverVersion)
+            ? driverVersion
+            : browserVersion;
 
     /// <inheritdoc/>
-    public bool TryGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion) =>
-        TryAttemptToGetDriverClosestVersion(version, architecture, out closestVersion)
-            || TryAttemptToGetDriverClosestVersion(version, architecture, out closestVersion);
+    public bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, out string closestVersion) =>
+        EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(version, platform.ToOSPlatform(), out closestVersion)
+            || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion)
+            || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion);
 
-    private bool TryAttemptToGetDriverClosestVersion(string version, Architecture architecture, out string closestVersion)
+    private bool TryGetDriverClosestVersionFromDownloadsPage(string version, TargetOSPlatform platform, out string closestVersion)
     {
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
         string originalVersionUrlVersionHrefStart = $"href=\"{originalVersionUrlVersionPart}";
@@ -93,7 +100,7 @@ public class EdgeDriverSetupStrategy :
 
         if (lastIndexOfOriginalVersion >= 0)
         {
-            Regex anyVersionRegex = new($"href=\"{GetDriverDownloadUrlString("([^\"]+)", architecture)}\"");
+            Regex anyVersionRegex = new($"href=\"{GetDriverDownloadUrlString("([^\"]+)", platform)}\"");
 
             Match previousVersionRegexMatch = anyVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionHrefStart.Length);
 
@@ -110,7 +117,7 @@ public class EdgeDriverSetupStrategy :
         }
 
         string majorVersion = VersionUtils.TrimMinor(version);
-        Regex majorVersionRegex = new($"href=\"{GetDriverDownloadUrlString($"({majorVersion}\\.[^\"]+)", architecture)}\"");
+        Regex majorVersionRegex = new($"href=\"{GetDriverDownloadUrlString($"({majorVersion}\\.[^\"]+)", platform)}\"");
         MatchCollection majorVersionRegexMatches = majorVersionRegex.Matches(downloadsPageHtml);
 
         if (majorVersionRegexMatches.Count > 0)

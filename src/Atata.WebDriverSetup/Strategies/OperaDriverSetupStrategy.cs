@@ -16,20 +16,21 @@ public class OperaDriverSetupStrategy :
     }
 
     /// <inheritdoc/>
-    public override string DriverBinaryFileName { get; } =
-        OSInfo.IsWindows
+    public override string GetDriverBinaryFileName(TargetOSPlatform platform) =>
+        platform.OSFamily == TargetOSFamily.Windows
             ? "operadriver.exe"
             : "operadriver";
 
     /// <inheritdoc/>
-    protected override string GetDriverDownloadFileName(string version, Architecture architecture)
+    protected override string GetDriverDownloadFileName(string version, TargetOSPlatform platform)
     {
         const string commonNamePart = "operadriver_";
 
-        return OSInfo.IsWindows
-            ? $"{commonNamePart}win{architecture.GetBits()}.zip"
-            : OSInfo.IsOSX
-                ? $"{commonNamePart}mac64.zip"
-                : $"{commonNamePart}linux64.zip";
+        return platform.OSFamily switch
+        {
+            TargetOSFamily.Windows => $"{commonNamePart}win{platform.Bits}.zip",
+            TargetOSFamily.Mac => $"{commonNamePart}mac64.zip",
+            _ => $"{commonNamePart}linux64.zip"
+        };
     }
 }

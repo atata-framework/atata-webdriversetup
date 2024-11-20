@@ -41,8 +41,8 @@ public class ChromeDriverSetupStrategy :
         _httpRequestExecutor = httpRequestExecutor;
 
     /// <inheritdoc/>
-    public string DriverBinaryFileName { get; } =
-        OSInfo.IsWindows
+    public string GetDriverBinaryFileName(TargetOSPlatform platform) =>
+        platform.OSFamily == TargetOSFamily.Windows
             ? "chromedriver.exe"
             : "chromedriver";
 
@@ -58,7 +58,7 @@ public class ChromeDriverSetupStrategy :
     }
 
     /// <inheritdoc/>
-    public Uri GetDriverDownloadUrl(string version, Architecture architecture)
+    public Uri GetDriverDownloadUrl(string version, TargetOSPlatform platform)
     {
         if (VersionUtils.GetNumbersCount(version) != 4)
             throw new ArgumentException($"Invalid driver \"{version}\" version. The version should consist of 4 numbers in format \"115.0.0.0\".", nameof(version));
@@ -66,12 +66,12 @@ public class ChromeDriverSetupStrategy :
         if (IsCftVersion(version))
         {
             string baseUrl = GetCftDownloadsBaseUrl(version);
-            string platform = GetCftDriverDownloadPlatform(architecture);
-            return new Uri($"{baseUrl}/{version}/{platform}/chromedriver-{platform}.zip");
+            string platformName = GetCftDriverDownloadPlatformName(platform);
+            return new Uri($"{baseUrl}/{version}/{platformName}/chromedriver-{platformName}.zip");
         }
         else
         {
-            return new Uri($"{OldBaseUrl}/{version}/{GetOldDriverDownloadFileName(architecture)}");
+            return new Uri($"{OldBaseUrl}/{version}/{GetOldDriverDownloadFileName(platform)}");
         }
     }
 
@@ -97,19 +97,21 @@ public class ChromeDriverSetupStrategy :
             : Cft2DownloadsBaseUrl;
     }
 
-    private static string GetOldDriverDownloadFileName(Architecture architecture) =>
-        OSInfo.IsWindows
-            ? "chromedriver_win32.zip"
-            : OSInfo.IsOSX
-                ? $"chromedriver_mac{(architecture == Architecture.Arm64 ? "_arm" : null)}64.zip"
-                : "chromedriver_linux64.zip";
+    private static string GetOldDriverDownloadFileName(TargetOSPlatform platform) =>
+        platform.OSFamily switch
+        {
+            TargetOSFamily.Windows => "chromedriver_win32.zip",
+            TargetOSFamily.Mac => $"chromedriver_mac{(platform.Architecture == TargetArchitecture.Arm64 ? "_arm" : null)}64.zip",
+            _ => "chromedriver_linux64.zip"
+        };
 
-    private static string GetCftDriverDownloadPlatform(Architecture architecture) =>
-        OSInfo.IsWindows
-            ? $"win{architecture.GetBits()}"
-            : OSInfo.IsOSX
-                ? $"mac-{(architecture == Architecture.Arm64 ? "arm" : "x")}64"
-                : "linux64";
+    private static string GetCftDriverDownloadPlatformName(TargetOSPlatform platform) =>
+        platform.OSFamily switch
+        {
+            TargetOSFamily.Windows => $"win{platform.Bits}",
+            TargetOSFamily.Mac => $"mac-{(platform.Architecture == TargetArchitecture.Arm64 ? "arm" : "x")}64",
+            _ => "linux64"
+        };
 
     /// <inheritdoc/>
     public string GetInstalledBrowserVersion() =>
@@ -123,7 +125,7 @@ public class ChromeDriverSetupStrategy :
                 : AppVersionDetector.GetThroughCli("google-chrome", "--product-version");
 
     /// <inheritdoc/>
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
+    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)
     {
         browserVersion.CheckNotNullOrWhitespace(browserVersion);
 

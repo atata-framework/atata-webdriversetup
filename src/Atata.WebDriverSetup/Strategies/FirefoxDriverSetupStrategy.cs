@@ -18,29 +18,30 @@ public class FirefoxDriverSetupStrategy :
     }
 
     /// <inheritdoc/>
-    public override string DriverBinaryFileName { get; } =
-        OSInfo.IsWindows
+    public override string GetDriverBinaryFileName(TargetOSPlatform platform) =>
+        platform.OSFamily == TargetOSFamily.Windows
             ? "geckodriver.exe"
             : "geckodriver";
 
     /// <inheritdoc/>
-    protected override string GetDriverDownloadFileName(string version, Architecture architecture)
+    protected override string GetDriverDownloadFileName(string version, TargetOSPlatform platform)
     {
         string commonNamePart = $"geckodriver-v{version}-";
 
-        return OSInfo.IsWindows
-            ? $"{commonNamePart}win{GetArchitectureSuffix(architecture)}.zip"
-            : OSInfo.IsOSX
-                ? $"{commonNamePart}macos{(architecture == Architecture.Arm64 ? GetArchitectureSuffix(Architecture.Arm64) : null)}.tar.gz"
-                : $"{commonNamePart}linux{GetArchitectureSuffix(architecture)}.tar.gz";
+        return platform.OSFamily switch
+        {
+            TargetOSFamily.Windows => $"{commonNamePart}win{GetArchitectureSuffix(platform.Architecture)}.zip",
+            TargetOSFamily.Mac => $"{commonNamePart}macos{(platform.Architecture == TargetArchitecture.Arm64 ? GetArchitectureSuffix(TargetArchitecture.Arm64) : null)}.tar.gz",
+            _ => $"{commonNamePart}linux{GetArchitectureSuffix(platform.Architecture)}.tar.gz"
+        };
     }
 
-    private static string GetArchitectureSuffix(Architecture architecture) =>
+    private static string GetArchitectureSuffix(TargetArchitecture architecture) =>
         architecture switch
         {
-            Architecture.X32 => "32",
-            Architecture.X64 => "64",
-            Architecture.Arm64 => "-aarch64",
+            TargetArchitecture.X32 => "32",
+            TargetArchitecture.X64 => "64",
+            TargetArchitecture.Arm64 => "-aarch64",
             _ => throw new ArgumentException($"""Unsupported "{architecture}" architecture.""", nameof(architecture))
         };
 
@@ -56,7 +57,7 @@ public class FirefoxDriverSetupStrategy :
                 ?.Replace("Mozilla Firefox ", null);
 
     /// <inheritdoc/>
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion)
+    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)
     {
         browserVersion.CheckNotNullOrWhitespace(browserVersion);
 

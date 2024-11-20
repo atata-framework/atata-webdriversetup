@@ -8,6 +8,8 @@ internal sealed class DriverVersionResolver
 
     private readonly IDriverSetupStrategy _setupStrategy;
 
+    private readonly TargetOSPlatform _platform;
+
     internal DriverVersionResolver(
         string browserName,
         DriverSetupOptions options,
@@ -16,10 +18,12 @@ internal sealed class DriverVersionResolver
         _browserName = browserName;
         _options = options;
         _setupStrategy = setupStrategy;
+
+        _platform = TargetOSPlatform.Detect(_options.Architecture);
     }
 
     internal string ResolveByBrowserVersion(string version) =>
-        GetCorrespondingVersionResolver().GetDriverVersionCorrespondingToBrowserVersion(version)
+        GetCorrespondingVersionResolver().GetDriverVersionCorrespondingToBrowserVersion(version, _platform)
             ?? throw new DriverSetupException(
                 $"Failed to find {_browserName} driver version corresponding to browser {version} version.");
 
@@ -38,9 +42,7 @@ internal sealed class DriverVersionResolver
         {
             try
             {
-                Architecture architecture = _options.Architecture.ResolveConcreteArchitecture();
-
-                if (closestVersionResolver.TryGetDriverClosestVersion(version, architecture, out closestVersion))
+                if (closestVersionResolver.TryGetDriverClosestVersion(version, _platform, out closestVersion))
                     return true;
             }
             catch (Exception exception)

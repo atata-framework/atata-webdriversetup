@@ -20,12 +20,13 @@ public class InternetExplorerDriverSetupStrategy : GitHubRepositoryBasedDriverSe
     }
 
     /// <inheritdoc/>
-    public override string DriverBinaryFileName => "IEDriverServer.exe";
+    public override string GetDriverBinaryFileName(TargetOSPlatform platform) =>
+        "IEDriverServer.exe";
 
     /// <inheritdoc/>
     public override string GetDriverLatestVersion() =>
         "4.14.0"; // Temporary workaround, as IEDriver and Selenium releases are not synchronized.
 
-    protected override string GetDriverDownloadFileName(string version, Architecture architecture) =>
-        $"IEDriverServer_{(architecture == Architecture.X32 ? "Win32" : "x64")}_{version}.zip";
+    protected override string GetDriverDownloadFileName(string version, TargetOSPlatform platform) =>
+        $"IEDriverServer_{(platform.Architecture == TargetArchitecture.X32 ? "Win32" : "x64")}_{version}.zip";
 }

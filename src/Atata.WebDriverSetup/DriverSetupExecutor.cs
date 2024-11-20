@@ -10,6 +10,8 @@ internal sealed class DriverSetupExecutor
 
     private readonly IHttpRequestExecutor _httpRequestExecutor;
 
+    private readonly TargetOSPlatform _platform;
+
     internal DriverSetupExecutor(
         string browserName,
         DriverSetupConfiguration configuration,
@@ -20,6 +22,8 @@ internal sealed class DriverSetupExecutor
         _configuration = configuration;
         _setupStrategy = setupStrategy;
         _httpRequestExecutor = httpRequestExecutor;
+
+        _platform = TargetOSPlatform.Detect(configuration.Architecture);
     }
 
     internal DriverSetupResult SetUp(string version)
@@ -27,7 +31,7 @@ internal sealed class DriverSetupExecutor
         version.CheckNotNullOrWhitespace(nameof(version));
 
         string driverDestinationDirectoryPath = BuildDriverDestinationDirectoryPath(version);
-        string driverDestinationFileName = _setupStrategy.DriverBinaryFileName;
+        string driverDestinationFileName = _setupStrategy.GetDriverBinaryFileName(_platform);
 
         DownloadDriverIfMissing(version, driverDestinationDirectoryPath, driverDestinationFileName);
 
@@ -71,9 +75,7 @@ internal sealed class DriverSetupExecutor
             if (!Directory.Exists(downloadDestinationDirectoryPath))
                 Directory.CreateDirectory(downloadDestinationDirectoryPath);
 
-            Architecture architecture = _configuration.Architecture.ResolveConcreteArchitecture();
-
-            string downloadUrl = _setupStrategy.GetDriverDownloadUrl(version, architecture).AbsoluteUri;
+            string downloadUrl = _setupStrategy.GetDriverDownloadUrl(version, _platform).AbsoluteUri;
             string downloadFileName = Path.GetFileName(downloadUrl);
 
             string downloadFilePath = Path.Combine(downloadDestinationDirectoryPath, downloadFileName);

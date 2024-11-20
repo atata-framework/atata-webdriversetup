@@ -73,7 +73,7 @@ public class FirefoxDriverSetupStrategyTests
         ExpectedResult = ExpectedLinuxArm64DriverDownloadUrl)]
     public string GetDriverDownloadUrl(Architecture architecture)
     {
-        var url = _sut.GetDriverDownloadUrl(TestVersion, architecture);
+        var url = _sut.GetDriverDownloadUrl(TestVersion, TargetOSPlatform.Detect(architecture));
 
         Assertions.AssertUrlReturnsOK(url);
 
@@ -84,7 +84,7 @@ public class FirefoxDriverSetupStrategyTests
     public void GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
     {
         string latestVersion = _sut.GetDriverLatestVersion();
-        var url = _sut.GetDriverDownloadUrl(latestVersion, architecture);
+        var url = _sut.GetDriverDownloadUrl(latestVersion, TargetOSPlatform.Detect(architecture));
 
         Assertions.AssertUrlReturnsOK(url);
     }
@@ -98,5 +98,5 @@ public class FirefoxDriverSetupStrategyTests
     [TestCase("80.0-beta", ExpectedResult = "0.30.0")]
     [TestCase("75.0.0beta2", ExpectedResult = "0.29.1")]
     public string GetDriverVersionCorrespondingToBrowserVersion(string version) =>
-        _sut.GetDriverVersionCorrespondingToBrowserVersion(version);
+        _sut.GetDriverVersionCorrespondingToBrowserVersion(version, TargetOSPlatform.DetectAuto());
 }

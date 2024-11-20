@@ -9,6 +9,7 @@ public interface IGetsDriverVersionCorrespondingToBrowserVersion
     /// Gets the driver version corresponding to the browser version.
     /// </summary>
     /// <param name="browserVersion">The browser version.</param>
+    /// <param name="platform">The target OS platform.</param>
     /// <returns>The driver version string.</returns>
-    string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion);
+    string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform);
 }
