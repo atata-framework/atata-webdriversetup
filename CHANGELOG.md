@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Added
 
-- Improve Edge driver version detection by using a predefined map of version/drivers.
+- Add predefined map of Edge version/drivers.
+- Add remote map of Edge version/drivers.
 
 ## [2.14.0] - 2024-10-09
 

@@ -80,13 +80,14 @@ public class EdgeDriverSetupStrategy :
         EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
             browserVersion,
             platform.ToOSPlatform(),
+            _httpRequestExecutor,
             out string driverVersion)
             ? driverVersion
             : browserVersion;
 
     /// <inheritdoc/>
     public bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, out string closestVersion) =>
-        EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(version, platform.ToOSPlatform(), out closestVersion)
+        EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(version, platform.ToOSPlatform(), _httpRequestExecutor, out closestVersion)
             || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion)
             || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion);
 

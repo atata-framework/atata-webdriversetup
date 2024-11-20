@@ -4,16 +4,26 @@ internal class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
 {
     private readonly IHttpRequestExecutor _realExecutor;
 
+    private readonly List<(string Url, string FilePath)> _downloadFileCalls = [];
+
+    public FakeHttpRequestExecutorProxy()
+        : this(new HttpRequestExecutor())
+    {
+    }
+
     public FakeHttpRequestExecutorProxy(IHttpRequestExecutor realExecutor) =>
         _realExecutor = realExecutor;
 
     public int DownloadFileFailuresCount { get; set; }
 
-    public List<(string Url, string FilePath)> DownloadFileCalls { get; } = [];
+    public IReadOnlyList<(string Url, string FilePath)> DownloadFileCalls =>
+        _downloadFileCalls;
+
+    public Queue<Func<Func<string>, string>> DownloadStringInterceptions { get; } = [];
 
     public void DownloadFile(string url, string filePath)
     {
-        DownloadFileCalls.Add((url, filePath));
+        _downloadFileCalls.Add((url, filePath));
 
         if (DownloadFileFailuresCount > 0)
         {
@@ -31,7 +41,9 @@ internal class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
         _realExecutor.DownloadStream(url);
 
     public string DownloadString(string url) =>
-        _realExecutor.DownloadString(url);
+        DownloadStringInterceptions.TryDequeue(out var interceptor)
+            ? interceptor.Invoke(() => _realExecutor.DownloadString(url))
+            : _realExecutor.DownloadString(url);
 
     public Uri GetRedirectUrl(string url) =>
         _realExecutor.GetRedirectUrl(url);
