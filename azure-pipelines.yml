@@ -30,10 +30,10 @@ jobs:
     inputs:
       version: $(netSdkVersion)
   - task: DotNetCoreCLI@2
-    displayName: Build solution
+    displayName: Build test projects
     inputs:
       command: build
-      projects: '**/*.sln'
+      projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
@@ -59,10 +59,10 @@ jobs:
     inputs:
       version: $(netSdkVersion)
   - task: DotNetCoreCLI@2
-    displayName: Build solution
+    displayName: Build test projects
     inputs:
       command: build
-      projects: '**/*.sln'
+      projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
@@ -88,10 +88,10 @@ jobs:
     inputs:
       version: $(netSdkVersion)
   - task: DotNetCoreCLI@2
-    displayName: Build solution
+    displayName: Build test projects
     inputs:
       command: build
-      projects: '**/*.sln'
+      projects: '**/*Tests.csproj'
       arguments: -c $(buildConfiguration) -p:RunCodeAnalysis=false
   - task: DotNetCoreCLI@2
     displayName: Run tests
