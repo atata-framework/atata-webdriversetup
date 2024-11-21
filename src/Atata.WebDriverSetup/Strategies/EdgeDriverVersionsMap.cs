@@ -41,6 +41,9 @@ internal static partial class EdgeDriverVersionsMap
             }
         }
 
+        if (TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(browserVersion, platform, out driverVersion))
+            return true;
+
         driverVersion = null;
         return false;
     }
@@ -68,6 +71,9 @@ internal static partial class EdgeDriverVersionsMap
             }
         }
 
+        if (TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(browserVersion, platform, out driverVersion))
+            return true;
+
         driverVersion = null;
         return false;
     }
@@ -76,6 +82,26 @@ internal static partial class EdgeDriverVersionsMap
     {
         s_remoteMapState = RemoteMapState.NotDownloaded;
         s_remoteMapText = null;
+    }
+
+    private static bool TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(string browserVersion, OSPlatforms platform, out string driverVersion)
+    {
+        if (s_remoteMapState is RemoteMapState.Same or RemoteMapState.Fresher)
+        {
+            int browserVersionRemoteMapTextIndex = FindRemoteMapTextIndexByMajorVersionNumber(browserVersion);
+
+            if (browserVersionRemoteMapTextIndex != -1)
+            {
+                int browserVersionEndRemoteMapTextIndex = FindRemoteMapTextLineEndIndex(browserVersionRemoteMapTextIndex);
+
+                driverVersion = FindClosestVersionInRemoteMapTextByPlatform(browserVersionEndRemoteMapTextIndex, platform);
+                if (driverVersion is not null)
+                    return true;
+            }
+        }
+
+        driverVersion = null;
+        return false;
     }
 
     private static int FindMapIndexByVersion(string version)
@@ -127,8 +153,9 @@ internal static partial class EdgeDriverVersionsMap
 
                 s_remoteMapState = IsRemoteMapFresher() ? RemoteMapState.Fresher : RemoteMapState.Same;
             }
-            catch
+            catch (Exception exception)
             {
+                Log.Warn(exception, $"Failed to download \"{RemoteMapUrl}\" or response is not OK.");
                 s_remoteMapState = RemoteMapState.DownloadFailed;
             }
         }
@@ -145,6 +172,13 @@ internal static partial class EdgeDriverVersionsMap
 
     private static int FindRemoteMapTextIndexByVersion(string version) =>
         s_remoteMapText.LastIndexOf($"\"{version}\"", StringComparison.Ordinal);
+
+    private static int FindRemoteMapTextIndexByMajorVersionNumber(string version)
+    {
+        int majorVersionNumber = VersionUtils.GetMajorNumber(version);
+
+        return s_remoteMapText.LastIndexOf($"\"{majorVersionNumber}.", StringComparison.Ordinal);
+    }
 
     private static int FindRemoteMapTextLineEndIndex(int index) =>
        s_remoteMapText.IndexOf(')', index);

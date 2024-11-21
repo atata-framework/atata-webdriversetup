@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Improve Edge driver version resolution functionality to get from remote map the closest driver version withing the same major version when exact version number is missing in the map.
+
 ## [3.0.0] - 2024-11-20
 
 ### Added

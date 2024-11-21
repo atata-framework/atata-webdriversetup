@@ -48,13 +48,26 @@ public abstract class EdgeDriverVersionsMapTests
         public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps()
         {
             bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
-                "130.0.0.0",
+                "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
                 out string driverVersion);
 
             result.Should().BeFalse();
             driverVersion.Should().BeNull();
+        }
+
+        [Test]
+        public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps_ButThereIsClosestByMajor()
+        {
+            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+                "130.0.9999.0",
+                OSPlatforms.Windows64,
+                FakeHttpRequestExecutorProxy,
+                out string driverVersion);
+
+            result.Should().BeTrue();
+            driverVersion.Should().Be("130.0.2849.89");
         }
 
         [Test]
@@ -132,13 +145,26 @@ public abstract class EdgeDriverVersionsMapTests
         public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps()
         {
             bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
-                "130.0.0.0",
+                "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
                 out string driverVersion);
 
             result.Should().BeFalse();
             driverVersion.Should().BeNull();
+        }
+
+        [Test]
+        public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps_ButThereIsClosestByMajor()
+        {
+            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+                "130.0.9999.0",
+                OSPlatforms.Windows64,
+                FakeHttpRequestExecutorProxy,
+                out string driverVersion);
+
+            result.Should().BeTrue();
+            driverVersion.Should().Be("130.0.2849.89");
         }
 
         [Test]
