@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2024-11-21
+
 ### Changed
 
 - Improve Edge driver version resolution functionality to get from remote map the closest driver version withing the same major version when exact version number is missing in the map.
@@ -175,8 +177,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial version release.
 
-[Unreleased]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.0.0...HEAD
-[2.14.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.14.0...v3.0.0
+[Unreleased]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.0.0...v3.1.0
+[3.0.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.14.0...v3.0.0
 [2.14.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.13.0...v2.14.0
 [2.13.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.12.0...v2.13.0
 [2.12.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v2.11.0...v2.12.0
