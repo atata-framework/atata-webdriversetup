@@ -645,6 +645,7 @@ internal static partial class EdgeDriverVersionsMap
         new("133.0.2965.0", Windows32 | Windows64 | WindowsArm64),
         new("133.0.2966.0", Windows32 | Windows64 | WindowsArm64),
         new("133.0.2967.0", Windows32 | Windows64 | WindowsArm64),
-        new("133.0.2968.0", Windows32 | Windows64 | WindowsArm64),
+        new("133.0.2968.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("133.0.2969.0", Windows32 | Windows64 | WindowsArm64),
     ];
 }
