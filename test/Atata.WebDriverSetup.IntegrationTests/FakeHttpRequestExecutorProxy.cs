@@ -1,6 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-internal class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
+internal sealed class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
 {
     private readonly IHttpRequestExecutor _realExecutor;
 

@@ -105,8 +105,8 @@ internal sealed class DriverVersionResolver
         }
     }
 
-    private IDriverVersionCache GetDriverVersionCache() =>
-        new XmlFileDriverVersionCache(
+    private XmlFileDriverVersionCache GetDriverVersionCache() =>
+        new(
             Path.Combine(
                 _options.StorageDirectoryPath,
                 _browserName.Replace(" ", null).ToLower(CultureInfo.InvariantCulture),
