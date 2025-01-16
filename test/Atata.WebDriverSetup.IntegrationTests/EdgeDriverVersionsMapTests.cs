@@ -67,7 +67,7 @@ public abstract class EdgeDriverVersionsMapTests
                 out string driverVersion);
 
             result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.123");
+            driverVersion.Should().Be("130.0.2849.142");
         }
 
         [Test]
@@ -164,7 +164,7 @@ public abstract class EdgeDriverVersionsMapTests
                 out string driverVersion);
 
             result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.123");
+            driverVersion.Should().Be("130.0.2849.142");
         }
 
         [Test]

@@ -543,6 +543,7 @@ internal static partial class EdgeDriverVersionsMap
         new("130.0.2849.108", Windows32 | Windows64 | WindowsArm64),
         new("130.0.2849.116", Windows32 | Windows64 | WindowsArm64),
         new("130.0.2849.123", Windows32 | Windows64 | WindowsArm64),
+        new("130.0.2849.142", Windows32 | Windows64 | WindowsArm64),
 
         new("131.0.2853.0", Windows32 | Windows64),
         new("131.0.2854.0", Windows32 | Windows64 | WindowsArm64),
@@ -611,6 +612,8 @@ internal static partial class EdgeDriverVersionsMap
         new("131.0.2903.108", Mac64 | MacArm64),
         new("131.0.2903.109", Mac64 | MacArm64),
         new("131.0.2903.112", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("131.0.2903.146", Windows32 | Windows64 | WindowsArm64),
+        new("131.0.2903.147", Linux64),
 
         new("132.0.2906.0", Windows32 | Windows64 | WindowsArm64),
         new("132.0.2909.0", Windows32 | Windows64 | WindowsArm64),
@@ -668,6 +671,10 @@ internal static partial class EdgeDriverVersionsMap
         new("132.0.2957.55", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
         new("132.0.2957.58", Linux64),
         new("132.0.2957.59", Mac64 | MacArm64),
+        new("132.0.2957.93", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("132.0.2957.101", Windows32 | Windows64 | WindowsArm64 | Linux64),
+        new("132.0.2957.106", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("132.0.2957.111", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
 
         new("133.0.2961.0", Mac64 | MacArm64),
         new("133.0.2964.0", Windows32 | Windows64 | WindowsArm64),
@@ -735,7 +742,23 @@ internal static partial class EdgeDriverVersionsMap
         new("133.0.3050.0", Windows32 | Windows64 | WindowsArm64),
         new("133.0.3053.0", Windows32 | Windows64 | WindowsArm64),
         new("133.0.3054.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("133.0.3054.1", Windows32 | Windows64 | WindowsArm64 | Linux64),
         new("133.0.3055.0", Windows32 | Windows64 | WindowsArm64),
         new("133.0.3056.0", Windows32 | Windows64 | WindowsArm64),
+        new("133.0.3060.0", Windows32 | Windows64 | WindowsArm64),
+        new("133.0.3061.0", Windows32 | Windows64 | WindowsArm64),
+        new("133.0.3062.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("133.0.3063.0", Windows32 | Windows64 | WindowsArm64),
+        new("133.0.3064.0", Windows32 | Windows64 | WindowsArm64),
+        new("133.0.3065.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("133.0.3065.7", Windows32 | Windows64 | WindowsArm64 | Linux64),
+
+        new("134.0.3073.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("134.0.3074.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("134.0.3075.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("134.0.3076.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("134.0.3077.0", Windows32 | Windows64 | WindowsArm64),
+        new("134.0.3078.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("134.0.3079.0", Windows32 | Windows64 | WindowsArm64),
     ];
 }
