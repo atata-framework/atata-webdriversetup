@@ -215,7 +215,7 @@ public static class DriverSetup
 
         var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
-        return results.Where(res => res != null).ToArray();
+        return [.. results.Where(res => res is not null)];
     }
 
     /// <summary>
@@ -260,7 +260,7 @@ public static class DriverSetup
 
         var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
-        return results.Where(res => res != null).ToArray();
+        return [.. results.Where(res => res is not null)];
     }
 
     internal static void RemovePendingConfiguration(DriverSetupConfigurationBuilder configurationBuilder)
