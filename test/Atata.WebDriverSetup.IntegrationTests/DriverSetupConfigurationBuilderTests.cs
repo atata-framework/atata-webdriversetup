@@ -54,7 +54,7 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
     [TestCase(BrowserNames.Chrome, "121.0.6167.57")]
     [TestCase(BrowserNames.Chrome, "121.0.6167.85")]
     [TestCase(BrowserNames.Firefox, "0.28.0")]
-    [TestCase(BrowserNames.Edge, "100.0.1185.36")]
+    [TestCase(BrowserNames.Edge, "135.0.3179.54")]
     [TestCase(BrowserNames.Opera, "86.0.4240.80")]
     [TestCase(BrowserNames.InternetExplorer, "3.141.59", IncludePlatform = Platforms.Windows)]
     [TestCase(BrowserNames.InternetExplorer, "4.11.0", IncludePlatform = Platforms.Windows)]
@@ -73,7 +73,7 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
     [TestCase(BrowserNames.Chrome, "115", "115")]
     [TestCase(BrowserNames.Chrome, "117.0.5896", "117.0.5896.0")]
     [TestCase(BrowserNames.Firefox, "101", "0.31.0")]
-    [TestCase(BrowserNames.Edge, "100.0.1185.36", "100.0.1185.36")]
+    [TestCase(BrowserNames.Edge, "135.0.3179.54", "135.0.3179.54")]
     public void SetUp_ByBrowserVersion(string browserName, string browserVersion, string driverVersion)
     {
         var result = DriverSetup.Configure(browserName)
