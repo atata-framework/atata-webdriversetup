@@ -1,7 +1,7 @@
 variables:
   buildConfiguration: 'Debug'
-  netSdkVersion: '8.x'
-  resultsDirectoryPath: 'test/Atata.WebDriverSetup.IntegrationTests/bin/$(buildConfiguration)/net8.0/results'
+  netSdkVersion: '9.x'
+  resultsDirectoryPath: 'test/Atata.WebDriverSetup.IntegrationTests/bin/$(buildConfiguration)/net9.0/results'
 
 jobs:
 - job: BuildAndRunCodeAnalysis
