@@ -1042,6 +1042,8 @@ internal static partial class EdgeDriverVersionsMap
         new("138.0.3351.52", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
         new("138.0.3351.55", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
         new("138.0.3351.65", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("138.0.3351.77", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("138.0.3351.83", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
 
         new("139.0.3357.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
         new("139.0.3358.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
@@ -1081,6 +1083,7 @@ internal static partial class EdgeDriverVersionsMap
         new("139.0.3405.0", Windows32 | Windows64 | WindowsArm64),
         new("139.0.3405.9", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
         new("139.0.3405.13", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("139.0.3405.21", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
 
         new("140.0.3406.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
         new("140.0.3407.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
@@ -1092,5 +1095,15 @@ internal static partial class EdgeDriverVersionsMap
         new("140.0.3413.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
         new("140.0.3414.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
         new("140.0.3415.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3421.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("140.0.3422.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3423.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3424.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3425.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3426.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3427.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3428.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3429.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
+        new("140.0.3430.0", Mac64 | MacArm64),
     ];
 }
