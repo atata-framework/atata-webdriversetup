@@ -379,6 +379,12 @@ bool isChromeInstalled = BrowserDetector.IsBrowserInstalled(BrowserNames.Chrome)
 string chromeVersion = BrowserDetector.GetInstalledBrowserVersion(BrowserNames.Chrome);
 ```
 
+## Community
+
+- Slack: [https://atata-framework.slack.com](https://join.slack.com/t/atata-framework/shared_invite/zt-5j3lyln7-WD1ZtMDzXBhPm0yXLDBzbA)
+- X: https://x.com/AtataFramework
+- Stack Overflow: https://stackoverflow.com/questions/tagged/atata
+
 ## Feedback
 
 Any feedback, issues and feature requests are welcome.
@@ -386,6 +392,10 @@ Any feedback, issues and feature requests are welcome.
 If you faced an issue please report it to [Atata.WebDriverSetup Issues](https://github.com/atata-framework/atata-webdriversetup/issues),
 [ask a question on Stack Overflow](https://stackoverflow.com/questions/ask?tags=atata+csharp) using [atata](https://stackoverflow.com/questions/tagged/atata) tag
 or use another [Atata Contact](https://atata.io/contact/) way.
+
+## Contributing
+
+Check out [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ## SemVer
 
