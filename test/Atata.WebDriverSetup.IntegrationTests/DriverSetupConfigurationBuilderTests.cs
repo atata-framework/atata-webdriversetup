@@ -106,7 +106,7 @@ public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
     private static void TestEdgeSetUpWhichFailsToDownloadAndPreviousVersionIsDownloaded(
         Action<DriverSetupConfigurationBuilder> builderConfiguration)
     {
-        FakeHttpRequestExecutorProxy fakeHttpRequestExecutorProxy = null;
+        FakeHttpRequestExecutorProxy fakeHttpRequestExecutorProxy = null!;
 
         var builder = DriverSetup.Configure(BrowserNames.Edge);
 

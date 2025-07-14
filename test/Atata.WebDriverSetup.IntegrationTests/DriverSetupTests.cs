@@ -28,7 +28,7 @@ public class DriverSetupTests : IntegrationTestFixture
     public void AutoSetUp_ThrowsArgumentException(string[] browserNames)
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            DriverSetup.AutoSetUp(browserNames));
+            DriverSetup.AutoSetUp(browserNames))!;
 
         exception.Message.Should().ContainEquivalentOf("unsupported");
     }
@@ -59,7 +59,7 @@ public class DriverSetupTests : IntegrationTestFixture
     public void AutoSetUpAsync_ThrowsArgumentException(string[] browserNames)
     {
         var exception = Assert.ThrowsAsync<ArgumentException>(() =>
-            DriverSetup.AutoSetUpAsync(browserNames));
+            DriverSetup.AutoSetUpAsync(browserNames))!;
 
         exception.Message.Should().ContainEquivalentOf("unsupported");
     }
@@ -136,7 +136,7 @@ public class DriverSetupTests : IntegrationTestFixture
             [BrowserNames.Chrome, BrowserNames.Firefox]
         ];
 
-        public static readonly IEnumerable<string[]> ContainsNullValue =
+        public static readonly IEnumerable<string?[]?> ContainsNullValue =
         [
             null,
             [null],

@@ -40,7 +40,7 @@ public abstract class IntegrationTestFixture
 
     private static string BuildTestResultDirectoryPath()
     {
-        string testClassName = TestContext.CurrentContext.Test.ClassName;
+        string testClassName = TestContext.CurrentContext.Test.ClassName!;
         testClassName = testClassName[(testClassName.LastIndexOf('.') + 1)..];
 
         string testName = TestContext.CurrentContext.Test.Name;
@@ -69,7 +69,7 @@ public abstract class IntegrationTestFixture
     protected static void AssertDriverIsSetUp(
         DriverSetupResult setupResult,
         string browserName,
-        string version = null,
+        string? version = null,
         Architecture architecture = Architecture.Auto)
     {
         var driverLocation = AssertDriverExists(browserName, version, architecture);
@@ -82,7 +82,7 @@ public abstract class IntegrationTestFixture
 
     private static (string DirectoryPath, string FileName) AssertDriverExists(
         string browserName,
-        string version,
+        string? version,
         Architecture architecture)
     {
         string driverDirectoryPath = GetRootDriverDirectoryPath(browserName);
@@ -93,7 +93,7 @@ public abstract class IntegrationTestFixture
             .Should().ContainSingle("there should exist single version folder")
             .Subject;
 
-        if (version != null)
+        if (version is not null)
             versionDirectory.Name.Should().StartWith(version);
 
         DirectoryInfo destinationDirectory;
@@ -127,20 +127,20 @@ public abstract class IntegrationTestFixture
     private static void AssertDriverSetupResult(
         DriverSetupResult result,
         string browserName,
-        string version,
+        string? version,
         (string DirectoryPath, string FileName) driverLocation)
     {
         result.Should().NotBeNull();
         result.BrowserName.Should().Be(browserName);
 
-        if (version != null)
+        if (version is not null)
             result.Version.Should().StartWith(version);
 
         result.DirectoryPath.Should().Be(driverLocation.DirectoryPath);
         result.FileName.Should().Be(driverLocation.FileName);
     }
 
-    protected static void AssertVersionCache(string browserName, string version = null)
+    protected static void AssertVersionCache(string browserName, string? version = null)
     {
         string driverDirectoryPath = GetRootDriverDirectoryPath(browserName);
         string cacheFilePath = Path.Combine(driverDirectoryPath, "versioncache.xml");
@@ -152,7 +152,7 @@ public abstract class IntegrationTestFixture
     }
 
     private static void AssertPathEnvironmentVariable(string driverDirectoryPath) =>
-        Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process)
+        Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process)!
             .Split(Path.PathSeparator)
             .Should().Contain(driverDirectoryPath);
 

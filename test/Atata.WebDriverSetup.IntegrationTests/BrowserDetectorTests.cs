@@ -17,7 +17,7 @@ public static class BrowserDetectorTests
         [Test]
         public void WithNull() =>
             Assert.Throws<ArgumentNullException>(() =>
-                BrowserDetector.GetFirstInstalledBrowserName(null as IEnumerable<string>));
+                BrowserDetector.GetFirstInstalledBrowserName((null as IEnumerable<string>)!));
 
         [Test]
         public void WithEmptyEnumerable() =>

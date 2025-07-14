@@ -3,7 +3,7 @@
 [Parallelizable(ParallelScope.None)]
 public abstract class EdgeDriverVersionsMapTests
 {
-    private protected FakeHttpRequestExecutorProxy FakeHttpRequestExecutorProxy { get; set; }
+    private protected FakeHttpRequestExecutorProxy FakeHttpRequestExecutorProxy { get; set; } = null!;
 
     [SetUp]
     public void SetUpTest()
@@ -25,7 +25,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.2849.89",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("130.0.2849.89");
@@ -38,7 +38,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.2849.89",
                 OSPlatforms.Linux64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("130.0.2849.78");
@@ -51,7 +51,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeFalse();
             driverVersion.Should().BeNull();
@@ -64,7 +64,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.9999.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("130.0.2849.142");
@@ -79,7 +79,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeFalse();
             driverVersion.Should().BeNull();
@@ -106,7 +106,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("999.0.0.0");
@@ -122,7 +122,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.2849.89",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("130.0.2849.80");
@@ -135,7 +135,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.2849.89",
                 OSPlatforms.Linux64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("130.0.2849.78");
@@ -148,7 +148,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeFalse();
             driverVersion.Should().BeNull();
@@ -161,7 +161,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.9999.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("130.0.2849.142");
@@ -176,7 +176,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "130.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeFalse();
             driverVersion.Should().BeNull();
@@ -206,7 +206,7 @@ public abstract class EdgeDriverVersionsMapTests
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string driverVersion);
+                out string? driverVersion);
 
             result.Should().BeTrue();
             driverVersion.Should().Be("997.0.0.0");

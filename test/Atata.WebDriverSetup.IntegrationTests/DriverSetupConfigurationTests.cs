@@ -3,18 +3,18 @@
 [TestFixture]
 public class DriverSetupConfigurationTests
 {
-    private DriverSetupOptions _globalOptions;
+    private DriverSetupOptions _globalOptions = null!;
 
-    private DriverSetupOptions _defaultOptions;
+    private DriverSetupOptions _defaultOptions = null!;
 
-    private DriverSetupConfiguration _configuration;
+    private DriverSetupConfiguration _configuration = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _globalOptions = new DriverSetupOptions();
-        _defaultOptions = new DriverSetupOptions(_globalOptions);
-        _configuration = new DriverSetupConfiguration(_defaultOptions);
+        _globalOptions = new();
+        _defaultOptions = new(_globalOptions);
+        _configuration = new(_defaultOptions);
     }
 
     [Test]
