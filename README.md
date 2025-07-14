@@ -19,21 +19,21 @@ Basically, it provides functionality similar to Java `WebDriverManager`.
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Set Up Version Corresponding to Locally Installed Browser Version](#set-up-version-corresponding-to-locally-installed-browser-version)
-  - [Set Up Latest Version](#set-up-latest-version)
-  - [Set Up Specific Version](#set-up-specific-version)
-  - [Set Up Version Corresponding to Specific Browser Version](#set-up-version-corresponding-to-specific-browser-version)
-- [DriverSetup Members](#driversetup-members)
-  - [DriverSetup Properties](#driversetup-properties)
-  - [DriverSetup Methods](#driversetup-methods)
+  - [Set up version corresponding to locally installed browser version](#set-up-version-corresponding-to-locally-installed-browser-version)
+  - [Set up latest version](#set-up-latest-version)
+  - [Set up specific version](#set-up-specific-version)
+  - [Set up version corresponding to specific browser version](#set-up-version-corresponding-to-specific-browser-version)
+- [DriverSetup members](#driversetup-members)
+  - [DriverSetup properties](#driversetup-properties)
+  - [DriverSetup methods](#driversetup-methods)
 - [Configuration](#configuration)
-  - [Global Configuration](#global-configuration)
-  - [Driver-Specific Configuration](#driver-specific-configuration)
-  - [Configuration Methods](#configuration-methods)
-  - [Handle HTTPS Certificate Errors](#handle-https-certificate-errors)
+  - [Global configuration](#global-configuration)
+  - [Driver-specific configuration](#driver-specific-configuration)
+  - [Configuration methods](#configuration-methods)
+  - [Handle HTTPS certificate errors](#handle-https-certificate-errors)
 - [BrowserDetector](#browserdetector)
-  - [BrowserDetector Methods](#browserdetector-methods)
-  - [BrowserDetector Usage](#browserdetector-usage)
+  - [BrowserDetector methods](#browserdetector-methods)
+  - [BrowserDetector usage](#browserdetector-usage)
 - [Feedback](#feedback)
 - [SemVer](#semver)
 - [License](#license)
@@ -93,7 +93,7 @@ which is read by WebDriver's DriverService classes.
 ChromeDriver chromeDriver = new ChromeDriver();
 ```
 
-### Set Up Version Corresponding to Locally Installed Browser Version
+### Set up version corresponding to locally installed browser version
 
 1. Configure with default configuration options:
    ```cs
@@ -117,7 +117,7 @@ DriverSetup.AutoSetUp(BrowserNames.Chrome, BrowserNames.Edge);
 If the version of browser cannot be detected automatically, latest driver version is used.
 Version auto-detection is currently supported for Chrome, Firefox and Edge browsers.
 
-### Set Up Latest Version
+### Set up latest version
 
 ```cs
 DriverSetup.ConfigureChrome()
@@ -125,7 +125,7 @@ DriverSetup.ConfigureChrome()
     .SetUp();
 ```
 
-### Set Up Specific Version
+### Set up specific version
 
 ```cs
 DriverSetup.ConfigureChrome()
@@ -140,7 +140,7 @@ DriverSetup.ConfigureChrome()
 - Opera: `"86.0.4240.80"`
 - InternetExplorer: `"3.141.59"`
 
-### Set Up Version Corresponding to Specific Browser Version
+### Set up version corresponding to specific browser version
 
 ```cs
 DriverSetup.ConfigureChrome()
@@ -156,11 +156,11 @@ This feature is currently supported for Chrome, Firefox and Edge browsers.
 - Firefox: `"104"`, `"104.0"` or `"104.0.1"`
 - Edge: `"89.0.774.4"`
 
-## DriverSetup Members
+## DriverSetup members
 
 `DriverSetup` is a static class, so all its members are static too.
 
-### DriverSetup Properties
+### DriverSetup properties
 
 - **`DriverSetupOptions GlobalOptions { get; }`**\
   Gets the global setup options.
@@ -171,7 +171,7 @@ This feature is currently supported for Chrome, Firefox and Edge browsers.
   Gets the pending driver setup configurations,
   the configurations that were created but were not set up.
 
-### DriverSetup Methods
+### DriverSetup methods
 
 - **`DriverSetupConfigurationBuilder ConfigureChrome()`**\
   Creates the Chrome driver setup configuration builder.
@@ -216,9 +216,9 @@ This feature is currently supported for Chrome, Firefox and Edge browsers.
 
 It's possible to set configuration options globally and separately for a specific driver.
 
-### Global Configuration
+### Global configuration
 
-#### Using Fluent Builder
+#### Using fluent builder
 
 ```cs
 DriverSetup.GlobalConfiguration
@@ -226,21 +226,21 @@ DriverSetup.GlobalConfiguration
     .WithVersionCache(false);
 ```
 
-#### Using Options Properties
+#### Using options properties
 
 ```cs
 DriverSetup.GlobalOptions.StorageDirectoryPath = "...";
 DriverSetup.GlobalOptions.UseVersionCache = false;
 ```
 
-### Default Driver Configuration
+### Default driver configuration
 
 ```cs
 DriverSetup.GetDefaultConfiguration(BrowserNames.InternetExplorer)
     .WithX32Architecture();
 ```
 
-### Driver-Specific Configuration
+### Driver-specific configuration
 
 ```cs
 DriverSetup.ConfigureChrome()
@@ -251,9 +251,9 @@ DriverSetup.ConfigureChrome()
 
 *Don't forget to call `SetUp()` or `SetUpAsync()` at the end.*
 
-### Configuration Methods
+### Configuration methods
 
-#### Driver-Specific Configuration Methods
+#### Driver-specific configuration methods
 
 - **`WithAutoVersion()`**\
   Sets the automatic driver version detection by installed browser version.
@@ -273,7 +273,7 @@ DriverSetup.ConfigureChrome()
   For example: `"ChromeDriver"` or `"InternetExplorerDriver"`.
   The `null` value means that none variable should be set.
 
-#### Common Configuration Methods
+#### Common configuration methods
 
 - **`WithStorageDirectoryPath(string path)`**\
   Sets the storage directory path.
@@ -324,7 +324,7 @@ DriverSetup.ConfigureChrome()
   to environment "Path" variable.
   The default value is `true`.
 
-### Handle HTTPS Certificate Errors
+### Handle HTTPS certificate errors
 
 Rarely you can get HTTP certificate errors during driver setup.
 In order to handle such errors you can try one or both of the configuration settings below.
@@ -345,7 +345,7 @@ so as a browser name the following constants can be used:
 - `BrowserNames.Firefox`
 - `BrowserNames.Edge`
 
-### BrowserDetector Methods
+### BrowserDetector methods
 
 - **`string GetInstalledBrowserVersion(string browserName)`**\
   Gets the installed browser version by the browser name.
@@ -356,9 +356,9 @@ so as a browser name the following constants can be used:
 - **`string GetFirstInstalledBrowserName(IEnumerable<string> browserNames)`**\
  Gets the name of the first installed browser among the `browserNames`.
 
-### BrowserDetector Usage
+### BrowserDetector usage
 
-#### Get First Installed Browser Name
+#### Get first installed browser name
 
 ```cs
 string browserName = BrowserDetector.GetFirstInstalledBrowserName(
@@ -367,13 +367,13 @@ string browserName = BrowserDetector.GetFirstInstalledBrowserName(
     BrowserNames.Edge);
 ```
 
-#### Is Browser Installed
+#### Is browser installed
 
 ```cs
 bool isChromeInstalled = BrowserDetector.IsBrowserInstalled(BrowserNames.Chrome);
 ```
 
-#### Get Installed Browser Version
+#### Get installed browser version
 
 ```cs
 string chromeVersion = BrowserDetector.GetInstalledBrowserVersion(BrowserNames.Chrome);
