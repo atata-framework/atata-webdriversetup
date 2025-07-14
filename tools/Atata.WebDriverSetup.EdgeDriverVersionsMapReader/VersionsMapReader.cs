@@ -20,10 +20,10 @@ internal static class VersionsMapReader
     {
         DriverSetup.AutoSetUp(BrowserNames.Chrome);
 
-        var contextBuilder = AtataContext.Configure()
-            .UseChrome()
-                .WithArguments("disable-search-engine-choice-screen")
-                .WithArguments("headless=new")
+        var contextBuilder = AtataContext.CreateDefaultNonScopedBuilder()
+            .Sessions.AddWebDriver(x => x
+                .UseChrome(x => x
+                    .WithArguments("disable-search-engine-choice-screen", "headless=new")))
             .LogConsumers.AddNLogFile();
 
         using (contextBuilder.Build())
