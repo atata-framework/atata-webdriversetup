@@ -44,8 +44,8 @@ public static class DriverSetup
         string browserName,
         Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)
     {
-        browserName.CheckNotNull(nameof(browserName));
-        driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
+        Guard.ThrowIfNull(browserName);
+        Guard.ThrowIfNull(driverSetupStrategyFactory);
 
         DriverSetupOptionsBuilder optionsBuilder = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData currentData)
             ? currentData.DefaultOptionsBuilder
@@ -155,7 +155,7 @@ public static class DriverSetup
 
     private static DriverSetupData GetDriverSetupData(string browserName)
     {
-        browserName.CheckNotNullOrWhitespace(nameof(browserName));
+        Guard.ThrowIfNullOrWhitespace(browserName);
 
         return s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData setupData)
             ? setupData
@@ -185,7 +185,7 @@ public static class DriverSetup
 
     /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
     public static DriverSetupResult[] AutoSetUp(params string[] browserNames) =>
-        AutoSetUp(browserNames?.AsEnumerable());
+        AutoSetUp(browserNames?.AsEnumerable()!);
 
     /// <summary>
     /// Sets up drivers with auto version detection for the browsers with the specified names.
@@ -202,12 +202,12 @@ public static class DriverSetup
 
     /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
     public static async Task<DriverSetupResult[]> AutoSetUpAsync(params string[] browserNames) =>
-        await AutoSetUpAsync(browserNames?.AsEnumerable()).ConfigureAwait(false);
+        await AutoSetUpAsync(browserNames?.AsEnumerable()!).ConfigureAwait(false);
 
     /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
     public static async Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames)
     {
-        browserNames.CheckNotNull(nameof(browserNames));
+        Guard.ThrowIfNull(browserNames);
 
         var tasks = browserNames
             .Distinct()
@@ -271,7 +271,7 @@ public static class DriverSetup
         }
     }
 
-    internal static string GetInstalledBrowserVersion(string browserName) =>
+    internal static string? GetInstalledBrowserVersion(string browserName) =>
         s_browserDriverSetupDataMap.TryGetValue(browserName, out var driverSetupData)
             ? (driverSetupData.StrategyFactory.Invoke(new HttpRequestExecutor()) as IGetsInstalledBrowserVersion)
                 ?.GetInstalledBrowserVersion()

@@ -54,7 +54,7 @@ public class ChromeDriverSetupStrategy :
 
         return jsonDocument.RootElement
             .GetPropertyByChain("channels", "Stable", "version")
-            .GetString();
+            .GetString()!;
     }
 
     /// <inheritdoc/>
@@ -114,7 +114,7 @@ public class ChromeDriverSetupStrategy :
         };
 
     /// <inheritdoc/>
-    public string GetInstalledBrowserVersion() =>
+    public string? GetInstalledBrowserVersion() =>
         OSInfo.IsWindows
             ? AppVersionDetector.GetFromProgramFiles(@"Google\Chrome\Application\chrome.exe")
                 ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Google\Chrome")
@@ -127,7 +127,7 @@ public class ChromeDriverSetupStrategy :
     /// <inheritdoc/>
     public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)
     {
-        browserVersion.CheckNotNullOrWhitespace(browserVersion);
+        Guard.ThrowIfNullOrWhitespace(browserVersion);
 
         int browserVersionNumbersCount = VersionUtils.GetNumbersCount(browserVersion);
 
@@ -159,6 +159,6 @@ public class ChromeDriverSetupStrategy :
 
         return jsonDocument.RootElement
             .GetPropertyByChain(subRootPropertyName, incompleteBrowserVersion, "version")
-            .GetString();
+            .GetString()!;
     }
 }

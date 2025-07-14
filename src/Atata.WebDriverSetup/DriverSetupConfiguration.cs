@@ -22,7 +22,7 @@ public class DriverSetupConfiguration : DriverSetupOptions
     /// </summary>
     public string Version
     {
-        get => GetOption<string>(nameof(Version));
+        get => GetOption<string>(nameof(Version))!;
         set => SetOption(nameof(Version), value);
     }
 
@@ -40,7 +40,7 @@ public class DriverSetupConfiguration : DriverSetupOptions
     /// The <see langword="null"/> value means that none variable should be set.
     /// </para>
     /// </summary>
-    public string EnvironmentVariableName
+    public string? EnvironmentVariableName
     {
         get => GetOption<string>(nameof(EnvironmentVariableName));
         set => SetOption(nameof(EnvironmentVariableName), value);

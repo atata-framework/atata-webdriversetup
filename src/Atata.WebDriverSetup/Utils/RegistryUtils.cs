@@ -19,7 +19,7 @@ public static class RegistryUtils
     /// </summary>
     /// <param name="applicationName">Name of the application.</param>
     /// <returns>The path or <see langword="null"/>.</returns>
-    public static string GetApplicationPath(string applicationName) =>
+    public static string? GetApplicationPath(string applicationName) =>
         GetValue(string.Format(CurrentUserRegistryAppPathFormat, applicationName))
             ?? GetValue(string.Format(LocalMachineRegistryAppPathFormat, applicationName));
 
@@ -29,7 +29,7 @@ public static class RegistryUtils
     /// <param name="keyName">Name of the key.</param>
     /// <param name="valueName">Name of the value.</param>
     /// <returns>The value or <see langword="null"/>.</returns>
-    public static string GetValue(string keyName, string valueName = null)
+    public static string? GetValue(string keyName, string? valueName = null)
     {
         try
         {

@@ -3,11 +3,11 @@
 /// <inheritdoc/>
 public class HttpRequestExecutor : IHttpRequestExecutor
 {
-    private readonly IWebProxy _proxy;
+    private readonly IWebProxy? _proxy;
 
     private readonly bool _checkCertificateRevocationList;
 
-    private readonly Action<HttpClientHandler> _httpClientHandlerConfigurationAction;
+    private readonly Action<HttpClientHandler>? _httpClientHandlerConfigurationAction;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
@@ -20,9 +20,9 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     /// </param>
     /// <param name="httpClientHandlerConfigurationAction">The configuration action of <see cref="HttpClientHandler"/>.</param>
     public HttpRequestExecutor(
-        IWebProxy proxy = null,
+        IWebProxy? proxy = null,
         bool checkCertificateRevocationList = true,
-        Action<HttpClientHandler> httpClientHandlerConfigurationAction = null)
+        Action<HttpClientHandler>? httpClientHandlerConfigurationAction = null)
     {
         _proxy = proxy;
         _checkCertificateRevocationList = checkCertificateRevocationList;
@@ -53,7 +53,7 @@ public class HttpRequestExecutor : IHttpRequestExecutor
 
         response.EnsureSuccessStatusCode();
 
-        using FileStream fileStream = new FileStream(filePath, FileMode.Create);
+        using FileStream fileStream = new(filePath, FileMode.Create);
         response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
     }
 
@@ -71,7 +71,7 @@ public class HttpRequestExecutor : IHttpRequestExecutor
 
     private HttpClient CreateHttpClientWithAutoRedirect(bool allowAutoRedirect)
     {
-        HttpClientHandler httpClientHandler = new HttpClientHandler
+        HttpClientHandler httpClientHandler = new()
         {
             Proxy = _proxy,
             AllowAutoRedirect = allowAutoRedirect

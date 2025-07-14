@@ -6,7 +6,7 @@ internal static partial class EdgeDriverVersionsMap
 
     private static RemoteMapState s_remoteMapState;
 
-    private static string s_remoteMapText;
+    private static string? s_remoteMapText;
 
     private enum RemoteMapState
     {
@@ -16,7 +16,11 @@ internal static partial class EdgeDriverVersionsMap
         Fresher
     }
 
-    internal static bool TryGetDriverVersionCorrespondingToBrowserVersion(string browserVersion, OSPlatforms platform, IHttpRequestExecutor httpRequestExecutor, out string driverVersion)
+    internal static bool TryGetDriverVersionCorrespondingToBrowserVersion(
+        string browserVersion,
+        OSPlatforms platform,
+        IHttpRequestExecutor httpRequestExecutor,
+        [NotNullWhen(true)] out string? driverVersion)
     {
         int browserVersionMapIndex = FindMapIndexByVersion(browserVersion);
 
@@ -48,7 +52,11 @@ internal static partial class EdgeDriverVersionsMap
         return false;
     }
 
-    internal static bool TryGetDriverVersionClosestToBrowserVersion(string browserVersion, OSPlatforms platform, IHttpRequestExecutor httpRequestExecutor, out string driverVersion)
+    internal static bool TryGetDriverVersionClosestToBrowserVersion(
+        string browserVersion,
+        OSPlatforms platform,
+        IHttpRequestExecutor httpRequestExecutor,
+        [NotNullWhen(true)] out string? driverVersion)
     {
         int browserVersionMapIndex = FindMapIndexByVersion(browserVersion);
 
@@ -84,7 +92,10 @@ internal static partial class EdgeDriverVersionsMap
         s_remoteMapText = null;
     }
 
-    private static bool TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(string browserVersion, OSPlatforms platform, out string driverVersion)
+    private static bool TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(
+        string browserVersion,
+        OSPlatforms platform,
+        [NotNullWhen(true)] out string? driverVersion)
     {
         if (s_remoteMapState is RemoteMapState.Same or RemoteMapState.Fresher)
         {
@@ -117,7 +128,7 @@ internal static partial class EdgeDriverVersionsMap
         return -1;
     }
 
-    private static string FindClosestVersionInMapByPlatform(int startIndex, OSPlatforms platform)
+    private static string? FindClosestVersionInMapByPlatform(int startIndex, OSPlatforms platform)
     {
         for (int i = startIndex; i >= 0; i--)
         {
@@ -163,35 +174,35 @@ internal static partial class EdgeDriverVersionsMap
 
     private static bool IsRemoteMapFresher()
     {
-        int lastVersionStartIndex = s_remoteMapText.LastIndexOf("new(", StringComparison.Ordinal) + 5;
+        int lastVersionStartIndex = s_remoteMapText!.LastIndexOf("new(", StringComparison.Ordinal) + 5;
         int lastVersionEndIndex = s_remoteMapText.IndexOf('"', lastVersionStartIndex);
-        string lastVersion = s_remoteMapText.Substring(lastVersionStartIndex, lastVersionEndIndex - lastVersionStartIndex);
+        string lastVersion = s_remoteMapText[lastVersionStartIndex..lastVersionEndIndex];
 
-        return lastVersion != s_map[s_map.Length - 1].Version;
+        return lastVersion != s_map[^1].Version;
     }
 
     private static int FindRemoteMapTextIndexByVersion(string version) =>
-        s_remoteMapText.LastIndexOf($"\"{version}\"", StringComparison.Ordinal);
+        s_remoteMapText!.LastIndexOf($"\"{version}\"", StringComparison.Ordinal);
 
     private static int FindRemoteMapTextIndexByMajorVersionNumber(string version)
     {
         int majorVersionNumber = VersionUtils.GetMajorNumber(version);
 
-        return s_remoteMapText.LastIndexOf($"\"{majorVersionNumber}.", StringComparison.Ordinal);
+        return s_remoteMapText!.LastIndexOf($"\"{majorVersionNumber}.", StringComparison.Ordinal);
     }
 
     private static int FindRemoteMapTextLineEndIndex(int index) =>
-       s_remoteMapText.IndexOf(')', index);
+       s_remoteMapText!.IndexOf(')', index);
 
-    private static string FindClosestVersionInRemoteMapTextByPlatform(int startIndex, OSPlatforms platform)
+    private static string? FindClosestVersionInRemoteMapTextByPlatform(int startIndex, OSPlatforms platform)
     {
-        int indexOfPlatform = s_remoteMapText.LastIndexOf(platform.ToString(), startIndex, StringComparison.Ordinal);
+        int indexOfPlatform = s_remoteMapText!.LastIndexOf(platform.ToString(), startIndex, StringComparison.Ordinal);
 
         if (indexOfPlatform != -1)
         {
             int versionEndIndex = s_remoteMapText.LastIndexOf('"', indexOfPlatform);
             int versionStartIndex = s_remoteMapText.LastIndexOf('"', versionEndIndex - 1) + 1;
-            return s_remoteMapText.Substring(versionStartIndex, versionEndIndex - versionStartIndex);
+            return s_remoteMapText[versionStartIndex..versionEndIndex];
         }
 
         return null;

@@ -32,7 +32,7 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
     /// <inheritdoc/>
     public string GetOrAddLatest(DateTime minimumAcceptableTimestamp, Func<string> latestVersionResolveFunction)
     {
-        latestVersionResolveFunction.CheckNotNull(nameof(latestVersionResolveFunction));
+        Guard.ThrowIfNull(latestVersionResolveFunction);
 
         return GetOrAdd(DriverVersions.Latest, minimumAcceptableTimestamp, _ => latestVersionResolveFunction());
     }
@@ -40,15 +40,15 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
     /// <inheritdoc/>
     public string GetOrAdd(string browserVersion, DateTime minimumAcceptableTimestamp, Func<string, string> versionResolveFunction)
     {
-        browserVersion.CheckNotNullOrWhitespace(nameof(browserVersion));
-        versionResolveFunction.CheckNotNull(nameof(versionResolveFunction));
+        Guard.ThrowIfNullOrWhitespace(browserVersion);
+        Guard.ThrowIfNull(versionResolveFunction);
 
         XDocument document = OpenDocument();
 
         XElement item = document.XPathSelectElement(
             $"//{RootElementName}/{ItemElementName}[@{BrowserAttributeName}='{browserVersion}']");
 
-        string driverVersion;
+        string? driverVersion;
 
         if (item != null)
         {
@@ -69,21 +69,21 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
             item.SetAttributeValue(TimestampAttributeName, DateTime.UtcNow.ToString(TimestampFormat, CultureInfo.InvariantCulture));
 
             document.Save(_filePath);
-            return driverVersion;
+            return driverVersion!;
         }
         else
         {
-            return null;
+            return null!;
         }
     }
 
-    private static bool TryGetDriverVersion(XElement item, DateTime minimumAcceptableTimestamp, out string version)
+    private static bool TryGetDriverVersion(XElement item, DateTime minimumAcceptableTimestamp, [NotNullWhen(true)] out string? version)
     {
-        string timestampAsString = item.Attribute(TimestampAttributeName)?.Value;
+        string? timestampAsString = item.Attribute(TimestampAttributeName)?.Value;
 
-        string driverVersion = item.Attribute(DriverAttributeName)?.Value;
+        string? driverVersion = item.Attribute(DriverAttributeName)?.Value;
 
-        if (!string.IsNullOrEmpty(timestampAsString) && !string.IsNullOrEmpty(driverVersion))
+        if (timestampAsString?.Length > 0 && driverVersion?.Length > 0)
         {
             DateTime timestamp = DateTime.ParseExact(timestampAsString, TimestampFormat, CultureInfo.InvariantCulture);
 

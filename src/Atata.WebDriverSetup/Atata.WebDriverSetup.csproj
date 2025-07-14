@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Nullable>disable</Nullable>
     <Version>3.4.0</Version>
     <Description>
 C#/.NET library that sets up browser drivers for Selenium WebDriver, e.g. chromedriver, geckodriver, etc.
@@ -30,6 +29,10 @@ The package targets .NET Standard 2.0, which supports .NET 5+, .NET Framework 4.
   <ItemGroup>
     <PackageReference Include="Atata.Cli" Version="2.2.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 

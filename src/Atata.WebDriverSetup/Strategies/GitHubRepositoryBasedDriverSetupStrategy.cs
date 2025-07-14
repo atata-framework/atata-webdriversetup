@@ -13,7 +13,7 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
 
     private readonly string _baseUrl;
 
-    private readonly Dictionary<string, string> _driverVersionToReleaseVersionMappings;
+    private readonly Dictionary<string, string>? _driverVersionToReleaseVersionMappings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GitHubRepositoryBasedDriverSetupStrategy"/> class.
@@ -28,7 +28,7 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
         string organizationName,
         string repositoryName,
         string versionTagPrefix = "v",
-        Dictionary<string, string> driverVersionToReleaseVersionMappings = null)
+        Dictionary<string, string>? driverVersionToReleaseVersionMappings = null)
     {
         _httpRequestExecutor = httpRequestExecutor;
         _versionTagPrefix = versionTagPrefix;
@@ -45,8 +45,8 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
         string latestReleaseUrl = $"{_baseUrl}/releases/latest";
         string actualReleaseUrl = _httpRequestExecutor.GetRedirectUrl(latestReleaseUrl).AbsoluteUri;
 
-        var urlParts = actualReleaseUrl.Split('/');
-        return urlParts[urlParts.Length - 1].Substring(_versionTagPrefix.Length);
+        string[] urlParts = actualReleaseUrl.Split('/');
+        return urlParts[^1][_versionTagPrefix.Length..];
     }
 
     /// <inheritdoc/>

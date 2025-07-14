@@ -28,7 +28,7 @@ internal sealed class DriverSetupExecutor
 
     internal DriverSetupResult SetUp(string version)
     {
-        version.CheckNotNullOrWhitespace(nameof(version));
+        Guard.ThrowIfNullOrWhitespace(version);
 
         string driverDestinationDirectoryPath = BuildDriverDestinationDirectoryPath(version);
         string driverDestinationFileName = _setupStrategy.GetDriverBinaryFileName(_platform);
@@ -182,7 +182,7 @@ internal sealed class DriverSetupExecutor
         const string pathVariableName = "PATH";
         string pathVariableValue = Environment.GetEnvironmentVariable(pathVariableName, EnvironmentVariableTarget.Process);
 
-        Regex isTherePathRegex = new Regex($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
+        Regex isTherePathRegex = new($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
 
         if (!isTherePathRegex.IsMatch(pathVariableValue))
         {

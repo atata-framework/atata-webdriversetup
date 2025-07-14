@@ -12,5 +12,5 @@ public interface IGetsDriverClosestVersion
     /// <param name="platform">The target OS platform.</param>
     /// <param name="closestVersion">The closest version.</param>
     /// <returns><see langword="true"/> if the closest version is found; otherwise, <see langword="false"/>.</returns>
-    bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, out string closestVersion);
+    bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, [NotNullWhen(true)] out string? closestVersion);
 }

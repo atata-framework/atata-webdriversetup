@@ -1,7 +1,9 @@
 ﻿global using System.Diagnostics;
+global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
 global using System.IO.Compression;
 global using System.Net;
+global using System.Runtime.CompilerServices;
 global using System.Runtime.InteropServices;
 global using System.Runtime.Serialization;
 global using System.Text;

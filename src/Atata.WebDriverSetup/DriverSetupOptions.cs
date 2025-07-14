@@ -5,15 +5,15 @@
 /// </summary>
 public class DriverSetupOptions
 {
-    private readonly DriverSetupOptions _baseOptions;
+    private readonly DriverSetupOptions? _baseOptions;
 
-    private readonly Dictionary<string, object> _optionValues = [];
+    private readonly Dictionary<string, object?> _optionValues = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DriverSetupOptions"/> class.
     /// </summary>
     /// <param name="baseOptions">The base options.</param>
-    public DriverSetupOptions(DriverSetupOptions baseOptions = null)
+    public DriverSetupOptions(DriverSetupOptions? baseOptions = null)
     {
         _baseOptions = baseOptions;
 
@@ -41,7 +41,7 @@ public class DriverSetupOptions
     /// </summary>
     public string StorageDirectoryPath
     {
-        get => GetOption<string>(nameof(StorageDirectoryPath));
+        get => GetOption<string>(nameof(StorageDirectoryPath))!;
         set => SetOption(nameof(StorageDirectoryPath), value);
     }
 
@@ -58,7 +58,7 @@ public class DriverSetupOptions
     /// <summary>
     /// Gets or sets the proxy.
     /// </summary>
-    public IWebProxy Proxy
+    public IWebProxy? Proxy
     {
         get => GetOption<IWebProxy>(nameof(Proxy));
         set => SetOption(nameof(Proxy), value);
@@ -84,7 +84,7 @@ public class DriverSetupOptions
     /// <value>
     /// The HTTP client handler configuration action.
     /// </value>
-    public Action<HttpClientHandler> HttpClientHandlerConfigurationAction
+    public Action<HttpClientHandler>? HttpClientHandlerConfigurationAction
     {
         get => GetOption<Action<HttpClientHandler>>(nameof(HttpClientHandlerConfigurationAction));
         set => SetOption(nameof(HttpClientHandlerConfigurationAction), value);
@@ -177,10 +177,10 @@ public class DriverSetupOptions
     /// <typeparam name="T">The type of the option.</typeparam>
     /// <param name="optionName">Name of the option.</param>
     /// <returns>The option value or default value.</returns>
-    protected T GetOption<T>(string optionName) =>
-        _optionValues.TryGetValue(optionName, out object value)
-            ? (T)value
-            : _baseOptions != null
+    protected T? GetOption<T>(string optionName) =>
+        _optionValues.TryGetValue(optionName, out object? value)
+            ? (T)value!
+            : _baseOptions is not null
                 ? _baseOptions.GetOption<T>(optionName)
                 : default;
 
@@ -189,6 +189,6 @@ public class DriverSetupOptions
     /// </summary>
     /// <param name="optionName">Name of the option.</param>
     /// <param name="value">The value to set.</param>
-    protected void SetOption(string optionName, object value) =>
+    protected void SetOption(string optionName, object? value) =>
         _optionValues[optionName] = value;
 }

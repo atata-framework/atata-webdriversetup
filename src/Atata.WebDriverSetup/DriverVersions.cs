@@ -35,12 +35,13 @@ public static class DriverVersions
     /// <param name="version">The version.</param>
     /// <param name="browserVersion">The browser version.</param>
     /// <returns><see langword="true"/> if the version string contains a browser version; otherwise, <see langword="false"/>.</returns>
-    public static bool TryExtractBrowserVersion(string version, out string browserVersion)
+    public static bool TryExtractBrowserVersion(string version, [NotNullWhen(true)] out string? browserVersion)
     {
-        if (version.StartsWith(BrowserVersionPrefix, StringComparison.Ordinal)
+        if (version is not null
+            && version.StartsWith(BrowserVersionPrefix, StringComparison.Ordinal)
             && version.Length > BrowserVersionPrefix.Length)
         {
-            browserVersion = version.Substring(BrowserVersionPrefix.Length);
+            browserVersion = version[BrowserVersionPrefix.Length..];
             return true;
         }
         else

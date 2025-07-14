@@ -18,10 +18,15 @@ public class DriverSetupResult
         string directoryPath,
         string fileName)
     {
-        BrowserName = browserName.CheckNotNullOrWhitespace(nameof(browserName));
-        Version = version.CheckNotNullOrWhitespace(nameof(version));
-        DirectoryPath = directoryPath.CheckNotNullOrWhitespace(nameof(directoryPath));
-        FileName = fileName.CheckNotNullOrWhitespace(nameof(fileName));
+        Guard.ThrowIfNullOrWhitespace(browserName);
+        Guard.ThrowIfNullOrWhitespace(version);
+        Guard.ThrowIfNullOrWhitespace(directoryPath);
+        Guard.ThrowIfNullOrWhitespace(fileName);
+
+        BrowserName = browserName;
+        Version = version;
+        DirectoryPath = directoryPath;
+        FileName = fileName;
     }
 
     /// <summary>

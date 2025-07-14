@@ -65,7 +65,7 @@ public class EdgeDriverSetupStrategy :
         };
 
     /// <inheritdoc/>
-    public string GetInstalledBrowserVersion() =>
+    public string? GetInstalledBrowserVersion() =>
         OSInfo.IsWindows
             ? AppVersionDetector.GetFromProgramFiles(@"Microsoft\Edge\Application\msedge.exe")
                 ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Microsoft\Edge")
@@ -81,17 +81,17 @@ public class EdgeDriverSetupStrategy :
             browserVersion,
             platform.ToOSPlatform(),
             _httpRequestExecutor,
-            out string driverVersion)
+            out string? driverVersion)
             ? driverVersion
             : browserVersion;
 
     /// <inheritdoc/>
-    public bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, out string closestVersion) =>
+    public bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, [NotNullWhen(true)] out string? closestVersion) =>
         EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(version, platform.ToOSPlatform(), _httpRequestExecutor, out closestVersion)
             || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion)
             || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion);
 
-    private bool TryGetDriverClosestVersionFromDownloadsPage(string version, TargetOSPlatform platform, out string closestVersion)
+    private bool TryGetDriverClosestVersionFromDownloadsPage(string version, TargetOSPlatform platform, [NotNullWhen(true)] out string? closestVersion)
     {
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
         string originalVersionUrlVersionHrefStart = $"href=\"{originalVersionUrlVersionPart}";
@@ -123,7 +123,7 @@ public class EdgeDriverSetupStrategy :
 
         if (majorVersionRegexMatches.Count > 0)
         {
-            string versionFound = majorVersionRegexMatches[majorVersionRegexMatches.Count - 1].Groups[1].Value;
+            string versionFound = majorVersionRegexMatches[^1].Groups[1].Value;
 
             if (versionFound != version)
             {

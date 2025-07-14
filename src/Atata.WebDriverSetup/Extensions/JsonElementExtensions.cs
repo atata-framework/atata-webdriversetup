@@ -4,8 +4,8 @@ internal static class JsonElementExtensions
 {
     internal static JsonElement GetPropertyByChain(this JsonElement jsonElement, params string[] propertyNames)
     {
-        jsonElement.CheckNotNull(nameof(jsonElement));
-        propertyNames.CheckNotNullOrEmpty(nameof(propertyNames));
+        Guard.ThrowIfNull(jsonElement);
+        Guard.ThrowIfNullOrEmpty(propertyNames);
 
         JsonElement currentElement = jsonElement;
 

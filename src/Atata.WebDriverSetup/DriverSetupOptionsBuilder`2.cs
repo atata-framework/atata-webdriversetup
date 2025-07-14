@@ -13,8 +13,12 @@ public abstract class DriverSetupOptionsBuilder<TBuilder, TContext>
     /// Initializes a new instance of the <see cref="DriverSetupOptionsBuilder{TBuilder, TContext}"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    protected DriverSetupOptionsBuilder(TContext context) =>
-        BuildingContext = context.CheckNotNull(nameof(context));
+    protected DriverSetupOptionsBuilder(TContext context)
+    {
+        Guard.ThrowIfNull(context);
+
+        BuildingContext = context;
+    }
 
     /// <summary>
     /// Gets the building context.
@@ -29,7 +33,9 @@ public abstract class DriverSetupOptionsBuilder<TBuilder, TContext>
     /// <returns>The same builder instance.</returns>
     public TBuilder WithStorageDirectoryPath(string path)
     {
-        BuildingContext.StorageDirectoryPath = path.CheckNotNullOrWhitespace(nameof(path));
+        Guard.ThrowIfNullOrWhitespace(path);
+
+        BuildingContext.StorageDirectoryPath = path;
         return (TBuilder)this;
     }
 

@@ -36,7 +36,7 @@ internal sealed class DriverVersionResolver
         ResolveCorrespondingVersion()
             ?? ResolveLatestVersion();
 
-    internal bool TryResolveClosestVersion(string version, out string closestVersion)
+    internal bool TryResolveClosestVersion(string version, [NotNullWhen(true)] out string? closestVersion)
     {
         if (_setupStrategy is IGetsDriverClosestVersion closestVersionResolver)
         {
@@ -55,12 +55,12 @@ internal sealed class DriverVersionResolver
         return false;
     }
 
-    private string ResolveCorrespondingVersion()
+    private string? ResolveCorrespondingVersion()
     {
-        string installedVersion = (_setupStrategy as IGetsInstalledBrowserVersion)
+        string? installedVersion = (_setupStrategy as IGetsInstalledBrowserVersion)
             ?.GetInstalledBrowserVersion();
 
-        return installedVersion != null
+        return installedVersion is not null
             ? ResolveByBrowserVersion(installedVersion)
             : null;
     }

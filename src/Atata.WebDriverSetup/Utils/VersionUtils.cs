@@ -69,7 +69,7 @@ public static class VersionUtils
 
     private static string[] GetParts(string version, int count)
     {
-        version.CheckNotNullOrWhitespace(nameof(version));
+        Guard.ThrowIfNullOrWhitespace(version);
 
         string[] parts = version.Split('.');
 
@@ -89,7 +89,7 @@ public static class VersionUtils
     /// <returns>The count of numbers.</returns>
     public static int GetNumbersCount(string version)
     {
-        version.CheckNotNullOrWhitespace(nameof(version));
+        Guard.ThrowIfNullOrWhitespace(version);
 
         return version.Count(x => x == '.') + 1;
     }

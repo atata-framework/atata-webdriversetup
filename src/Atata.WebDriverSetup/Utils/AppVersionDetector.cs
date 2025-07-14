@@ -12,7 +12,7 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="applicationRelativePaths">The application relative paths in Program Files or Program Files (x86) folders.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetFromProgramFiles(params string[] applicationRelativePaths) =>
+    public static string? GetFromProgramFiles(params string[] applicationRelativePaths) =>
         GetFromProgramFiles(applicationRelativePaths.AsEnumerable());
 
     /// <summary>
@@ -20,7 +20,7 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="applicationRelativePaths">The application relative paths in Program Files or Program Files (x86) folders.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetFromProgramFiles(IEnumerable<string> applicationRelativePaths)
+    public static string? GetFromProgramFiles(IEnumerable<string> applicationRelativePaths)
     {
         string[] programFilesFolders =
         [
@@ -29,7 +29,7 @@ public static class AppVersionDetector
         ];
 
         return programFilesFolders
-            .Where(path => !string.IsNullOrEmpty(path))
+            .Where(path => path?.Length > 0)
             .SelectMany(progPath => applicationRelativePaths.Select(relPath => Path.Combine(progPath, relPath)))
             .Select(GetFromExecutableFileVersion)
             .FirstOrDefault(x => x != null);
@@ -40,7 +40,7 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="filePath">The file path.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetFromExecutableFileVersion(string filePath) =>
+    public static string? GetFromExecutableFileVersion(string filePath) =>
         File.Exists(filePath)
             ? GetFileVersion(filePath)
             : null;
@@ -50,7 +50,7 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="applicationRelativePathInSoftwareSection">The application relative path in software section.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetFromBLBeaconInRegistry(string applicationRelativePathInSoftwareSection) =>
+    public static string? GetFromBLBeaconInRegistry(string applicationRelativePathInSoftwareSection) =>
         RegistryUtils.GetValue(
             $@"HKEY_CURRENT_USER\Software\{applicationRelativePathInSoftwareSection}\BLBeacon",
             "version");
@@ -60,16 +60,16 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="applicationName">Name of the application.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetByApplicationPathInRegistry(string applicationName)
+    public static string? GetByApplicationPathInRegistry(string applicationName)
     {
-        string applicationPath = RegistryUtils.GetApplicationPath(applicationName);
+        string? applicationPath = RegistryUtils.GetApplicationPath(applicationName);
 
-        return string.IsNullOrEmpty(applicationPath)
-            ? null
-            : GetFileVersion(applicationPath);
+        return applicationPath?.Length > 0
+            ? GetFileVersion(applicationPath)
+            : null;
     }
 
-    private static string GetFileVersion(string filePath)
+    private static string? GetFileVersion(string filePath)
     {
         try
         {
@@ -86,7 +86,7 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="applicationName">The application name.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetThroughOSXApplicationCli(string applicationName)
+    public static string? GetThroughOSXApplicationCli(string applicationName)
     {
         string filePath = $"/Applications/{applicationName}.app/Contents/MacOS/{applicationName}";
 
@@ -99,11 +99,11 @@ public static class AppVersionDetector
     /// <param name="fileNameOrCommand">The file name or command.</param>
     /// <param name="arguments">The command arguments.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string GetThroughCli(string fileNameOrCommand, string arguments)
+    public static string? GetThroughCli(string fileNameOrCommand, string arguments)
     {
         try
         {
-            string result = new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
+            string? result = new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
             Log.Trace($"Command \"{fileNameOrCommand} {arguments}\" => \"{result}\"");
             return result;
         }

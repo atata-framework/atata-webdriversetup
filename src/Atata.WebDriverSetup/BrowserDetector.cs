@@ -13,8 +13,8 @@
 public static class BrowserDetector
 {
     /// <inheritdoc cref="GetFirstInstalledBrowserName(IEnumerable{string})"/>
-    public static string GetFirstInstalledBrowserName(params string[] browserNames) =>
-        GetFirstInstalledBrowserName(browserNames?.AsEnumerable());
+    public static string? GetFirstInstalledBrowserName(params string[] browserNames) =>
+        GetFirstInstalledBrowserName(browserNames?.AsEnumerable()!);
 
     /// <summary>
     /// Gets the name of the first installed browser among the <paramref name="browserNames"/>.
@@ -23,9 +23,12 @@ public static class BrowserDetector
     /// <returns>
     /// The browser name; or <see langword="null"/> if none of the browsers is installed.
     /// </returns>
-    public static string GetFirstInstalledBrowserName(IEnumerable<string> browserNames) =>
-        browserNames.CheckNotNullOrEmpty(nameof(browserNames))
-            .FirstOrDefault(IsBrowserInstalled);
+    public static string? GetFirstInstalledBrowserName(IEnumerable<string> browserNames)
+    {
+        Guard.ThrowIfNullOrEmpty(browserNames);
+
+        return browserNames.FirstOrDefault(IsBrowserInstalled);
+    }
 
     /// <summary>
     /// Determines whether the browser with the specified name is installed.
@@ -42,9 +45,9 @@ public static class BrowserDetector
     /// </summary>
     /// <param name="browserName">Name of the browser.</param>
     /// <returns>The version string; or <see langword="null"/> if the browser is not found.</returns>
-    public static string GetInstalledBrowserVersion(string browserName)
+    public static string? GetInstalledBrowserVersion(string browserName)
     {
-        browserName.CheckNotNullOrWhitespace(nameof(browserName));
+        Guard.ThrowIfNullOrWhitespace(browserName);
 
         return DriverSetup.GetInstalledBrowserVersion(browserName);
     }

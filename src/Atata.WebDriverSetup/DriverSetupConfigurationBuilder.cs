@@ -21,8 +21,11 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         DriverSetupConfiguration context)
         : base(context)
     {
-        BrowserName = browserName.CheckNotNull(nameof(browserName));
-        _driverSetupStrategyFactory = driverSetupStrategyFactory.CheckNotNull(nameof(driverSetupStrategyFactory));
+        Guard.ThrowIfNull(browserName);
+        Guard.ThrowIfNull(driverSetupStrategyFactory);
+
+        BrowserName = browserName;
+        _driverSetupStrategyFactory = driverSetupStrategyFactory;
     }
 
     /// <summary>
@@ -61,7 +64,8 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
     /// <returns>The same builder instance.</returns>
     public DriverSetupConfigurationBuilder WithVersion(string version)
     {
-        BuildingContext.Version = version.CheckNotNullOrWhitespace(nameof(version));
+        Guard.ThrowIfNullOrWhitespace(version);
+        BuildingContext.Version = version;
         return this;
     }
 
@@ -105,14 +109,16 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         }
         else
         {
-            return null;
+            return null!;
         }
     }
 
     internal DriverSetupConfigurationBuilder WithHttpRequestExecutor(
         Func<DriverSetupConfiguration, IHttpRequestExecutor> httpRequestExecutorFactory)
     {
-        _httpRequestExecutorFactory = httpRequestExecutorFactory.CheckNotNull(nameof(httpRequestExecutorFactory));
+        Guard.ThrowIfNull(httpRequestExecutorFactory);
+
+        _httpRequestExecutorFactory = httpRequestExecutorFactory;
         return this;
     }
 
@@ -183,7 +189,7 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         catch (Exception e) when (e.InnerException is HttpRequestException)
         {
             if (BuildingContext.Version is DriverVersions.Auto or DriverVersions.Latest
-                && driverVersionResolver.TryResolveClosestVersion(driverVersion, out string closestDriverVersion))
+                && driverVersionResolver.TryResolveClosestVersion(driverVersion, out string? closestDriverVersion))
             {
                 try
                 {
@@ -228,7 +234,7 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
             return driverVersionResolver.ResolveCorrespondingOrLatestVersion();
         else if (version == DriverVersions.Latest)
             return driverVersionResolver.ResolveLatestVersion();
-        else if (DriverVersions.TryExtractBrowserVersion(version, out string browserVersion))
+        else if (DriverVersions.TryExtractBrowserVersion(version, out string? browserVersion))
             return driverVersionResolver.ResolveByBrowserVersion(browserVersion);
         else
             return version;

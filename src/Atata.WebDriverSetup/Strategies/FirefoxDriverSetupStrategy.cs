@@ -46,7 +46,7 @@ public class FirefoxDriverSetupStrategy :
         };
 
     /// <inheritdoc/>
-    public string GetInstalledBrowserVersion() =>
+    public string? GetInstalledBrowserVersion() =>
         OSInfo.IsWindows
             ? AppVersionDetector.GetFromProgramFiles(@"Mozilla Firefox\firefox.exe")
                 ?? RegistryUtils.GetValue(@"HKEY_CURRENT_USER\Software\Mozilla\Mozilla Firefox")
@@ -59,7 +59,7 @@ public class FirefoxDriverSetupStrategy :
     /// <inheritdoc/>
     public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)
     {
-        browserVersion.CheckNotNullOrWhitespace(browserVersion);
+        Guard.ThrowIfNullOrWhitespace(browserVersion);
 
         string browserMajorVersion = VersionUtils.TrimMinor(browserVersion);
         int browserMajorVersionNumber = int.Parse(browserMajorVersion);

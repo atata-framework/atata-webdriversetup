@@ -9,5 +9,6 @@ public interface IGetsInstalledBrowserVersion
     /// Gets the installed browser version.
     /// </summary>
     /// <returns>The version number.</returns>
-    string GetInstalledBrowserVersion();
+    // TODO: Replace with: bool TryGetInstalledBrowserVersion([NotNullWhen(true)] out string? version);.
+    string? GetInstalledBrowserVersion();
 }
