@@ -4,9 +4,9 @@ internal static class Assertions
 {
     internal static void AssertUrlReturnsOK(Uri url)
     {
-        using var httpClient = new HttpClient();
-        using var requestMessage = new HttpRequestMessage(HttpMethod.Head, url);
-        using var response = httpClient.Send(requestMessage);
+        using HttpClient httpClient = new();
+        using HttpRequestMessage requestMessage = new(HttpMethod.Head, url);
+        using HttpResponseMessage response = httpClient.Send(requestMessage);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, $"URL {url} should be available");
     }
