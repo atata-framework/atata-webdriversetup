@@ -11,7 +11,7 @@ public class EdgeDriverSetupStrategy :
     IGetsDriverClosestVersion
 {
     private const string BaseUrl =
-        "https://msedgedriver.azureedge.net";
+        "https://msedgedriver.microsoft.com";
 
     private const string DriverLatestVersionUrl =
         BaseUrl + "/LATEST_STABLE";
