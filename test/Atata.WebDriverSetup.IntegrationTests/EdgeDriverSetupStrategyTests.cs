@@ -6,7 +6,7 @@ public class EdgeDriverSetupStrategyTests
     private const string TestVersion = "116.0.1938.81";
 
     private const string ExpectedDriverDownloadUrlBase =
-        $"https://msedgedriver.azureedge.net/{TestVersion}/edgedriver_";
+        $"https://msedgedriver.microsoft.com/{TestVersion}/edgedriver_";
 
     private const string ExpectedWindowsX32DriverDownloadUrl =
         $"{ExpectedDriverDownloadUrlBase}win32.zip";

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix Edge driver download functionality.
+  It was broken because of domain migration from msedgedriver.azureedge.net to msedgedriver.microsoft.com.
+
 ## [3.4.0] - 2025-07-12
 
 ### Changed
