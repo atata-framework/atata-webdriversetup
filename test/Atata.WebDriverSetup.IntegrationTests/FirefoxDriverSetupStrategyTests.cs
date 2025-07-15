@@ -90,8 +90,8 @@ public class FirefoxDriverSetupStrategyTests
     }
 
     [Test]
-    public void GetInstalledBrowserVersion() =>
-        _sut.GetInstalledBrowserVersion()
+    public async Task GetInstalledBrowserVersionAsync() =>
+        (await _sut.GetInstalledBrowserVersionAsync())
             .Should().MatchRegex(@"^[0-9]+\.[0-9]+");
 
     [TestCase("100.0.0", ExpectedResult = "0.31.0")]

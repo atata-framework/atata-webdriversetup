@@ -85,12 +85,14 @@ public static class AppVersionDetector
     /// Gets the application version through OSX application CLI passing <c>"--version"</c> argument.
     /// </summary>
     /// <param name="applicationName">The application name.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string? GetThroughOSXApplicationCli(string applicationName)
+    public static async Task<string?> GetThroughOSXApplicationCliAsync(string applicationName, CancellationToken cancellationToken = default)
     {
         string filePath = $"/Applications/{applicationName}.app/Contents/MacOS/{applicationName}";
 
-        return GetThroughCli(filePath, "--version");
+        return await GetThroughCliAsync(filePath, "--version", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -98,12 +100,19 @@ public static class AppVersionDetector
     /// </summary>
     /// <param name="fileNameOrCommand">The file name or command.</param>
     /// <param name="arguments">The command arguments.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static string? GetThroughCli(string fileNameOrCommand, string arguments)
+    public static async Task<string?> GetThroughCliAsync(string fileNameOrCommand, string arguments, CancellationToken cancellationToken = default)
     {
         try
         {
-            string? result = new ProgramCli(fileNameOrCommand).Execute(arguments).Output?.Trim();
+            ProgramCli cli = new(fileNameOrCommand);
+
+            CliCommandResult cliResult = await cli.ExecuteAsync(arguments, cancellationToken)
+                .ConfigureAwait(false);
+
+            string result = cliResult.Output.Trim();
+
             Log.Trace($"Command \"{fileNameOrCommand} {arguments}\" => \"{result}\"");
             return result;
         }

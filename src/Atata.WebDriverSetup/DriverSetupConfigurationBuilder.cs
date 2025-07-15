@@ -99,13 +99,25 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
     /// or <see langword="null"/>, if the configuration
     /// <see cref="DriverSetupOptions.IsEnabled"/> property is <see langword="false"/>.
     /// </returns>
-    public DriverSetupResult SetUp()
+    public DriverSetupResult SetUp() =>
+        SetUpAsync().GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Sets up driver.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// The <see cref="DriverSetupResult"/> instance;
+    /// or <see langword="null"/>, if the configuration
+    /// <see cref="DriverSetupOptions.IsEnabled"/> property is <see langword="false"/>.
+    /// </returns>
+    public async Task<DriverSetupResult> SetUpAsync(CancellationToken cancellationToken = default)
     {
         if (BuildingContext.IsEnabled)
         {
             return BuildingContext.UseMutex
-                ? ExecuteSetUpUsingMutex()
-                : ExecuteSetUp();
+                ? (await ExecuteSetUpUsingMutexAsync(cancellationToken).ConfigureAwait(false))
+                : (await ExecuteSetUpAsync(cancellationToken).ConfigureAwait(false));
         }
         else
         {
@@ -122,7 +134,7 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         return this;
     }
 
-    private DriverSetupResult ExecuteSetUpUsingMutex()
+    private async Task<DriverSetupResult> ExecuteSetUpUsingMutexAsync(CancellationToken cancellationToken)
     {
         const int timeoutToWait = 600_000;
         string mutexId = $@"Global\{{50E4E9F8-971F-440E-B7BE-D4B584350529}}-{BrowserName.ToLowerInvariant()}";
@@ -144,7 +156,8 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
                 hasHandle = true;
             }
 
-            return ExecuteSetUp();
+            return await ExecuteSetUpAsync(cancellationToken)
+                .ConfigureAwait(false);
         }
         finally
         {
@@ -153,18 +166,18 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         }
     }
 
-    private DriverSetupResult ExecuteSetUp()
+    private async Task<DriverSetupResult> ExecuteSetUpAsync(CancellationToken cancellationToken)
     {
         IHttpRequestExecutor httpRequestExecutor = _httpRequestExecutorFactory.Invoke(BuildingContext);
 
         IDriverSetupStrategy setupStrategy = _driverSetupStrategyFactory.Invoke(httpRequestExecutor);
 
-        DriverVersionResolver driverVersionResolver = new DriverVersionResolver(
-            BrowserName, BuildingContext, setupStrategy);
+        DriverVersionResolver driverVersionResolver = new(BrowserName, BuildingContext, setupStrategy);
 
-        string driverVersion = ResolveDriverVersion(driverVersionResolver);
+        string driverVersion = await ResolveDriverVersionAsync(driverVersionResolver, cancellationToken)
+            .ConfigureAwait(false);
 
-        DriverSetupExecutor setupExecutor = new DriverSetupExecutor(
+        DriverSetupExecutor setupExecutor = new(
             BrowserName,
             BuildingContext,
             setupStrategy,
@@ -205,10 +218,6 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         }
     }
 
-    /// <inheritdoc cref="SetUp"/>
-    public async Task<DriverSetupResult> SetUpAsync() =>
-        await Task.Run(SetUp).ConfigureAwait(false);
-
     internal static IHttpRequestExecutor CreateDefaultHttpRequestExecutor(DriverSetupConfiguration configuration)
     {
         IHttpRequestExecutor executor = new HttpRequestExecutor(
@@ -226,12 +235,12 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
             configuration.HttpRequestRetryInterval);
     }
 
-    private string ResolveDriverVersion(DriverVersionResolver driverVersionResolver)
+    private async Task<string> ResolveDriverVersionAsync(DriverVersionResolver driverVersionResolver, CancellationToken cancellationToken)
     {
         string version = BuildingContext.Version;
 
         if (version == DriverVersions.Auto)
-            return driverVersionResolver.ResolveCorrespondingOrLatestVersion();
+            return await driverVersionResolver.ResolveCorrespondingOrLatestVersionAsync(cancellationToken).ConfigureAwait(false);
         else if (version == DriverVersions.Latest)
             return driverVersionResolver.ResolveLatestVersion();
         else if (DriverVersions.TryExtractBrowserVersion(version, out string? browserVersion))

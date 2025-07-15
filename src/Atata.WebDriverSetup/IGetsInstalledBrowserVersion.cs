@@ -8,7 +8,7 @@ public interface IGetsInstalledBrowserVersion
     /// <summary>
     /// Gets the installed browser version.
     /// </summary>
-    /// <returns>The version number.</returns>
-    // TODO: Replace with: bool TryGetInstalledBrowserVersion([NotNullWhen(true)] out string? version);.
-    string? GetInstalledBrowserVersion();
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The version number or <see langword="null"/>.</returns>
+    Task<string?> GetInstalledBrowserVersionAsync(CancellationToken cancellationToken = default);
 }

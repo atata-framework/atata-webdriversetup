@@ -32,8 +32,8 @@ internal sealed class DriverVersionResolver
             ?? throw new DriverSetupException(
                 $"Failed to find {_browserName} driver latest version.");
 
-    internal string ResolveCorrespondingOrLatestVersion() =>
-        ResolveCorrespondingVersion()
+    internal async Task<string> ResolveCorrespondingOrLatestVersionAsync(CancellationToken cancellationToken) =>
+        (await ResolveCorrespondingVersionAsync(cancellationToken).ConfigureAwait(false))
             ?? ResolveLatestVersion();
 
     internal bool TryResolveClosestVersion(string version, [NotNullWhen(true)] out string? closestVersion)
@@ -55,14 +55,18 @@ internal sealed class DriverVersionResolver
         return false;
     }
 
-    private string? ResolveCorrespondingVersion()
+    private async Task<string?> ResolveCorrespondingVersionAsync(CancellationToken cancellationToken)
     {
-        string? installedVersion = (_setupStrategy as IGetsInstalledBrowserVersion)
-            ?.GetInstalledBrowserVersion();
+        if (_setupStrategy is IGetsInstalledBrowserVersion installedBrowserVersionResolver)
+        {
+            string? installedVersion = await installedBrowserVersionResolver.GetInstalledBrowserVersionAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-        return installedVersion is not null
-            ? ResolveByBrowserVersion(installedVersion)
-            : null;
+            if (installedVersion is not null)
+                return ResolveByBrowserVersion(installedVersion);
+        }
+
+        return null;
     }
 
     private IGetsDriverLatestVersion GetLatestVersionResolver()

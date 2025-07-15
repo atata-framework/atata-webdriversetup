@@ -78,8 +78,8 @@ public class ChromeDriverSetupStrategyTests
     }
 
     [Test]
-    public void GetInstalledBrowserVersion() =>
-        _sut.GetInstalledBrowserVersion()
+    public async Task GetInstalledBrowserVersionAsync() =>
+        (await _sut.GetInstalledBrowserVersionAsync())
             .Should().MatchRegex(@"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$");
 
     [TestCase("101.0.4951.41", ExpectedResult = "101.0.4951.41")]

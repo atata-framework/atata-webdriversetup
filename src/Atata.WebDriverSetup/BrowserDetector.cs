@@ -45,10 +45,20 @@ public static class BrowserDetector
     /// </summary>
     /// <param name="browserName">Name of the browser.</param>
     /// <returns>The version string; or <see langword="null"/> if the browser is not found.</returns>
-    public static string? GetInstalledBrowserVersion(string browserName)
+    public static string? GetInstalledBrowserVersion(string browserName) =>
+        GetInstalledBrowserVersionAsync(browserName).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Gets the installed browser version by the browser name.
+    /// </summary>
+    /// <param name="browserName">Name of the browser.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The version string; or <see langword="null"/> if the browser is not found.</returns>
+    public static async Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNullOrWhitespace(browserName);
 
-        return DriverSetup.GetInstalledBrowserVersion(browserName);
+        return await DriverSetup.GetInstalledBrowserVersionAsync(browserName, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

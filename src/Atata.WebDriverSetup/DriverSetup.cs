@@ -271,11 +271,17 @@ public static class DriverSetup
         }
     }
 
-    internal static string? GetInstalledBrowserVersion(string browserName) =>
-        s_browserDriverSetupDataMap.TryGetValue(browserName, out var driverSetupData)
-            ? (driverSetupData.StrategyFactory.Invoke(new HttpRequestExecutor()) as IGetsInstalledBrowserVersion)
-                ?.GetInstalledBrowserVersion()
-            : null;
+    internal static async Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken)
+    {
+        if (s_browserDriverSetupDataMap.TryGetValue(browserName, out var driverSetupData)
+            && driverSetupData.StrategyFactory.Invoke(new HttpRequestExecutor()) is IGetsInstalledBrowserVersion installedBrowserVersionResolver)
+        {
+            return await installedBrowserVersionResolver.GetInstalledBrowserVersionAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return null;
+    }
 
     private sealed class DriverSetupData
     {

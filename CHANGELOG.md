@@ -7,10 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add methods to `AppVersionDetector`:
+  ```cs
+  public static async Task<string?> GetThroughOSXApplicationCliAsync(string applicationName, CancellationToken cancellationToken = default);
+
+  public static async Task<string?> GetThroughCliAsync(string fileNameOrCommand, string arguments, CancellationToken cancellationToken = default);
+  ```
+- Add method to `BrowserDetector`:
+  ```cs
+  public static async Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default);
+  ```
+- Add method to `DriverSetupConfigurationBuilder`:
+  ```cs
+  public async Task<DriverSetupResult> SetUpAsync(CancellationToken cancellationToken = default);
+  ```
+
 ### Changed
 
 - Enable nullable reference types.
 - Update Edge driver versions map.
+- In `IGetsInstalledBrowserVersion` replace method:
+  ```cs
+  string? GetInstalledBrowserVersion();
+  ```
+  with:
+  ```cs
+  Task<string?> GetInstalledBrowserVersionAsync(CancellationToken cancellationToken = default);
+  ```
+
+### Removed
+
+- Remove `AppVersionDetector.GetThroughCli` method in favor of new `AppVersionDetector.GetThroughCliAsync`.
+- Remove `AppVersionDetector.GetThroughOSXApplicationCli` method in favor of new `AppVersionDetector.GetThroughOSXApplicationCliAsync`.
 
 ## [3.5.0] - 2025-07-15
 

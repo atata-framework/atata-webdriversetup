@@ -114,15 +114,15 @@ public class ChromeDriverSetupStrategy :
         };
 
     /// <inheritdoc/>
-    public string? GetInstalledBrowserVersion() =>
+    public async Task<string?> GetInstalledBrowserVersionAsync(CancellationToken cancellationToken = default) =>
         OSInfo.IsWindows
             ? AppVersionDetector.GetFromProgramFiles(@"Google\Chrome\Application\chrome.exe")
                 ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Google\Chrome")
                 ?? AppVersionDetector.GetByApplicationPathInRegistry("chrome.exe")
             : OSInfo.IsOSX
-                ? AppVersionDetector.GetThroughOSXApplicationCli("Google Chrome")
+                ? (await AppVersionDetector.GetThroughOSXApplicationCliAsync("Google Chrome", cancellationToken).ConfigureAwait(false))
                     ?.Replace("Google Chrome ", null)
-                : AppVersionDetector.GetThroughCli("google-chrome", "--product-version");
+                : (await AppVersionDetector.GetThroughCliAsync("google-chrome", "--product-version", cancellationToken).ConfigureAwait(false));
 
     /// <inheritdoc/>
     public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)

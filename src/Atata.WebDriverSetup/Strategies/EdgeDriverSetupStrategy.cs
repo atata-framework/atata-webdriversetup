@@ -65,15 +65,15 @@ public class EdgeDriverSetupStrategy :
         };
 
     /// <inheritdoc/>
-    public string? GetInstalledBrowserVersion() =>
+    public async Task<string?> GetInstalledBrowserVersionAsync(CancellationToken cancellationToken = default) =>
         OSInfo.IsWindows
             ? AppVersionDetector.GetFromProgramFiles(@"Microsoft\Edge\Application\msedge.exe")
                 ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Microsoft\Edge")
                 ?? AppVersionDetector.GetByApplicationPathInRegistry("msedge.exe")
             : (OSInfo.IsOSX
-                ? AppVersionDetector.GetThroughOSXApplicationCli("Microsoft Edge")
-                : AppVersionDetector.GetThroughCli("microsoft-edge", "--version"))
-                ?.Replace("Microsoft Edge ", null);
+                ? (await AppVersionDetector.GetThroughOSXApplicationCliAsync("Microsoft Edge", cancellationToken).ConfigureAwait(false))
+                : (await AppVersionDetector.GetThroughCliAsync("microsoft-edge", "--version", cancellationToken).ConfigureAwait(false)))
+                    ?.Replace("Microsoft Edge ", null);
 
     /// <inheritdoc/>
     public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform) =>
