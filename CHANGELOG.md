@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enable nullable reference types.
 - Update Edge driver versions map.
 - Add `CancellationToken cancellationToken = default` parameter to the following methods of `DriverSetup`:
+  - `AutoSetUpAsync`
+  - `AutoSetUpSafelyAsync`
   - `SetUpPendingConfigurationsAsync`
 - In `IGetsInstalledBrowserVersion` replace method:
   ```cs
@@ -80,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- Remove `DriverSetup.AutoSetUpAsync(params string[] browserNames)` method in favor of new `DriverSetup.AutoSetUpAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`.
 - Remove `AppVersionDetector.GetThroughCli` method in favor of new `AppVersionDetector.GetThroughCliAsync`.
 - Remove `AppVersionDetector.GetThroughOSXApplicationCli` method in favor of new `AppVersionDetector.GetThroughOSXApplicationCliAsync`.
 

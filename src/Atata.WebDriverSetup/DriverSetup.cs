@@ -196,22 +196,37 @@ public static class DriverSetup
     public static DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames) =>
         AutoSetUpAsync(browserNames).GetAwaiter().GetResult();
 
-    /// <inheritdoc cref="AutoSetUp(string)"/>
-    public static async Task<DriverSetupResult> AutoSetUpAsync(string browserName) =>
-        await Configure(browserName).WithAutoVersion().SetUpAsync().ConfigureAwait(false);
+    /// <summary>
+    /// Sets up driver with auto version detection for the browser with the specified name.
+    /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
+    /// </summary>
+    /// <param name="browserName">The browser name. Can be one or many of <see cref="BrowserNames"/> values.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task with: a <see cref="DriverSetupResult"/> instance;
+    /// or <see langword="null"/>, if the <see cref="DriverSetupOptions.IsEnabled"/> property
+    /// of <see cref="GlobalOptions"/> is <see langword="false"/>.
+    /// </returns>
+    public static async Task<DriverSetupResult> AutoSetUpAsync(string browserName, CancellationToken cancellationToken = default) =>
+        await Configure(browserName)
+            .WithAutoVersion()
+            .SetUpAsync(cancellationToken)
+            .ConfigureAwait(false);
 
-    /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
-    public static async Task<DriverSetupResult[]> AutoSetUpAsync(params string[] browserNames) =>
-        await AutoSetUpAsync(browserNames?.AsEnumerable()!).ConfigureAwait(false);
-
-    /// <inheritdoc cref="AutoSetUp(IEnumerable{string})"/>
-    public static async Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames)
+    /// <summary>
+    /// Sets up drivers with auto version detection for the browsers with the specified names.
+    /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
+    /// </summary>
+    /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task with an array of <see cref="DriverSetupResult"/>.</returns>
+    public static async Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNull(browserNames);
 
         var tasks = browserNames
             .Distinct()
-            .Select(AutoSetUpAsync);
+            .Select(x => AutoSetUpAsync(x, cancellationToken));
 
         var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
@@ -228,14 +243,22 @@ public static class DriverSetup
     public static DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames) =>
         AutoSetUpSafelyAsync(browserNames).GetAwaiter().GetResult();
 
-    /// <inheritdoc cref="AutoSetUpSafely"/>
-    public static async Task<DriverSetupResult[]> AutoSetUpSafelyAsync(IEnumerable<string> browserNames) =>
+    /// <summary>
+    /// Sets up drivers with auto version detection for the browsers with the specified names.
+    /// Supported browser names are defined in <see cref="BrowserNames"/> static class.
+    /// Skips invalid/unsupported browser names.
+    /// </summary>
+    /// <param name="browserNames">The browser names. Can be one or many of <see cref="BrowserNames" /> values.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task with an array of <see cref="DriverSetupResult"/>.</returns>
+    public static async Task<DriverSetupResult[]> AutoSetUpSafelyAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default) =>
         browserNames != null
             ? await AutoSetUpAsync(
                 browserNames
                     .Where(name => name is not null)
                     .Distinct()
-                    .Where(s_browserDriverSetupDataMap.ContainsKey))
+                    .Where(s_browserDriverSetupDataMap.ContainsKey),
+                cancellationToken)
                 .ConfigureAwait(false)
             : [];
 
@@ -250,7 +273,7 @@ public static class DriverSetup
     /// Sets up pending configurations that are stored in <see cref="PendingConfigurations" /> property.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task with the array of <see cref="DriverSetupResult"/>.</returns>
+    /// <returns>A task with an array of <see cref="DriverSetupResult"/>.</returns>
     public static async Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync(CancellationToken cancellationToken = default)
     {
         DriverSetupConfigurationBuilder[] pendingConfigurations;
