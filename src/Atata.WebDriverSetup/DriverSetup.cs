@@ -246,8 +246,12 @@ public static class DriverSetup
     public static DriverSetupResult[] SetUpPendingConfigurations() =>
         SetUpPendingConfigurationsAsync().GetAwaiter().GetResult();
 
-    /// <inheritdoc cref="SetUpPendingConfigurations"/>
-    public static async Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync()
+    /// <summary>
+    /// Sets up pending configurations that are stored in <see cref="PendingConfigurations" /> property.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task with the array of <see cref="DriverSetupResult"/>.</returns>
+    public static async Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync(CancellationToken cancellationToken = default)
     {
         DriverSetupConfigurationBuilder[] pendingConfigurations;
 
@@ -256,7 +260,7 @@ public static class DriverSetup
             pendingConfigurations = [.. PendingConfigurations];
         }
 
-        var tasks = pendingConfigurations.Select(conf => conf.SetUpAsync());
+        var tasks = pendingConfigurations.Select(conf => conf.SetUpAsync(cancellationToken));
 
         var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 

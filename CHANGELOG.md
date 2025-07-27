@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Enable nullable reference types.
 - Update Edge driver versions map.
+- Add `CancellationToken cancellationToken = default` parameter to the following methods of `DriverSetup`:
+  - `SetUpPendingConfigurationsAsync`
 - In `IGetsInstalledBrowserVersion` replace method:
   ```cs
   string? GetInstalledBrowserVersion();
