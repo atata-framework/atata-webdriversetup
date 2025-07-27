@@ -8,6 +8,7 @@ public interface IGetsDriverLatestVersion
     /// <summary>
     /// Gets the driver latest version.
     /// </summary>
-    /// <returns>The latest version string.</returns>
-    string GetDriverLatestVersion();
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task with the latest version string.</returns>
+    Task<string> GetDriverLatestVersionAsync(CancellationToken cancellationToken = default);
 }

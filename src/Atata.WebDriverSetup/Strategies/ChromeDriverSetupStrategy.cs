@@ -47,10 +47,15 @@ public class ChromeDriverSetupStrategy :
             : "chromedriver";
 
     /// <inheritdoc/>
-    public string GetDriverLatestVersion()
+    public async Task<string> GetDriverLatestVersionAsync(CancellationToken cancellationToken = default)
     {
-        using Stream versionsStream = _httpRequestExecutor.DownloadStream(CftApiBaseUrl + "/last-known-good-versions.json");
-        using JsonDocument jsonDocument = JsonDocument.Parse(versionsStream);
+        using Stream versionsStream = await _httpRequestExecutor.DownloadStreamAsync(
+            CftApiBaseUrl + "/last-known-good-versions.json",
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        using JsonDocument jsonDocument = await JsonDocument.ParseAsync(versionsStream, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         return jsonDocument.RootElement
             .GetPropertyByChain("channels", "Stable", "version")
@@ -125,7 +130,10 @@ public class ChromeDriverSetupStrategy :
                 : (await AppVersionDetector.GetThroughCliAsync("google-chrome", "--product-version", cancellationToken).ConfigureAwait(false));
 
     /// <inheritdoc/>
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)
+    public async Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(
+        string browserVersion,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNullOrWhitespace(browserVersion);
 
@@ -140,22 +148,34 @@ public class ChromeDriverSetupStrategy :
 
         if (IsCftVersion(browserVersionToUse))
         {
-            return browserVersionNumbersCount <= 2
-                ? GetDriverVersionFromCftEndpoint("/latest-versions-per-milestone.json", "milestones", browserVersionToUse)
-                : GetDriverVersionFromCftEndpoint("/latest-patch-versions-per-build.json", "builds", browserVersionToUse);
+            Task<string> getDriverVersionTask = browserVersionNumbersCount <= 2
+                ? GetDriverVersionFromCftEndpointAsync("/latest-versions-per-milestone.json", "milestones", browserVersionToUse, cancellationToken)
+                : GetDriverVersionFromCftEndpointAsync("/latest-patch-versions-per-build.json", "builds", browserVersionToUse, cancellationToken);
+
+            return await getDriverVersionTask.ConfigureAwait(false);
         }
         else
         {
             string url = string.Format(OldDriverSpecificVersionUrlFormat, browserVersionToUse);
 
-            return _httpRequestExecutor.DownloadString(url);
+            return await _httpRequestExecutor.DownloadStringAsync(url, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 
-    private string GetDriverVersionFromCftEndpoint(string relativeEndpoint, string subRootPropertyName, string incompleteBrowserVersion)
+    private async Task<string> GetDriverVersionFromCftEndpointAsync(
+        string relativeEndpoint,
+        string subRootPropertyName,
+        string incompleteBrowserVersion,
+        CancellationToken cancellationToken)
     {
-        using Stream versionsStream = _httpRequestExecutor.DownloadStream(CftApiBaseUrl + relativeEndpoint);
-        using JsonDocument jsonDocument = JsonDocument.Parse(versionsStream);
+        using Stream versionsStream = await _httpRequestExecutor.DownloadStreamAsync(
+            CftApiBaseUrl + relativeEndpoint,
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        using JsonDocument jsonDocument = await JsonDocument.ParseAsync(versionsStream, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         return jsonDocument.RootElement
             .GetPropertyByChain(subRootPropertyName, incompleteBrowserVersion, "version")

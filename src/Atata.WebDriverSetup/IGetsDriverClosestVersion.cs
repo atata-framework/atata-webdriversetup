@@ -1,16 +1,19 @@
 ﻿namespace Atata.WebDriverSetup;
 
 /// <summary>
-/// Provides a method that tries to resolve the driver closest version.
+/// Provides a method that resolves the driver closest version.
 /// </summary>
 public interface IGetsDriverClosestVersion
 {
     /// <summary>
-    /// Tries to get the driver version closest to <paramref name="version"/>.
+    /// Gets the driver version closest to <paramref name="version"/>.
     /// </summary>
     /// <param name="version">The version.</param>
     /// <param name="platform">The target OS platform.</param>
-    /// <param name="closestVersion">The closest version.</param>
-    /// <returns><see langword="true"/> if the closest version is found; otherwise, <see langword="false"/>.</returns>
-    bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, [NotNullWhen(true)] out string? closestVersion);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task with the driver closest version.</returns>
+    Task<string> GetDriverClosestVersionAsync(
+        string version,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default);
 }

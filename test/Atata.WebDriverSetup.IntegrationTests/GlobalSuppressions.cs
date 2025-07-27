@@ -1,12 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-#pragma warning disable S103 // Lines should not be too long
+﻿#pragma warning disable S103 // Lines should not be too long
 
 [assembly: SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1009:Closing parenthesis should be spaced correctly", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.IntegrationTestFixture.BuildTestResultDirectoryPath~System.String")]
 [assembly: SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.ChromeDriverSetupStrategyTests.GetDriverDownloadUrl(Atata.WebDriverSetup.Architecture)~System.String")]
 [assembly: SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.FirefoxDriverSetupStrategyTests.GetDriverDownloadUrl(Atata.WebDriverSetup.Architecture)~System.String")]
 [assembly: SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.EdgeDriverSetupStrategyTests.GetDriverDownloadUrl(Atata.WebDriverSetup.Architecture)~System.String")]
-[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.EdgeDriverVersionsMapTests.TryGetDriverVersionCorrespondingToBrowserVersion.WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap")]
-[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.EdgeDriverVersionsMapTests.TryGetDriverVersionClosestToBrowserVersion.WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap")]
-
-#pragma warning restore S103 // Lines should not be too long
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.EdgeDriverVersionsMapTests.GetDriverVersionCorrespondingToBrowserVersionAsync.WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.IntegrationTests.EdgeDriverVersionsMapTests.GetDriverVersionClosestToBrowserVersionAsync.WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap~System.Threading.Tasks.Task")]

@@ -36,6 +36,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ```cs
   Task<string?> GetInstalledBrowserVersionAsync(CancellationToken cancellationToken = default);
   ```
+- In `IGetsDriverLatestVersion` replace method:
+  ```cs
+  string GetDriverLatestVersion();
+  ```
+  with:
+  ```cs
+  Task<string> GetDriverLatestVersionAsync(CancellationToken cancellationToken = default);
+  ```
+- In `IGetsDriverClosestVersion` replace method:
+  ```cs
+  bool TryGetDriverClosestVersion(
+      string version,
+      TargetOSPlatform platform,
+      [NotNullWhen(true)] out string? closestVersion);
+  ```
+  with:
+  ```cs
+  Task<string> GetDriverClosestVersionAsync(
+      string version,
+      TargetOSPlatform platform,
+      CancellationToken cancellationToken = default);
+  ```
+- In `IGetsDriverVersionCorrespondingToBrowserVersion` replace method:
+  ```cs
+  string GetDriverVersionCorrespondingToBrowserVersion(
+      string browserVersion,
+      TargetOSPlatform platform);
+  ```
+  with:
+  ```cs
+  Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(
+      string browserVersion,
+      TargetOSPlatform platform,
+      CancellationToken cancellationToken = default);
+  ```
 
 ### Removed
 

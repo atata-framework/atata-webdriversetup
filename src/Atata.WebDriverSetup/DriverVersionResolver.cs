@@ -22,28 +22,28 @@ internal sealed class DriverVersionResolver
         _platform = TargetOSPlatform.Detect(_options.Architecture);
     }
 
-    internal string ResolveByBrowserVersion(string version) =>
-        GetCorrespondingVersionResolver().GetDriverVersionCorrespondingToBrowserVersion(version, _platform)
+    internal async Task<string> ResolveByBrowserVersionAsync(string version, CancellationToken cancellationToken) =>
+        (await GetCorrespondingVersionResolver().GetDriverVersionCorrespondingToBrowserVersionAsync(version, _platform, cancellationToken).ConfigureAwait(false))
             ?? throw new DriverSetupException(
                 $"Failed to find {_browserName} driver version corresponding to browser {version} version.");
 
-    internal string ResolveLatestVersion() =>
-        GetLatestVersionResolver().GetDriverLatestVersion()
+    internal async Task<string> ResolveLatestVersionAsync(CancellationToken cancellationToken) =>
+        (await GetLatestVersionResolver().GetDriverLatestVersionAsync(cancellationToken).ConfigureAwait(false))
             ?? throw new DriverSetupException(
                 $"Failed to find {_browserName} driver latest version.");
 
     internal async Task<string> ResolveCorrespondingOrLatestVersionAsync(CancellationToken cancellationToken) =>
         (await ResolveCorrespondingVersionAsync(cancellationToken).ConfigureAwait(false))
-            ?? ResolveLatestVersion();
+            ?? (await ResolveLatestVersionAsync(cancellationToken).ConfigureAwait(false));
 
-    internal bool TryResolveClosestVersion(string version, [NotNullWhen(true)] out string? closestVersion)
+    internal async Task<string?> ResolveClosestVersionAsync(string version, CancellationToken cancellationToken)
     {
         if (_setupStrategy is IGetsDriverClosestVersion closestVersionResolver)
         {
             try
             {
-                if (closestVersionResolver.TryGetDriverClosestVersion(version, _platform, out closestVersion))
-                    return true;
+                return await closestVersionResolver.GetDriverClosestVersionAsync(version, _platform, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -51,8 +51,7 @@ internal sealed class DriverVersionResolver
             }
         }
 
-        closestVersion = null;
-        return false;
+        return null;
     }
 
     private async Task<string?> ResolveCorrespondingVersionAsync(CancellationToken cancellationToken)
@@ -63,7 +62,8 @@ internal sealed class DriverVersionResolver
                 .ConfigureAwait(false);
 
             if (installedVersion is not null)
-                return ResolveByBrowserVersion(installedVersion);
+                return await ResolveByBrowserVersionAsync(installedVersion, cancellationToken)
+                    .ConfigureAwait(false);
         }
 
         return null;

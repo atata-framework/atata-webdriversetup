@@ -16,82 +16,79 @@ public abstract class EdgeDriverVersionsMapTests
     public void TearDownSuite() =>
         EdgeDriverVersionsMap.ResetRemoteMapCache();
 
-    public sealed class TryGetDriverVersionCorrespondingToBrowserVersion : EdgeDriverVersionsMapTests
+    public sealed class GetDriverVersionCorrespondingToBrowserVersionAsync : EdgeDriverVersionsMapTests
     {
         [Test]
-        public void WhenBrowserVersionHasDriverInLocalMap()
+        public async Task WhenBrowserVersionHasDriverInLocalMap()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
                 "130.0.2849.89",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.89");
+            result.Should().Be("130.0.2849.89");
         }
 
         [Test]
-        public void WhenClosestBrowserVersionHasDriverInLocalMap()
+        public async Task WhenClosestBrowserVersionHasDriverInLocalMap()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
                 "130.0.2849.89",
                 OSPlatforms.Linux64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.78");
+            result.Should().Be("130.0.2849.78");
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps()
+        public async Task WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeFalse();
-            driverVersion.Should().BeNull();
+            result.Should().BeNull();
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps_ButThereIsClosestByMajor()
+        public async Task WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps_ButThereIsClosestByMajor()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
                 "130.0.9999.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.142");
+            result.Should().Be("130.0.2849.142");
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalMapAndRemoteMapFailsToDownload()
+        public async Task WhenBrowserVersionIsNotPresentInLocalMapAndRemoteMapFailsToDownload()
         {
-            FakeHttpRequestExecutorProxy.DownloadStringInterceptions.Enqueue(_ => string.Empty);
+            FakeHttpRequestExecutorProxy.DownloadStringInterceptions.Enqueue(
+                _ => Task.FromResult(string.Empty));
 
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
                 "130.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeFalse();
-            driverVersion.Should().BeNull();
+            result.Should().BeNull();
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap()
+        public async Task WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap()
         {
             FakeHttpRequestExecutorProxy.DownloadStringInterceptions.Enqueue(
-                call =>
+                async call =>
                 {
-                    string result = call.Invoke();
+                    string result = await call.Invoke()
+                        .ConfigureAwait(false);
 
                     int indexOfLastVersionEnd = result.LastIndexOf(',') + 1;
                     return result.Insert(
@@ -102,93 +99,89 @@ public abstract class EdgeDriverVersionsMapTests
                         """);
                 });
 
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("999.0.0.0");
+            result.Should().Be("999.0.0.0");
         }
     }
 
-    public sealed class TryGetDriverVersionClosestToBrowserVersion : EdgeDriverVersionsMapTests
+    public sealed class GetDriverVersionClosestToBrowserVersionAsync : EdgeDriverVersionsMapTests
     {
         [Test]
-        public void WhenBrowserVersionHasDriverInLocalMap()
+        public async Task WhenBrowserVersionHasDriverInLocalMap()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(
                 "130.0.2849.89",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.80");
+            result.Should().Be("130.0.2849.80");
         }
 
         [Test]
-        public void WhenClosestBrowserVersionHasDriverInLocalMap()
+        public async Task WhenClosestBrowserVersionHasDriverInLocalMap()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(
                 "130.0.2849.89",
                 OSPlatforms.Linux64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.78");
+            result.Should().Be("130.0.2849.78");
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps()
+        public async Task WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeFalse();
-            driverVersion.Should().BeNull();
+            result.Should().BeNull();
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps_ButThereIsClosestByMajor()
+        public async Task WhenBrowserVersionIsNotPresentInLocalAndRemoteMaps_ButThereIsClosestByMajor()
         {
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(
                 "130.0.9999.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("130.0.2849.142");
+            result.Should().Be("130.0.2849.142");
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalMapAndRemoteMapFailsToDownload()
+        public async Task WhenBrowserVersionIsNotPresentInLocalMapAndRemoteMapFailsToDownload()
         {
-            FakeHttpRequestExecutorProxy.DownloadStringInterceptions.Enqueue(_ => string.Empty);
+            FakeHttpRequestExecutorProxy.DownloadStringInterceptions.Enqueue(
+                _ => Task.FromResult(string.Empty));
 
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(
                 "130.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeFalse();
-            driverVersion.Should().BeNull();
+            result.Should().BeNull();
         }
 
         [Test]
-        public void WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap()
+        public async Task WhenBrowserVersionIsNotPresentInLocalMapButPresentInRemoteMap()
         {
             FakeHttpRequestExecutorProxy.DownloadStringInterceptions.Enqueue(
-                call =>
+                async call =>
                 {
-                    string result = call.Invoke();
+                    string result = await call.Invoke()
+                        .ConfigureAwait(false);
 
                     int indexOfLastVersionEnd = result.LastIndexOf(',') + 1;
                     return result.Insert(
@@ -202,14 +195,13 @@ public abstract class EdgeDriverVersionsMapTests
                         """);
                 });
 
-            bool result = EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(
+            var result = await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(
                 "999.0.0.0",
                 OSPlatforms.Windows64,
                 FakeHttpRequestExecutorProxy,
-                out string? driverVersion);
+                CancellationToken.None);
 
-            result.Should().BeTrue();
-            driverVersion.Should().Be("997.0.0.0");
+            result.Should().Be("997.0.0.0");
         }
     }
 }

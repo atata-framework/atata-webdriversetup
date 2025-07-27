@@ -19,9 +19,15 @@ internal sealed class CachedDriverVersionCorrespondingToBrowserVersionResolver
         _versionCheckInterval = versionCheckInterval;
     }
 
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform) =>
-        _driverVersionCache.GetOrAdd(
+    public async Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(
+        string browserVersion,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default)
+        =>
+        await _driverVersionCache.GetOrAddAsync(
             browserVersion,
             DateTime.UtcNow - _versionCheckInterval,
-            v => _actualResolver.GetDriverVersionCorrespondingToBrowserVersion(v, platform));
+            (v, ct) => _actualResolver.GetDriverVersionCorrespondingToBrowserVersionAsync(v, platform, ct),
+            cancellationToken)
+            .ConfigureAwait(false);
 }

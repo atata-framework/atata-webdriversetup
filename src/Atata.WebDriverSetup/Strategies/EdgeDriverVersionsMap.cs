@@ -16,22 +16,23 @@ internal static partial class EdgeDriverVersionsMap
         Fresher
     }
 
-    internal static bool TryGetDriverVersionCorrespondingToBrowserVersion(
+    internal static async Task<string?> GetDriverVersionCorrespondingToBrowserVersionAsync(
         string browserVersion,
         OSPlatforms platform,
         IHttpRequestExecutor httpRequestExecutor,
-        [NotNullWhen(true)] out string? driverVersion)
+        CancellationToken cancellationToken)
     {
         int browserVersionMapIndex = FindMapIndexByVersion(browserVersion);
+        string? driverVersion;
 
         if (browserVersionMapIndex != -1)
         {
             driverVersion = FindClosestVersionInMapByPlatform(browserVersionMapIndex, platform);
             if (driverVersion is not null)
-                return true;
+                return driverVersion;
         }
 
-        if (EnsureRemoteMapDownloadedAndFresher(httpRequestExecutor))
+        if (await EnsureRemoteMapDownloadedAndFresherAsync(httpRequestExecutor, cancellationToken).ConfigureAwait(false))
         {
             int browserVersionRemoteMapTextIndex = FindRemoteMapTextIndexByVersion(browserVersion);
 
@@ -41,33 +42,33 @@ internal static partial class EdgeDriverVersionsMap
 
                 driverVersion = FindClosestVersionInRemoteMapTextByPlatform(browserVersionEndRemoteMapTextIndex, platform);
                 if (driverVersion is not null)
-                    return true;
+                    return driverVersion;
             }
         }
 
         if (TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(browserVersion, platform, out driverVersion))
-            return true;
+            return driverVersion;
 
-        driverVersion = null;
-        return false;
+        return null;
     }
 
-    internal static bool TryGetDriverVersionClosestToBrowserVersion(
+    internal static async Task<string?> GetDriverVersionClosestToBrowserVersionAsync(
         string browserVersion,
         OSPlatforms platform,
         IHttpRequestExecutor httpRequestExecutor,
-        [NotNullWhen(true)] out string? driverVersion)
+        CancellationToken cancellationToken)
     {
         int browserVersionMapIndex = FindMapIndexByVersion(browserVersion);
+        string? driverVersion;
 
         if (browserVersionMapIndex != -1)
         {
             driverVersion = FindClosestVersionInMapByPlatform(browserVersionMapIndex - 1, platform);
             if (driverVersion is not null)
-                return true;
+                return driverVersion;
         }
 
-        if (EnsureRemoteMapDownloadedAndFresher(httpRequestExecutor))
+        if (await EnsureRemoteMapDownloadedAndFresherAsync(httpRequestExecutor, cancellationToken).ConfigureAwait(false))
         {
             int browserVersionRemoteMapTextIndex = FindRemoteMapTextIndexByVersion(browserVersion);
 
@@ -75,15 +76,14 @@ internal static partial class EdgeDriverVersionsMap
             {
                 driverVersion = FindClosestVersionInRemoteMapTextByPlatform(browserVersionRemoteMapTextIndex, platform);
                 if (driverVersion is not null)
-                    return true;
+                    return driverVersion;
             }
         }
 
         if (TryGetDriverVersionClosestToBrowserVersionByMajorVersionNumber(browserVersion, platform, out driverVersion))
-            return true;
+            return driverVersion;
 
-        driverVersion = null;
-        return false;
+        return null;
     }
 
     internal static void ResetRemoteMapCache()
@@ -141,20 +141,24 @@ internal static partial class EdgeDriverVersionsMap
         return null;
     }
 
-    private static bool EnsureRemoteMapDownloadedAndFresher(IHttpRequestExecutor httpRequestExecutor)
+    private static async Task<bool> EnsureRemoteMapDownloadedAndFresherAsync(
+        IHttpRequestExecutor httpRequestExecutor,
+        CancellationToken cancellationToken)
     {
-        EnsureRemoteMapDownloaded(httpRequestExecutor);
+        await EnsureRemoteMapDownloadedAsync(httpRequestExecutor, cancellationToken)
+            .ConfigureAwait(false);
 
         return s_remoteMapState == RemoteMapState.Fresher;
     }
 
-    private static void EnsureRemoteMapDownloaded(IHttpRequestExecutor httpRequestExecutor)
+    private static async Task EnsureRemoteMapDownloadedAsync(IHttpRequestExecutor httpRequestExecutor, CancellationToken cancellationToken)
     {
         if (s_remoteMapState == RemoteMapState.NotDownloaded)
         {
             try
             {
-                s_remoteMapText = httpRequestExecutor.DownloadString(RemoteMapUrl);
+                s_remoteMapText = await httpRequestExecutor.DownloadStringAsync(RemoteMapUrl, cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (string.IsNullOrWhiteSpace(s_remoteMapText))
                 {

@@ -40,10 +40,13 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
     public abstract string GetDriverBinaryFileName(TargetOSPlatform platform);
 
     /// <inheritdoc/>
-    public virtual string GetDriverLatestVersion()
+    public virtual async Task<string> GetDriverLatestVersionAsync(CancellationToken cancellationToken = default)
     {
         string latestReleaseUrl = $"{_baseUrl}/releases/latest";
-        string actualReleaseUrl = _httpRequestExecutor.GetRedirectUrl(latestReleaseUrl).AbsoluteUri;
+
+        Uri redirectUri = await _httpRequestExecutor.GetRedirectUrlAsync(latestReleaseUrl, cancellationToken)
+            .ConfigureAwait(false);
+        string actualReleaseUrl = redirectUri.AbsoluteUri;
 
         string[] urlParts = actualReleaseUrl.Split('/');
         return urlParts[^1][_versionTagPrefix.Length..];

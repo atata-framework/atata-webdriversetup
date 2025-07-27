@@ -28,29 +28,41 @@ public class ReliableHttpRequestExecutor : IHttpRequestExecutor
     }
 
     /// <inheritdoc/>
-    public void DownloadFile(string url, string filePath) =>
-        ExecuteWithRetries(() =>
-        {
-            _httpRequestExecutor.DownloadFile(url, filePath);
-            return true;
-        });
+    public async Task DownloadFileAsync(string url, string filePath, CancellationToken cancellationToken = default) =>
+        await ExecuteWithRetriesAsync(
+            async ct =>
+            {
+                await _httpRequestExecutor.DownloadFileAsync(url, filePath, ct)
+                    .ConfigureAwait(false);
+                return true;
+            },
+            cancellationToken)
+            .ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public string DownloadString(string url) =>
-        ExecuteWithRetries(() =>
-            _httpRequestExecutor.DownloadString(url));
+    public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default) =>
+        await ExecuteWithRetriesAsync(
+            ct => _httpRequestExecutor.DownloadStringAsync(url, ct),
+            cancellationToken)
+            .ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public Stream DownloadStream(string url) =>
-        ExecuteWithRetries(() =>
-            _httpRequestExecutor.DownloadStream(url));
+    public async Task<Stream> DownloadStreamAsync(string url, CancellationToken cancellationToken = default) =>
+        await ExecuteWithRetriesAsync(
+            ct => _httpRequestExecutor.DownloadStreamAsync(url, ct),
+            cancellationToken)
+            .ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public Uri GetRedirectUrl(string url) =>
-        ExecuteWithRetries(() =>
-            _httpRequestExecutor.GetRedirectUrl(url));
+    public async Task<Uri> GetRedirectUrlAsync(string url, CancellationToken cancellationToken = default) =>
+        await ExecuteWithRetriesAsync(
+            ct => _httpRequestExecutor.GetRedirectUrlAsync(url, ct),
+            cancellationToken)
+            .ConfigureAwait(false);
 
-    private TResult ExecuteWithRetries<TResult>(Func<TResult> operation)
+    private async Task<TResult> ExecuteWithRetriesAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> operation,
+        CancellationToken cancellationToken)
     {
         int attempt = 1;
 
@@ -58,7 +70,7 @@ public class ReliableHttpRequestExecutor : IHttpRequestExecutor
         {
             try
             {
-                return operation.Invoke();
+                return await operation.Invoke(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -66,7 +78,9 @@ public class ReliableHttpRequestExecutor : IHttpRequestExecutor
                     throw;
 
                 attempt++;
-                Task.Delay(_retryInterval).Wait();
+
+                await Task.Delay(_retryInterval, cancellationToken)
+                    .ConfigureAwait(false);
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-#pragma warning disable S103 // Lines should not be too long
+﻿#pragma warning disable S103 // Lines should not be too long
 
 [assembly: SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.HttpRequestExecutor.CreateHttpClientWithAutoRedirect(System.Boolean)~System.Net.Http.HttpClient")]
 [assembly: SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>", Scope = "member", Target = "~F:Atata.WebDriverSetup.ChromeDriverSetupStrategy.CftApiBaseUrl")]
@@ -13,5 +11,4 @@
 [assembly: SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetup.SetUpPendingConfigurationsAsync~System.Threading.Tasks.Task{Atata.WebDriverSetup.DriverSetupResult[]}")]
 [assembly: SuppressMessage("Security", "CA5400:Ensure HttpClient certificate revocation list check is not disabled", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.HttpRequestExecutor.CreateHttpClientWithAutoRedirect(System.Boolean)~System.Net.Http.HttpClient")]
 [assembly: SuppressMessage("Major Code Smell", "S104:Files should not have too many lines of code", Justification = "<Pending>")]
-
-#pragma warning restore S103 // Lines should not be too long
+[assembly: SuppressMessage("Critical Code Smell", "S134:Control flow statements \"if\", \"switch\", \"for\", \"foreach\", \"while\", \"do\"  and \"try\" should not be nested too deeply", Justification = "<Pending>", Scope = "member", Target = "~M:Atata.WebDriverSetup.DriverSetupConfigurationBuilder.SetUpDriverAsync(Atata.WebDriverSetup.DriverVersionResolver,Atata.WebDriverSetup.DriverSetupExecutor,System.String,System.Threading.CancellationToken)~System.Threading.Tasks.Task{Atata.WebDriverSetup.DriverSetupResult}")]

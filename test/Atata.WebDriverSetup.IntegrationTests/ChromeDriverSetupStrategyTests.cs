@@ -69,9 +69,9 @@ public class ChromeDriverSetupStrategyTests
     }
 
     [TestCaseSource(typeof(Architectures), nameof(Architectures.All))]
-    public void GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
+    public async Task GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
     {
-        string latestVersion = _sut.GetDriverLatestVersion();
+        string latestVersion = await _sut.GetDriverLatestVersionAsync();
         var url = _sut.GetDriverDownloadUrl(latestVersion, TargetOSPlatform.Detect(architecture));
 
         Assertions.AssertUrlReturnsOK(url);
@@ -85,6 +85,6 @@ public class ChromeDriverSetupStrategyTests
     [TestCase("101.0.4951.41", ExpectedResult = "101.0.4951.41")]
     [TestCase("97.0", ExpectedResult = "97.0.4692.71")]
     [TestCase("94", ExpectedResult = "94.0.4606.113")]
-    public string GetDriverVersionCorrespondingToBrowserVersion(string version) =>
-        _sut.GetDriverVersionCorrespondingToBrowserVersion(version, TargetOSPlatform.DetectAuto());
+    public async Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(string version) =>
+        await _sut.GetDriverVersionCorrespondingToBrowserVersionAsync(version, TargetOSPlatform.DetectAuto());
 }

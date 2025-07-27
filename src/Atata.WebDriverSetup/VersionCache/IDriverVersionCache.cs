@@ -12,8 +12,12 @@ public interface IDriverVersionCache
     /// </summary>
     /// <param name="minimumAcceptableTimestamp">The minimum acceptable timestamp.</param>
     /// <param name="latestVersionResolveFunction">The function that resolves the latest version.</param>
-    /// <returns>The driver version string.</returns>
-    string GetOrAddLatest(DateTime minimumAcceptableTimestamp, Func<string> latestVersionResolveFunction);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A value task with the driver version string.</returns>
+    ValueTask<string> GetOrAddLatestAsync(
+        DateTime minimumAcceptableTimestamp,
+        Func<CancellationToken, Task<string>> latestVersionResolveFunction,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a browser/driver versions pair to the cache by using the specified function
@@ -23,6 +27,11 @@ public interface IDriverVersionCache
     /// <param name="browserVersion">The browser version.</param>
     /// <param name="minimumAcceptableTimestamp">The minimum acceptable timestamp.</param>
     /// <param name="versionResolveFunction">The function that resolves the version.</param>
-    /// <returns>The driver version string.</returns>
-    string GetOrAdd(string browserVersion, DateTime minimumAcceptableTimestamp, Func<string, string> versionResolveFunction);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A value task with the driver version string.</returns>
+    ValueTask<string> GetOrAddAsync(
+        string browserVersion,
+        DateTime minimumAcceptableTimestamp,
+        Func<string, CancellationToken, Task<string>> versionResolveFunction,
+        CancellationToken cancellationToken = default);
 }

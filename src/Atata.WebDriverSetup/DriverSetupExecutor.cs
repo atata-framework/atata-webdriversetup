@@ -26,14 +26,15 @@ internal sealed class DriverSetupExecutor
         _platform = TargetOSPlatform.Detect(configuration.Architecture);
     }
 
-    internal DriverSetupResult SetUp(string version)
+    internal async Task<DriverSetupResult> SetUpAsync(string version, CancellationToken cancellationToken)
     {
         Guard.ThrowIfNullOrWhitespace(version);
 
         string driverDestinationDirectoryPath = BuildDriverDestinationDirectoryPath(version);
         string driverDestinationFileName = _setupStrategy.GetDriverBinaryFileName(_platform);
 
-        DownloadDriverIfMissing(version, driverDestinationDirectoryPath, driverDestinationFileName);
+        await DownloadDriverIfMissingAsync(version, driverDestinationDirectoryPath, driverDestinationFileName, cancellationToken)
+            .ConfigureAwait(false);
 
         SetEnvironmentVariables(driverDestinationDirectoryPath);
 
@@ -56,10 +57,11 @@ internal sealed class DriverSetupExecutor
         }
     }
 
-    private void DownloadDriverIfMissing(
+    private async Task DownloadDriverIfMissingAsync(
         string version,
         string driverDestinationDirectoryPath,
-        string driverDestinationFileName)
+        string driverDestinationFileName,
+        CancellationToken cancellationToken)
     {
         string driverDestinationFilePath = Path.Combine(driverDestinationDirectoryPath, driverDestinationFileName);
 
@@ -82,7 +84,8 @@ internal sealed class DriverSetupExecutor
 
             try
             {
-                _httpRequestExecutor.DownloadFile(downloadUrl, downloadFilePath);
+                await _httpRequestExecutor.DownloadFileAsync(downloadUrl, downloadFilePath, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception exception)
             {

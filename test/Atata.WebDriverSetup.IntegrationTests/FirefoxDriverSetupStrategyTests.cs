@@ -81,9 +81,9 @@ public class FirefoxDriverSetupStrategyTests
     }
 
     [TestCaseSource(typeof(Architectures), nameof(Architectures.All))]
-    public void GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
+    public async Task GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
     {
-        string latestVersion = _sut.GetDriverLatestVersion();
+        string latestVersion = await _sut.GetDriverLatestVersionAsync();
         var url = _sut.GetDriverDownloadUrl(latestVersion, TargetOSPlatform.Detect(architecture));
 
         Assertions.AssertUrlReturnsOK(url);
@@ -97,6 +97,6 @@ public class FirefoxDriverSetupStrategyTests
     [TestCase("100.0.0", ExpectedResult = "0.31.0")]
     [TestCase("80.0-beta", ExpectedResult = "0.30.0")]
     [TestCase("75.0.0beta2", ExpectedResult = "0.29.1")]
-    public string GetDriverVersionCorrespondingToBrowserVersion(string version) =>
-        _sut.GetDriverVersionCorrespondingToBrowserVersion(version, TargetOSPlatform.DetectAuto());
+    public async Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(string version) =>
+        await _sut.GetDriverVersionCorrespondingToBrowserVersionAsync(version, TargetOSPlatform.DetectAuto());
 }

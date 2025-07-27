@@ -87,6 +87,6 @@ public class EdgeDriverSetupStrategyTests
     [TestCase("130.0.9999.0", IncludePlatform = Platforms.Windows, ExpectedResult = "130.0.2849.142")]
     [TestCase("130.0.9999.0", IncludePlatform = Platforms.MacOS, ExpectedResult = "130.0.2849.81")]
     [TestCase("130.0.9999.0", IncludePlatform = Platforms.Linux, ExpectedResult = "130.0.2849.78")]
-    public string GetDriverVersionCorrespondingToBrowserVersion(string version) =>
-        _sut.GetDriverVersionCorrespondingToBrowserVersion(version, TargetOSPlatform.DetectAuto());
+    public async Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(string version) =>
+        await _sut.GetDriverVersionCorrespondingToBrowserVersionAsync(version, TargetOSPlatform.DetectAuto());
 }

@@ -7,13 +7,14 @@ internal sealed class LoggingHttpRequestExecutor : IHttpRequestExecutor
     public LoggingHttpRequestExecutor(IHttpRequestExecutor httpRequestExecutor) =>
         _httpRequestExecutor = httpRequestExecutor;
 
-    public void DownloadFile(string url, string filePath)
+    public async Task DownloadFileAsync(string url, string filePath, CancellationToken cancellationToken = default)
     {
         Log.Trace($"Downloading file by URL {url}");
 
         try
         {
-            _httpRequestExecutor.DownloadFile(url, filePath);
+            await _httpRequestExecutor.DownloadFileAsync(url, filePath, cancellationToken)
+                .ConfigureAwait(false);
 
             Log.Trace($"Downloaded file by URL {url} to {filePath}");
         }
@@ -24,13 +25,14 @@ internal sealed class LoggingHttpRequestExecutor : IHttpRequestExecutor
         }
     }
 
-    public string DownloadString(string url)
+    public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default)
     {
         Log.Trace($"Downloading string by URL {url}");
 
         try
         {
-            var result = _httpRequestExecutor.DownloadString(url);
+            var result = await _httpRequestExecutor.DownloadStringAsync(url, cancellationToken)
+                .ConfigureAwait(false);
 
             Log.Trace($"Downloaded string by URL {url}:{(result.Contains('\n') ? Environment.NewLine : " ")}{result}");
 
@@ -43,13 +45,14 @@ internal sealed class LoggingHttpRequestExecutor : IHttpRequestExecutor
         }
     }
 
-    public Stream DownloadStream(string url)
+    public async Task<Stream> DownloadStreamAsync(string url, CancellationToken cancellationToken = default)
     {
         Log.Trace($"Downloading stream by URL {url}");
 
         try
         {
-            var result = _httpRequestExecutor.DownloadStream(url);
+            var result = await _httpRequestExecutor.DownloadStreamAsync(url, cancellationToken)
+                .ConfigureAwait(false);
 
             Log.Trace($"Downloaded stream by URL {url}");
 
@@ -62,13 +65,14 @@ internal sealed class LoggingHttpRequestExecutor : IHttpRequestExecutor
         }
     }
 
-    public Uri GetRedirectUrl(string url)
+    public async Task<Uri> GetRedirectUrlAsync(string url, CancellationToken cancellationToken = default)
     {
         Log.Trace($"Getting redirect URL for {url}");
 
         try
         {
-            var result = _httpRequestExecutor.GetRedirectUrl(url);
+            var result = await _httpRequestExecutor.GetRedirectUrlAsync(url, cancellationToken)
+                .ConfigureAwait(false);
 
             Log.Trace($"Got redirect URL for {url}: {result}");
 

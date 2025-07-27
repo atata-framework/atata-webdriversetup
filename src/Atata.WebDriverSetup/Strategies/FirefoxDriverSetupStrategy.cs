@@ -57,17 +57,22 @@ public class FirefoxDriverSetupStrategy :
                 ?.Replace("Mozilla Firefox ", null);
 
     /// <inheritdoc/>
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform)
+    public Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(
+        string browserVersion,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNullOrWhitespace(browserVersion);
 
         string browserMajorVersion = VersionUtils.TrimMinor(browserVersion);
         int browserMajorVersionNumber = int.Parse(browserMajorVersion);
 
-        return browserMajorVersionNumber >= 91
+        string driverVersion = browserMajorVersionNumber >= 91
             ? "0.31.0"
             : browserMajorVersionNumber >= 78
                 ? "0.30.0"
                 : "0.29.1";
+
+        return Task.FromResult(driverVersion);
     }
 }

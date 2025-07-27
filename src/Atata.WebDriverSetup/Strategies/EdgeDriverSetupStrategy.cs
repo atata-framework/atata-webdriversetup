@@ -34,8 +34,13 @@ public class EdgeDriverSetupStrategy :
             : "msedgedriver";
 
     /// <inheritdoc/>
-    public string GetDriverLatestVersion() =>
-        _httpRequestExecutor.DownloadString(DriverLatestVersionUrl).Trim();
+    public async Task<string> GetDriverLatestVersionAsync(CancellationToken cancellationToken = default)
+    {
+        string versionString = await _httpRequestExecutor.DownloadStringAsync(DriverLatestVersionUrl, cancellationToken)
+            .ConfigureAwait(false);
+
+        return versionString.Trim();
+    }
 
     /// <inheritdoc/>
     public Uri GetDriverDownloadUrl(string version, TargetOSPlatform platform) =>
@@ -76,27 +81,42 @@ public class EdgeDriverSetupStrategy :
                     ?.Replace("Microsoft Edge ", null);
 
     /// <inheritdoc/>
-    public string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform) =>
-        EdgeDriverVersionsMap.TryGetDriverVersionCorrespondingToBrowserVersion(
+    public async Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(
+        string browserVersion,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default)
+    {
+        string? driverVersion = await EdgeDriverVersionsMap.GetDriverVersionCorrespondingToBrowserVersionAsync(
             browserVersion,
             platform.ToOSPlatform(),
             _httpRequestExecutor,
-            out string? driverVersion)
-            ? driverVersion
-            : browserVersion;
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return driverVersion ?? browserVersion;
+    }
 
     /// <inheritdoc/>
-    public bool TryGetDriverClosestVersion(string version, TargetOSPlatform platform, [NotNullWhen(true)] out string? closestVersion) =>
-        EdgeDriverVersionsMap.TryGetDriverVersionClosestToBrowserVersion(version, platform.ToOSPlatform(), _httpRequestExecutor, out closestVersion)
-            || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion)
-            || TryGetDriverClosestVersionFromDownloadsPage(version, platform, out closestVersion);
+    public async Task<string> GetDriverClosestVersionAsync(
+        string version,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default)
+        =>
+        await EdgeDriverVersionsMap.GetDriverVersionClosestToBrowserVersionAsync(version, platform.ToOSPlatform(), _httpRequestExecutor, cancellationToken).ConfigureAwait(false)
+            ?? await GetDriverClosestVersionFromDownloadsPageAsync(version, platform, cancellationToken).ConfigureAwait(false)
+            ?? await GetDriverClosestVersionFromDownloadsPageAsync(version, platform, cancellationToken).ConfigureAwait(false)
+            ?? null!;
 
-    private bool TryGetDriverClosestVersionFromDownloadsPage(string version, TargetOSPlatform platform, [NotNullWhen(true)] out string? closestVersion)
+    private async Task<string?> GetDriverClosestVersionFromDownloadsPageAsync(
+        string version,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken)
     {
         string originalVersionUrlVersionPart = GetDriverDownloadUrlVersionPart(version);
         string originalVersionUrlVersionHrefStart = $"href=\"{originalVersionUrlVersionPart}";
 
-        string downloadsPageHtml = _httpRequestExecutor.DownloadString(DownloadsPage);
+        string downloadsPageHtml = await _httpRequestExecutor.DownloadStringAsync(DownloadsPage, cancellationToken)
+            .ConfigureAwait(false);
         int lastIndexOfOriginalVersion = downloadsPageHtml.LastIndexOf(originalVersionUrlVersionHrefStart, StringComparison.Ordinal);
 
         if (lastIndexOfOriginalVersion >= 0)
@@ -110,10 +130,7 @@ public class EdgeDriverSetupStrategy :
                 string versionFound = previousVersionRegexMatch.Groups[1].Value;
 
                 if (versionFound != version)
-                {
-                    closestVersion = versionFound;
-                    return true;
-                }
+                    return versionFound;
             }
         }
 
@@ -126,13 +143,9 @@ public class EdgeDriverSetupStrategy :
             string versionFound = majorVersionRegexMatches[^1].Groups[1].Value;
 
             if (versionFound != version)
-            {
-                closestVersion = versionFound;
-                return true;
-            }
+                return versionFound;
         }
 
-        closestVersion = null;
-        return false;
+        return null;
     }
 }

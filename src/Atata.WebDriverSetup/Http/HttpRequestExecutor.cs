@@ -30,38 +30,47 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     }
 
     /// <inheritdoc/>
-    public string DownloadString(string url)
+    public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default)
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
-        return client.GetStringAsync(url).GetAwaiter().GetResult();
+        // TODO: After .NET upgrade, use client.GetStringAsync(url, cancellationToken)
+        return await client.GetStringAsync(url)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public Stream DownloadStream(string url)
+    public async Task<Stream> DownloadStreamAsync(string url, CancellationToken cancellationToken = default)
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
-        return client.GetStreamAsync(url).GetAwaiter().GetResult();
+        // TODO: After .NET upgrade, use client.GetStreamAsync(url, cancellationToken)
+        return await client.GetStreamAsync(url)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public void DownloadFile(string url, string filePath)
+    public async Task DownloadFileAsync(string url, string filePath, CancellationToken cancellationToken = default)
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
-        using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
+        using HttpResponseMessage response = await client.GetAsync(url, cancellationToken).
+            ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
         using FileStream fileStream = new(filePath, FileMode.Create);
-        response.Content.CopyToAsync(fileStream).GetAwaiter().GetResult();
+
+        // TODO: After .NET upgrade, use response.Content.CopyToAsync(fileStream, cancellationToken)
+        await response.Content.CopyToAsync(fileStream)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public Uri GetRedirectUrl(string url)
+    public async Task<Uri> GetRedirectUrlAsync(string url, CancellationToken cancellationToken = default)
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(false);
-        using HttpResponseMessage response = client.GetAsync(url).GetAwaiter().GetResult();
+        using HttpResponseMessage response = await client.GetAsync(url, cancellationToken)
+            .ConfigureAwait(false);
 
         if (response.StatusCode != HttpStatusCode.Found)
             throw new HttpRequestException($"""Unexpected HTTP response status for "{url}". Expected 302, but was {(int)response.StatusCode}.""");

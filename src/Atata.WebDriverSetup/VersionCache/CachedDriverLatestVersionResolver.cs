@@ -18,8 +18,10 @@ internal sealed class CachedDriverLatestVersionResolver : IGetsDriverLatestVersi
         _versionCheckInterval = versionCheckInterval;
     }
 
-    public string GetDriverLatestVersion() =>
-        _driverVersionCache.GetOrAddLatest(
+    public async Task<string> GetDriverLatestVersionAsync(CancellationToken cancellationToken = default) =>
+        await _driverVersionCache.GetOrAddLatestAsync(
             DateTime.UtcNow - _versionCheckInterval,
-            _actualResolver.GetDriverLatestVersion);
+            _actualResolver.GetDriverLatestVersionAsync,
+            cancellationToken)
+            .ConfigureAwait(false);
 }

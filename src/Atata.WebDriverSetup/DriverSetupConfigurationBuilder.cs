@@ -183,34 +183,43 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
             setupStrategy,
             httpRequestExecutor);
 
-        DriverSetupResult result = SetUpDriver(driverVersionResolver, setupExecutor, driverVersion);
+        DriverSetupResult result = await SetUpDriverAsync(driverVersionResolver, setupExecutor, driverVersion, cancellationToken)
+            .ConfigureAwait(false);
 
         DriverSetup.RemovePendingConfiguration(this);
 
         return result;
     }
 
-    private DriverSetupResult SetUpDriver(
+    private async Task<DriverSetupResult> SetUpDriverAsync(
         DriverVersionResolver driverVersionResolver,
         DriverSetupExecutor setupExecutor,
-        string driverVersion)
+        string driverVersion,
+        CancellationToken cancellationToken)
     {
         try
         {
-            return setupExecutor.SetUp(driverVersion);
+            return await setupExecutor.SetUpAsync(driverVersion, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (Exception e) when (e.InnerException is HttpRequestException)
         {
-            if (BuildingContext.Version is DriverVersions.Auto or DriverVersions.Latest
-                && driverVersionResolver.TryResolveClosestVersion(driverVersion, out string? closestDriverVersion))
+            if (BuildingContext.Version is DriverVersions.Auto or DriverVersions.Latest)
             {
-                try
+                string? closestDriverVersion = await driverVersionResolver.ResolveClosestVersionAsync(driverVersion, cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (closestDriverVersion is not null)
                 {
-                    return setupExecutor.SetUp(closestDriverVersion);
-                }
-                catch (Exception exception)
-                {
-                    Log.Warn(exception, $"Failed to set-up driver with version {closestDriverVersion} closest to {driverVersion}.");
+                    try
+                    {
+                        return await setupExecutor.SetUpAsync(closestDriverVersion, cancellationToken)
+                            .ConfigureAwait(false);
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Warn(exception, $"Failed to set-up driver with version {closestDriverVersion} closest to {driverVersion}.");
+                    }
                 }
             }
 
@@ -242,9 +251,9 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         if (version == DriverVersions.Auto)
             return await driverVersionResolver.ResolveCorrespondingOrLatestVersionAsync(cancellationToken).ConfigureAwait(false);
         else if (version == DriverVersions.Latest)
-            return driverVersionResolver.ResolveLatestVersion();
+            return await driverVersionResolver.ResolveLatestVersionAsync(cancellationToken).ConfigureAwait(false);
         else if (DriverVersions.TryExtractBrowserVersion(version, out string? browserVersion))
-            return driverVersionResolver.ResolveByBrowserVersion(browserVersion);
+            return await driverVersionResolver.ResolveByBrowserVersionAsync(browserVersion, cancellationToken).ConfigureAwait(false);
         else
             return version;
     }

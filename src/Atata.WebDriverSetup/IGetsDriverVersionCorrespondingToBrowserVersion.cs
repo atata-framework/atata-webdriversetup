@@ -10,6 +10,10 @@ public interface IGetsDriverVersionCorrespondingToBrowserVersion
     /// </summary>
     /// <param name="browserVersion">The browser version.</param>
     /// <param name="platform">The target OS platform.</param>
-    /// <returns>The driver version string.</returns>
-    string GetDriverVersionCorrespondingToBrowserVersion(string browserVersion, TargetOSPlatform platform);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task with the driver version string.</returns>
+    Task<string> GetDriverVersionCorrespondingToBrowserVersionAsync(
+        string browserVersion,
+        TargetOSPlatform platform,
+        CancellationToken cancellationToken = default);
 }

@@ -30,15 +30,27 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
         _filePath = filePath;
 
     /// <inheritdoc/>
-    public string GetOrAddLatest(DateTime minimumAcceptableTimestamp, Func<string> latestVersionResolveFunction)
+    public async ValueTask<string> GetOrAddLatestAsync(
+        DateTime minimumAcceptableTimestamp,
+        Func<CancellationToken, Task<string>> latestVersionResolveFunction,
+        CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNull(latestVersionResolveFunction);
 
-        return GetOrAdd(DriverVersions.Latest, minimumAcceptableTimestamp, _ => latestVersionResolveFunction());
+        return await GetOrAddAsync(
+            DriverVersions.Latest,
+            minimumAcceptableTimestamp,
+            (_, ct) => latestVersionResolveFunction.Invoke(ct),
+            cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public string GetOrAdd(string browserVersion, DateTime minimumAcceptableTimestamp, Func<string, string> versionResolveFunction)
+    public async ValueTask<string> GetOrAddAsync(
+        string browserVersion,
+        DateTime minimumAcceptableTimestamp,
+        Func<string, CancellationToken, Task<string>> versionResolveFunction,
+        CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNullOrWhitespace(browserVersion);
         Guard.ThrowIfNull(versionResolveFunction);
@@ -50,7 +62,7 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
 
         string? driverVersion;
 
-        if (item != null)
+        if (item is not null)
         {
             if (TryGetDriverVersion(item, minimumAcceptableTimestamp, out driverVersion))
                 return driverVersion;
@@ -61,7 +73,8 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
             document.Root.Add(item);
         }
 
-        driverVersion = versionResolveFunction.Invoke(browserVersion);
+        driverVersion = await versionResolveFunction.Invoke(browserVersion, cancellationToken)
+            .ConfigureAwait(false);
 
         if (!string.IsNullOrWhiteSpace(driverVersion))
         {

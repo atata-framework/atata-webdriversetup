@@ -19,9 +19,9 @@ internal sealed class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
     public IReadOnlyList<(string Url, string FilePath)> DownloadFileCalls =>
         _downloadFileCalls;
 
-    public Queue<Func<Func<string>, string>> DownloadStringInterceptions { get; } = [];
+    public Queue<Func<Func<Task<string>>, Task<string>>> DownloadStringInterceptions { get; } = [];
 
-    public void DownloadFile(string url, string filePath)
+    public async Task DownloadFileAsync(string url, string filePath, CancellationToken cancellationToken = default)
     {
         _downloadFileCalls.Add((url, filePath));
 
@@ -33,18 +33,23 @@ internal sealed class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
         }
         else
         {
-            _realExecutor.DownloadFile(url, filePath);
+            await _realExecutor.DownloadFileAsync(url, filePath, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 
-    public Stream DownloadStream(string url) =>
-        _realExecutor.DownloadStream(url);
+    public async Task<Stream> DownloadStreamAsync(string url, CancellationToken cancellationToken = default) =>
+        await _realExecutor.DownloadStreamAsync(url, cancellationToken)
+            .ConfigureAwait(false);
 
-    public string DownloadString(string url) =>
+    public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default) =>
         DownloadStringInterceptions.TryDequeue(out var interceptor)
-            ? interceptor.Invoke(() => _realExecutor.DownloadString(url))
-            : _realExecutor.DownloadString(url);
+            ? await interceptor.Invoke(async () => await _realExecutor.DownloadStringAsync(url, cancellationToken).ConfigureAwait(false))
+                .ConfigureAwait(false)
+            : await _realExecutor.DownloadStringAsync(url, cancellationToken)
+                .ConfigureAwait(false);
 
-    public Uri GetRedirectUrl(string url) =>
-        _realExecutor.GetRedirectUrl(url);
+    public async Task<Uri> GetRedirectUrlAsync(string url, CancellationToken cancellationToken = default) =>
+        await _realExecutor.GetRedirectUrlAsync(url, cancellationToken)
+            .ConfigureAwait(false);
 }
