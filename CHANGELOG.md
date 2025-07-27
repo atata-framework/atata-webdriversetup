@@ -11,19 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add methods to `AppVersionDetector`:
   ```cs
-  public static async Task<string?> GetThroughOSXApplicationCliAsync(string applicationName, CancellationToken cancellationToken = default);
+  public static Task<string?> GetThroughOSXApplicationCliAsync(string applicationName, CancellationToken cancellationToken = default);
 
-  public static async Task<string?> GetThroughCliAsync(string fileNameOrCommand, string arguments, CancellationToken cancellationToken = default);
+  public static Task<string?> GetThroughCliAsync(string fileNameOrCommand, string arguments, CancellationToken cancellationToken = default);
   ```
 - Add methods to `BrowserDetector`:
   ```cs
-  public static async Task<bool> IsBrowserInstalledAsync(string browserName, CancellationToken cancellationToken = default);
+  public static Task<string?> GetFirstInstalledBrowserNameAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default);
 
-  public static async Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default);
+  public static Task<bool> IsBrowserInstalledAsync(string browserName, CancellationToken cancellationToken = default);
+
+  public static Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default);
   ```
 - Add method to `DriverSetupConfigurationBuilder`:
   ```cs
-  public async Task<DriverSetupResult> SetUpAsync(CancellationToken cancellationToken = default);
+  public Task<DriverSetupResult> SetUpAsync(CancellationToken cancellationToken = default);
   ```
 
 ### Changed

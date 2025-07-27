@@ -27,7 +27,28 @@ public static class BrowserDetector
     {
         Guard.ThrowIfNullOrEmpty(browserNames);
 
-        return browserNames.FirstOrDefault(IsBrowserInstalled);
+        return GetFirstInstalledBrowserNameAsync(browserNames).GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// Gets the name of the first installed browser among the <paramref name="browserNames"/>.
+    /// </summary>
+    /// <param name="browserNames">The browser names.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task with the browser name; or <see langword="null"/> if none of the browsers is installed.
+    /// </returns>
+    public static async Task<string?> GetFirstInstalledBrowserNameAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)
+    {
+        Guard.ThrowIfNullOrEmpty(browserNames);
+
+        foreach (string browserName in browserNames)
+        {
+            if (await IsBrowserInstalledAsync(browserName, cancellationToken).ConfigureAwait(false))
+                return browserName;
+        }
+
+        return null;
     }
 
     /// <summary>

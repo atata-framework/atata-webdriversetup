@@ -3,30 +3,35 @@
 public static class BrowserDetectorTests
 {
     [TestFixture]
-    public class GetFirstInstalledBrowserName
+    public class GetFirstInstalledBrowserNameAsync
     {
         [Test]
-        public void With3ValidBrowserNames()
+        public async Task With3ValidBrowserNames()
         {
-            var browserNames = new[] { BrowserNames.Chrome, BrowserNames.Firefox, BrowserNames.Edge };
-            var result = BrowserDetector.GetFirstInstalledBrowserName(browserNames);
+            string[] browserNames = [BrowserNames.Chrome, BrowserNames.Firefox, BrowserNames.Edge];
+            var result = await BrowserDetector.GetFirstInstalledBrowserNameAsync(browserNames);
 
             result.Should().BeOneOf(browserNames);
         }
 
         [Test]
         public void WithNull() =>
-            Assert.Throws<ArgumentNullException>(() =>
-                BrowserDetector.GetFirstInstalledBrowserName((null as IEnumerable<string>)!));
+            Assert.That(
+                async () => await BrowserDetector.GetFirstInstalledBrowserNameAsync(null!),
+                Throws.TypeOf<ArgumentNullException>());
 
         [Test]
         public void WithEmptyEnumerable() =>
-            Assert.Throws<ArgumentException>(() =>
-                BrowserDetector.GetFirstInstalledBrowserName());
+            Assert.That(
+                async () => await BrowserDetector.GetFirstInstalledBrowserNameAsync([]),
+                Throws.TypeOf<ArgumentException>());
 
         [Test]
-        public void WithInvalidBrowserName() =>
-            BrowserDetector.GetFirstInstalledBrowserName("InvalidName")
-                .Should().BeNull();
+        public async Task WithInvalidBrowserName()
+        {
+            var result = await BrowserDetector.GetFirstInstalledBrowserNameAsync(["InvalidName"]);
+
+            result.Should().BeNull();
+        }
     }
 }
