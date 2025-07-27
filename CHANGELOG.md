@@ -15,8 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   public static async Task<string?> GetThroughCliAsync(string fileNameOrCommand, string arguments, CancellationToken cancellationToken = default);
   ```
-- Add method to `BrowserDetector`:
+- Add methods to `BrowserDetector`:
   ```cs
+  public static async Task<bool> IsBrowserInstalledAsync(string browserName, CancellationToken cancellationToken = default);
+
   public static async Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default);
   ```
 - Add method to `DriverSetupConfigurationBuilder`:

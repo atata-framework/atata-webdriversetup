@@ -38,7 +38,18 @@ public static class BrowserDetector
     /// <see langword="true"/> if the browser is installed; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool IsBrowserInstalled(string browserName) =>
-        GetInstalledBrowserVersion(browserName) != null;
+        IsBrowserInstalledAsync(browserName).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Determines whether the browser with the specified name is installed.
+    /// </summary>
+    /// <param name="browserName">Name of the browser.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task with a value <see langword="true"/> if the browser is installed; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static async Task<bool> IsBrowserInstalledAsync(string browserName, CancellationToken cancellationToken = default) =>
+        (await GetInstalledBrowserVersionAsync(browserName, cancellationToken).ConfigureAwait(false)) is not null;
 
     /// <summary>
     /// Gets the installed browser version by the browser name.
@@ -53,7 +64,7 @@ public static class BrowserDetector
     /// </summary>
     /// <param name="browserName">Name of the browser.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The version string; or <see langword="null"/> if the browser is not found.</returns>
+    /// <returns>A task with the version string; or <see langword="null"/> if the browser is not found.</returns>
     public static async Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default)
     {
         Guard.ThrowIfNullOrWhitespace(browserName);
