@@ -33,6 +33,17 @@ public sealed class AsyncFileLock : IDisposable
     /// <summary>
     /// Tries to acquire the file lock asynchronously within the given timeout.
     /// </summary>
+    /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for acquiring the lock.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task with a boolean result indicating whether the lock was acquired successfully.
+    /// </returns>
+    public Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        WaitAsync(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
+
+    /// <summary>
+    /// Tries to acquire the file lock asynchronously within the given timeout.
+    /// </summary>
     /// <param name="timeout">The maximum time to wait for acquiring the lock.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
@@ -59,15 +70,23 @@ public sealed class AsyncFileLock : IDisposable
                     bufferSize: 1,
                     useAsync: true);
 
-                if (_lockStream.Length == 0)
+                try
                 {
-                    await _lockStream.WriteAsync([1], 0, 1, cancellationToken)
-                        .ConfigureAwait(false);
-                    await _lockStream.FlushAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                }
+                    if (_lockStream.Length == 0)
+                    {
+                        await _lockStream.WriteAsync([1], 0, 1, cancellationToken)
+                            .ConfigureAwait(false);
+                        await _lockStream.FlushAsync(cancellationToken)
+                            .ConfigureAwait(false);
+                    }
 
-                return true;
+                    return true;
+                }
+                catch
+                {
+                    SafelyCleanUpLockStream();
+                    throw;
+                }
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
@@ -87,6 +106,13 @@ public sealed class AsyncFileLock : IDisposable
         if (_isDisposed)
             return;
 
+        SafelyCleanUpLockStream();
+
+        _isDisposed = true;
+    }
+
+    private void SafelyCleanUpLockStream()
+    {
         if (_lockStream is not null)
         {
             try
@@ -100,7 +126,5 @@ public sealed class AsyncFileLock : IDisposable
 
             _lockStream = null;
         }
-
-        _isDisposed = true;
     }
 }

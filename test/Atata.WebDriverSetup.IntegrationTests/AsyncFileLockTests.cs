@@ -23,7 +23,7 @@ public sealed class AsyncFileLockTests
         await fileLock1.WaitAsync(TimeSpan.FromSeconds(5));
 
         using AsyncFileLock fileLock2 = new(lockFilePath);
-        bool isSecondAcquired = await fileLock2.WaitAsync(TimeSpan.FromSeconds(2));
+        bool isSecondAcquired = await fileLock2.WaitAsync(TimeSpan.FromSeconds(1));
 
         Assert.That(isSecondAcquired, Is.False);
     }
