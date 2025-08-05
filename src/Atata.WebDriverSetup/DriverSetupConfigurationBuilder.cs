@@ -116,7 +116,7 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         if (BuildingContext.IsEnabled)
         {
             return BuildingContext.UseMutex
-                ? (await ExecuteSetUpUsingMutexAsync(cancellationToken).ConfigureAwait(false))
+                ? (await ExecuteSetUpUsingInterProcessSynchronizationAsync(cancellationToken).ConfigureAwait(false))
                 : (await ExecuteSetUpAsync(cancellationToken).ConfigureAwait(false));
         }
         else
@@ -134,36 +134,21 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
         return this;
     }
 
-    private async Task<DriverSetupResult> ExecuteSetUpUsingMutexAsync(CancellationToken cancellationToken)
+    private async Task<DriverSetupResult> ExecuteSetUpUsingInterProcessSynchronizationAsync(CancellationToken cancellationToken)
     {
-        const int timeoutToWait = 600_000;
-        string mutexId = $@"Global\{{50E4E9F8-971F-440E-B7BE-D4B584350529}}-{BrowserName.ToLowerInvariant()}";
+        TimeSpan timeoutToWait = TimeSpan.FromMinutes(3);
 
-        using var mutex = new Mutex(false, mutexId, out _);
-        var hasHandle = false;
+        string lockFilePath = Path.Combine(Path.GetTempPath(), $"Atata.WebDriverSetup-{BrowserName.ToLowerInvariant()}.lock");
+        using AsyncFileLock fileLock = new(lockFilePath);
 
-        try
-        {
-            try
-            {
-                hasHandle = mutex.WaitOne(timeoutToWait, false);
+        bool hasLock = await fileLock.WaitAsync(timeoutToWait, cancellationToken)
+            .ConfigureAwait(false);
 
-                if (!hasHandle)
-                    throw new TimeoutException("Timeout waiting for driver setup mutex.");
-            }
-            catch (AbandonedMutexException)
-            {
-                hasHandle = true;
-            }
+        if (!hasLock)
+            throw new TimeoutException($"Timeout waiting for driver setup inter-process synchronization lock file \"{lockFilePath}\".");
 
-            return await ExecuteSetUpAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
-        finally
-        {
-            if (hasHandle)
-                mutex.ReleaseMutex();
-        }
+        return await ExecuteSetUpAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     private async Task<DriverSetupResult> ExecuteSetUpAsync(CancellationToken cancellationToken)
