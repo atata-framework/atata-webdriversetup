@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>3.4.0</Version>
+    <Version>4.0.0-beta.1</Version>
     <Description>
 C#/.NET library that sets up browser drivers for Selenium WebDriver, e.g. chromedriver, geckodriver, etc.
 
