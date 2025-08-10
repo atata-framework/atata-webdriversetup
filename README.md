@@ -300,7 +300,7 @@ DriverSetup.ConfigureChrome()
   and to download a driver archive.
 - **`WithMutex(bool isEnabled)`**\
   Sets a value indicating whether to use mutex to sync driver setup across machine..
-  The default value is `true`.
+  The default value is `false`.
 - **`WithVersionCache(bool isEnabled)`**\
   Sets a value indicating whether to use version cache.
   The default value is `true`.

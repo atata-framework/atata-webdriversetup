@@ -80,11 +80,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       CancellationToken cancellationToken = default);
   ```
 
+### Deprecated
+
+- In `DriverSetupOptionsBuilder<TBuilder, TContext>` deprecate `WithMutex` method in favor of the new `WithInterProcessSynchronization`.
+- In `DriverSetupOptions` deprecate `UseMutex` property in favor of the new `UseInterProcessSynchronization`.
+
 ### Removed
 
-- Remove `DriverSetup.AutoSetUpAsync(params string[] browserNames)` method in favor of new `DriverSetup.AutoSetUpAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`.
-- Remove `AppVersionDetector.GetThroughCli` method in favor of new `AppVersionDetector.GetThroughCliAsync`.
-- Remove `AppVersionDetector.GetThroughOSXApplicationCli` method in favor of new `AppVersionDetector.GetThroughOSXApplicationCliAsync`.
+- In `DriverSetup` remove `AutoSetUpAsync(params string[] browserNames)` method in favor of the new `AutoSetUpAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`.
+- In `AppVersionDetector` remove `GetThroughCli` method in favor of the new `GetThroughCliAsync`.
+- In `AppVersionDetector` remove `GetThroughOSXApplicationCli` method in favor of the new `GetThroughOSXApplicationCliAsync`.
 
 ## [3.5.0] - 2025-07-15
 

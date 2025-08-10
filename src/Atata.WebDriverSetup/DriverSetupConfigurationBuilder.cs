@@ -115,7 +115,7 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
     {
         if (BuildingContext.IsEnabled)
         {
-            return BuildingContext.UseMutex
+            return BuildingContext.UseInterProcessSynchronization
                 ? (await ExecuteSetUpUsingInterProcessSynchronizationAsync(cancellationToken).ConfigureAwait(false))
                 : (await ExecuteSetUpAsync(cancellationToken).ConfigureAwait(false));
         }

@@ -114,15 +114,19 @@ public abstract class DriverSetupOptionsBuilder<TBuilder, TContext>
         return (TBuilder)this;
     }
 
+    [Obsolete("Use WithInterProcessSynchronization(...) instead.")]
+    public TBuilder WithMutex(bool isEnabled) =>
+        WithInterProcessSynchronization(isEnabled);
+
     /// <summary>
-    /// Sets a value indicating whether to use mutex to sync driver setup across machine.
+    /// Sets a value indicating whether to use inter-process synchronization to synchronize driver setup across machine.
     /// The default value is <see langword="false"/>.
     /// </summary>
     /// <param name="isEnabled">Whether to use mutex.</param>
     /// <returns>The same builder instance.</returns>
-    public TBuilder WithMutex(bool isEnabled)
+    public TBuilder WithInterProcessSynchronization(bool isEnabled)
     {
-        BuildingContext.UseMutex = isEnabled;
+        BuildingContext.UseInterProcessSynchronization = isEnabled;
         return (TBuilder)this;
     }
 

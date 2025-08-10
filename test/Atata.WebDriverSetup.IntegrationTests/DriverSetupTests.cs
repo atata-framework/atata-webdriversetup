@@ -96,12 +96,12 @@ public class DriverSetupTests : IntegrationTestFixture
     }
 
     [Test]
-    public async Task SetUpAsync_SameBrowsers_WithMutex_InParallel()
+    public async Task SetUpAsync_SameBrowsers_WithInterProcessSynchronization_InParallel()
     {
         var results = await Task.WhenAll(
-            DriverSetup.ConfigureChrome().WithMutex(true).SetUpAsync(),
-            DriverSetup.ConfigureChrome().WithMutex(true).SetUpAsync(),
-            DriverSetup.ConfigureChrome().WithMutex(true).SetUpAsync());
+            DriverSetup.ConfigureChrome().WithInterProcessSynchronization(true).SetUpAsync(),
+            DriverSetup.ConfigureChrome().WithInterProcessSynchronization(true).SetUpAsync(),
+            DriverSetup.ConfigureChrome().WithInterProcessSynchronization(true).SetUpAsync());
 
         results.Should().HaveCount(3);
         results[0].Should().BeEquivalentTo(results[1]).And.BeEquivalentTo(results[2]);

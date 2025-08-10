@@ -21,7 +21,7 @@ public class DriverSetupOptions
         {
             StorageDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
             CheckCertificateRevocationList = true;
-            UseMutex = false;
+            UseInterProcessSynchronization = false;
             UseVersionCache = true;
 
             LatestVersionCheckInterval = TimeSpan.FromHours(2);
@@ -90,14 +90,21 @@ public class DriverSetupOptions
         set => SetOption(nameof(HttpClientHandlerConfigurationAction), value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to use mutex to sync driver setup across machine.
-    /// The default value is <see langword="false"/>.
-    /// </summary>
+    [Obsolete("Use UseInterProcessSynchronization instead.")]
     public bool UseMutex
     {
-        get => GetOption<bool>(nameof(UseMutex));
-        set => SetOption(nameof(UseMutex), value);
+        get => UseInterProcessSynchronization;
+        set => UseInterProcessSynchronization = value;
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to use inter-process synchronization to synchronize driver setup across machine.
+    /// The default value is <see langword="false"/>.
+    /// </summary>
+    public bool UseInterProcessSynchronization
+    {
+        get => GetOption<bool>(nameof(UseInterProcessSynchronization));
+        set => SetOption(nameof(UseInterProcessSynchronization), value);
     }
 
     /// <summary>
