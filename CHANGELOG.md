@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.0] - 2025-10-13
+
 ### Changed
 
 - Update Edge driver versions map.
@@ -210,7 +212,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial version release.
 
-[Unreleased]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.5.0...HEAD
+[Unreleased]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.6.0...HEAD
+[3.6.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.5.0...v3.6.0
 [3.5.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.2.0...v3.3.0
