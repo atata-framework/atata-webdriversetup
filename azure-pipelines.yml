@@ -17,7 +17,7 @@ jobs:
     displayName: Build solution with code analysis
     inputs:
       command: build
-      projects: '**/*.sln'
+      projects: '**/*.slnx'
       arguments: -c $(buildConfiguration) -warnaserror
 
 - job: RunTestsOnWindows
