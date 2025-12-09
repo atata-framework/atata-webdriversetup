@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atata" Version="3.7.0" />
-    <PackageReference Include="NLog" Version="6.0.6" />
+    <PackageReference Include="NLog" Version="6.0.7" />
   </ItemGroup>
 
   <ItemGroup>
