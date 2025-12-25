@@ -7,11 +7,11 @@ namespace Atata.WebDriverSetup;
 /// </summary>
 public static class RegistryUtils
 {
-    private const string CurrentUserRegistryAppPathFormat =
-        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\App Paths\{0}";
+    private const string CurrentUserRegistryAppPathPrefix =
+        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\App Paths\";
 
-    private const string LocalMachineRegistryAppPathFormat =
-        @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{0}";
+    private const string LocalMachineRegistryAppPathPrefix =
+        @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\";
 
     /// <summary>
     /// Gets the application path in registry.
@@ -20,8 +20,8 @@ public static class RegistryUtils
     /// <param name="applicationName">Name of the application.</param>
     /// <returns>The path or <see langword="null"/>.</returns>
     public static string? GetApplicationPath(string applicationName) =>
-        GetValue(string.Format(CurrentUserRegistryAppPathFormat, applicationName))
-            ?? GetValue(string.Format(LocalMachineRegistryAppPathFormat, applicationName));
+        GetValue(CurrentUserRegistryAppPathPrefix + applicationName)
+            ?? GetValue(LocalMachineRegistryAppPathPrefix + applicationName);
 
     /// <summary>
     /// Gets the registry value by key name and optionally by value name.
