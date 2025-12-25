@@ -34,8 +34,11 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
-        // TODO: After .NET upgrade, use client.GetStringAsync(url, cancellationToken)
+#if NET8_0_OR_GREATER
+        return await client.GetStringAsync(url, cancellationToken)
+#else
         return await client.GetStringAsync(url)
+#endif
             .ConfigureAwait(false);
     }
 
@@ -44,8 +47,11 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     {
         using HttpClient client = CreateHttpClientWithAutoRedirect(true);
 
-        // TODO: After .NET upgrade, use client.GetStreamAsync(url, cancellationToken)
+#if NET8_0_OR_GREATER
+        return await client.GetStreamAsync(url, cancellationToken)
+#else
         return await client.GetStreamAsync(url)
+#endif
             .ConfigureAwait(false);
     }
 
@@ -60,8 +66,11 @@ public class HttpRequestExecutor : IHttpRequestExecutor
 
         using FileStream fileStream = new(filePath, FileMode.Create);
 
-        // TODO: After .NET upgrade, use response.Content.CopyToAsync(fileStream, cancellationToken)
+#if NET8_0_OR_GREATER
+        await response.Content.CopyToAsync(fileStream, cancellationToken)
+#else
         await response.Content.CopyToAsync(fileStream)
+#endif
             .ConfigureAwait(false);
     }
 

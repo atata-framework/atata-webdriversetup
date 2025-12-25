@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net462</TargetFrameworks>
     <Version>4.0.0-beta.3</Version>
     <Description>
 C#/.NET library that sets up browser drivers for Selenium WebDriver, e.g. chromedriver, geckodriver, etc.
@@ -17,7 +17,7 @@ Features:
 - Caches the used driver versions.
 - After a driver is set up, adds the driver path to environment "PATH" variable, which is consumed by WebDriver.
 
-The package targets .NET Standard 2.0, which supports .NET 5+, .NET Framework 4.6.1+ and .NET Core/Standard 2.0+.
+The package targets .NET 8.0 and .NET Framework 4.6.2.
     </Description>
     <RepositoryUrl>https://github.com/atata-framework/atata-webdriversetup</RepositoryUrl>
     <PackageId>Atata.WebDriverSetup</PackageId>
@@ -30,7 +30,7 @@ The package targets .NET Standard 2.0, which supports .NET 5+, .NET Framework 4.
     <PackageReference Include="Atata.Cli" Version="4.0.0-beta.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
-    <PackageReference Include="System.Text.Json" Version="8.0.6" />
+    <PackageReference Include="System.Text.Json" Version="8.0.6" Condition="'$(TargetFramework)' == 'net462'" />
   </ItemGroup>
 
   <ItemGroup>

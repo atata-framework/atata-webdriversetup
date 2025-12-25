@@ -73,8 +73,14 @@ public sealed class AsyncFileLock : IDisposable
                 {
                     if (_lockStream.Length == 0)
                     {
+#if NET8_0_OR_GREATER
+                        Span<byte> bytesToWrite = [1];
+                        _lockStream.Write(bytesToWrite);
+#else
                         await _lockStream.WriteAsync([1], 0, 1, cancellationToken)
                             .ConfigureAwait(false);
+#endif
+
                         await _lockStream.FlushAsync(cancellationToken)
                             .ConfigureAwait(false);
                     }
