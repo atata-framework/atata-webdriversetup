@@ -1,7 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-[TestFixture]
-public class DriverSetupConfigurationTests
+public sealed class DriverSetupConfigurationTests
 {
     private DriverSetupOptions _globalOptions = null!;
 

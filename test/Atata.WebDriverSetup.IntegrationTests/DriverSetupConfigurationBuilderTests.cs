@@ -1,6 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-public class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
+public sealed class DriverSetupConfigurationBuilderTests : IntegrationTestFixture
 {
     [TestCase(BrowserNames.Chrome)]
     [TestCase(BrowserNames.Firefox)]

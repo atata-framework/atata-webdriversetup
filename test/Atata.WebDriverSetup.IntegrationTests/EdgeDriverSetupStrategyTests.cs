@@ -1,7 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-[TestFixture]
-public class EdgeDriverSetupStrategyTests
+public sealed class EdgeDriverSetupStrategyTests
 {
     private const string TestVersion = "116.0.1938.81";
 

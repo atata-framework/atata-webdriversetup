@@ -1,6 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-public class DriverSetupTests : IntegrationTestFixture
+public sealed class DriverSetupTests : IntegrationTestFixture
 {
     [TestCase(BrowserNames.Chrome)]
     public void AutoSetUp(string browserName)

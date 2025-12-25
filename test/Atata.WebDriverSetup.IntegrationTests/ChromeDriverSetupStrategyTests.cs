@@ -1,7 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-[TestFixture]
-public class ChromeDriverSetupStrategyTests
+public sealed class ChromeDriverSetupStrategyTests
 {
     private const string TestVersion = "110.0.5481.30";
 

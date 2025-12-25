@@ -1,6 +1,5 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-[TestFixture]
 [Parallelizable(ParallelScope.None)]
 public abstract class IntegrationTestFixture
 {

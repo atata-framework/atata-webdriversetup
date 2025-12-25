@@ -1,7 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-[TestFixture]
-public class FirefoxDriverSetupStrategyTests
+public sealed class FirefoxDriverSetupStrategyTests
 {
     private const string TestVersion = "0.33.0";
 
