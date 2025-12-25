@@ -51,8 +51,7 @@ public sealed class AsyncFileLock : IDisposable
     /// </returns>
     public async Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
-        if (_isDisposed)
-            throw new ObjectDisposedException(nameof(AsyncFileLock));
+        Guard.ThrowIfDisposed(_isDisposed, this);
 
         var stopwatch = Stopwatch.StartNew();
 
