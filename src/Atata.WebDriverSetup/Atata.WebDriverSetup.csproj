@@ -29,10 +29,7 @@ The package targets .NET Standard 2.0, which supports .NET 5+, .NET Framework 4.
   <ItemGroup>
     <PackageReference Include="Atata.Cli" Version="4.0.0-beta.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="PolySharp" Version="1.15.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
   </ItemGroup>
 
