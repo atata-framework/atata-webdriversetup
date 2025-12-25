@@ -61,8 +61,8 @@ internal sealed class DriverVersionResolver
             string? installedVersion = await installedBrowserVersionResolver.GetInstalledBrowserVersionAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            if (installedVersion is not null)
-                return await ResolveByBrowserVersionAsync(installedVersion, cancellationToken)
+            if (!string.IsNullOrWhiteSpace(installedVersion))
+                return await ResolveByBrowserVersionAsync(installedVersion!, cancellationToken)
                     .ConfigureAwait(false);
         }
 
