@@ -57,7 +57,7 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
 
         XDocument document = OpenDocument();
 
-        XElement item = document.XPathSelectElement(
+        XElement? item = document.XPathSelectElement(
             $"//{RootElementName}/{ItemElementName}[@{BrowserAttributeName}='{browserVersion}']");
 
         string? driverVersion;
@@ -70,7 +70,7 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
         else
         {
             item = new XElement(ItemElementName, new XAttribute(BrowserAttributeName, browserVersion));
-            document.Root.Add(item);
+            document.Root!.Add(item);
         }
 
         driverVersion = await versionResolveFunction.Invoke(browserVersion, cancellationToken)
@@ -117,18 +117,16 @@ public class XmlFileDriverVersionCache : IDriverVersionCache
         {
             XDocument document = XDocument.Load(_filePath);
 
-            if (document.Root.Name == RootElementName)
+            if (document.Root?.Name == RootElementName)
                 return document;
         }
         else
         {
-            string directoryPath = Path.GetDirectoryName(_filePath);
-
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
+            string directoryPath = Path.GetDirectoryName(_filePath)!;
+            Directory.CreateDirectory(directoryPath);
         }
 
-        return new XDocument(
+        return new(
             new XElement(RootElementName));
     }
 }

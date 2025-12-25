@@ -56,7 +56,7 @@ public abstract class GitHubRepositoryBasedDriverSetupStrategy :
     public Uri GetDriverDownloadUrl(string version, TargetOSPlatform platform)
     {
         if (_driverVersionToReleaseVersionMappings is null
-            || !_driverVersionToReleaseVersionMappings.TryGetValue(version, out string releaseVersion))
+            || !_driverVersionToReleaseVersionMappings.TryGetValue(version, out string? releaseVersion))
             releaseVersion = version;
 
         return BuildDriverDownloadUrl(releaseVersion, version, platform);

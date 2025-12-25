@@ -165,7 +165,7 @@ internal sealed class DriverSetupExecutor
 
     private static void ExtractFromTarGz(string archiveFilePath, string destinationFilePath)
     {
-        Tar.ExtractTarGz(archiveFilePath, Path.GetDirectoryName(destinationFilePath));
+        Tar.ExtractTarGz(archiveFilePath, Path.GetDirectoryName(destinationFilePath)!);
 
         if (!File.Exists(destinationFilePath))
             throw new FileNotFoundException("Failed to find file after extraction.", destinationFilePath);
@@ -183,17 +183,20 @@ internal sealed class DriverSetupExecutor
     private static void AddToEnvironmentPathVariable(string path)
     {
         const string pathVariableName = "PATH";
-        string pathVariableValue = Environment.GetEnvironmentVariable(pathVariableName, EnvironmentVariableTarget.Process);
+        string? pathVariableValue = Environment.GetEnvironmentVariable(pathVariableName, EnvironmentVariableTarget.Process);
 
-        Regex isTherePathRegex = new($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
-
-        if (!isTherePathRegex.IsMatch(pathVariableValue))
+        if (pathVariableValue is not null)
         {
-            var newPathVariableValue = string.IsNullOrEmpty(pathVariableValue)
-                ? path
-                : $"{path}{Path.PathSeparator}{pathVariableValue}";
+            Regex isTherePathRegex = new($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
 
-            Environment.SetEnvironmentVariable(pathVariableName, newPathVariableValue, EnvironmentVariableTarget.Process);
+            if (!isTherePathRegex.IsMatch(pathVariableValue))
+            {
+                var newPathVariableValue = pathVariableValue is null or []
+                    ? path
+                    : $"{path}{Path.PathSeparator}{pathVariableValue}";
+
+                Environment.SetEnvironmentVariable(pathVariableName, newPathVariableValue, EnvironmentVariableTarget.Process);
+            }
         }
     }
 }

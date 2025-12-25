@@ -47,9 +47,9 @@ internal static class Tar
             stream.Seek(376L, SeekOrigin.Current);
 
             string destinationFilePath = Path.Combine(destinationDirectoryPath, entryName);
+            string fullDestinationDirectoryPath = Path.GetDirectoryName(destinationFilePath)!;
 
-            if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(destinationFilePath));
+            Directory.CreateDirectory(fullDestinationDirectoryPath);
 
             if (!entryName.Equals("./", StringComparison.Ordinal))
             {

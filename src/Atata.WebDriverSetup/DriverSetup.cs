@@ -47,7 +47,7 @@ public static class DriverSetup
         Guard.ThrowIfNull(browserName);
         Guard.ThrowIfNull(driverSetupStrategyFactory);
 
-        DriverSetupOptionsBuilder optionsBuilder = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData currentData)
+        DriverSetupOptionsBuilder optionsBuilder = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData? currentData)
             ? currentData.DefaultOptionsBuilder
             : new DriverSetupOptionsBuilder(new DriverSetupOptions(GlobalOptions));
 
@@ -128,7 +128,7 @@ public static class DriverSetup
         string browserName,
         Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)
     {
-        DriverSetupOptions driverSetupOptions = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData driverSetupData)
+        DriverSetupOptions driverSetupOptions = s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData? driverSetupData)
             ? driverSetupData.DefaultOptionsBuilder.BuildingContext
             : GlobalOptions;
 
@@ -157,7 +157,7 @@ public static class DriverSetup
     {
         Guard.ThrowIfNullOrWhitespace(browserName);
 
-        return s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData setupData)
+        return s_browserDriverSetupDataMap.TryGetValue(browserName, out DriverSetupData? setupData)
             ? setupData
             : throw new ArgumentException($"""Unsupported "{browserName}" browser name.""", nameof(browserName));
     }
