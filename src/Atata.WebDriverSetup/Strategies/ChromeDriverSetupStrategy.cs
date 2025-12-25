@@ -24,8 +24,8 @@ public class ChromeDriverSetupStrategy :
     private const string OldDriverLatestVersionUrl =
         OldBaseUrl + "/LATEST_RELEASE";
 
-    private const string OldDriverSpecificVersionUrlFormat =
-        OldDriverLatestVersionUrl + "_{0}";
+    private const string OldDriverSpecificVersionUrlPrefix =
+        OldDriverLatestVersionUrl + "_";
 
     private const int Cft1StartingVersionMajorNumber = 115;
 
@@ -156,7 +156,7 @@ public class ChromeDriverSetupStrategy :
         }
         else
         {
-            string url = string.Format(OldDriverSpecificVersionUrlFormat, browserVersionToUse);
+            string url = OldDriverSpecificVersionUrlPrefix + browserVersionToUse;
 
             return await _httpRequestExecutor.DownloadStringAsync(url, cancellationToken)
                 .ConfigureAwait(false);
