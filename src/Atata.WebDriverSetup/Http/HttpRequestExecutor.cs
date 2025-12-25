@@ -75,7 +75,8 @@ public class HttpRequestExecutor : IHttpRequestExecutor
         if (response.StatusCode != HttpStatusCode.Found)
             throw new HttpRequestException($"""Unexpected HTTP response status for "{url}". Expected 302, but was {(int)response.StatusCode}.""");
 
-        return response.Headers.Location;
+        return response.Headers.Location
+            ?? throw new HttpRequestException("Unexpected HTTP response null location header.");
     }
 
     private HttpClient CreateHttpClientWithAutoRedirect(bool allowAutoRedirect)
