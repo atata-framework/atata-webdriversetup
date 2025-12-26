@@ -125,7 +125,7 @@ public class ChromeDriverSetupStrategy :
                 ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Google\Chrome")
                 ?? AppVersionDetector.GetByApplicationPathInRegistry("chrome.exe")
             : OSInfo.IsMacOS
-                ? (await AppVersionDetector.GetThroughOSXApplicationCliAsync("Google Chrome", cancellationToken).ConfigureAwait(false))
+                ? (await AppVersionDetector.GetThroughMacOSApplicationCliAsync("Google Chrome", cancellationToken).ConfigureAwait(false))
                     ?.Replace("Google Chrome ", null)
                 : (await AppVersionDetector.GetThroughCliAsync("google-chrome", "--product-version", cancellationToken).ConfigureAwait(false));
 

@@ -82,12 +82,12 @@ public static class AppVersionDetector
     }
 
     /// <summary>
-    /// Gets the application version through OSX application CLI passing <c>"--version"</c> argument.
+    /// Gets the application version through macOS application CLI passing <c>"--version"</c> argument.
     /// </summary>
     /// <param name="applicationName">The application name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The version or <see langword="null"/>.</returns>
-    public static async Task<string?> GetThroughOSXApplicationCliAsync(string applicationName, CancellationToken cancellationToken = default)
+    public static async Task<string?> GetThroughMacOSApplicationCliAsync(string applicationName, CancellationToken cancellationToken = default)
     {
         string filePath = $"/Applications/{applicationName}.app/Contents/MacOS/{applicationName}";
 
