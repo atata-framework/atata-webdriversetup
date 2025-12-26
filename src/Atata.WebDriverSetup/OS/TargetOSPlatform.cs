@@ -60,8 +60,8 @@ public sealed class TargetOSPlatform
     private static TargetArchitecture DetectArchitecture() =>
         RuntimeInformation.OSArchitecture switch
         {
-            System.Runtime.InteropServices.Architecture.Arm64 => TargetArchitecture.Arm64,
-            System.Runtime.InteropServices.Architecture.X64 => TargetArchitecture.X64,
+            RuntimeArchitecture.Arm64 => TargetArchitecture.Arm64,
+            RuntimeArchitecture.X64 => TargetArchitecture.X64,
             _ => TargetArchitecture.X32
         };
 
