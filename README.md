@@ -8,7 +8,7 @@
 [![Atata docs](https://img.shields.io/badge/docs-Atata_Framework-orange.svg)](https://atata.io)
 [![X](https://img.shields.io/badge/follow-@AtataFramework-blue.svg)](https://x.com/AtataFramework)
 
-**Atata.WebDriverSetup** is a .NET library that sets up browser drivers for Selenium WebDriver,
+**Atata.WebDriverSetup** is a C#/.NET library that sets up browser drivers for Selenium WebDriver,
 e.g. `chromedriver`, `geckodriver`, etc.
 Basically, it provides functionality similar to Java `WebDriverManager`.
 
