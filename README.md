@@ -12,7 +12,7 @@
 e.g. `chromedriver`, `geckodriver`, etc.
 Basically, it provides functionality similar to Selenium Manager or Java `WebDriverManager`.
 
-*The package targets .NET Standard 2.0, which supports .NET 5+, .NET Framework 4.6.1+ and .NET Core/Standard 2.0+.*
+*The package targets .NET 8.0 and .NET Framework 4.6.2.*
 
 ## Table of contents
 
@@ -79,9 +79,9 @@ NUnit example:
 public class SetUpFixture
 {
     [OneTimeSetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
-        DriverSetup.AutoSetUp(BrowserNames.Chrome);
+        await DriverSetup.AutoSetUpAsync(BrowserNames.Chrome);
     }
 }
 ```
@@ -97,20 +97,20 @@ ChromeDriver chromeDriver = new ChromeDriver();
 
 1. Configure with default configuration options:
    ```cs
-   DriverSetup.AutoSetUp(BrowserNames.Chrome);
+   await DriverSetup.AutoSetUpAsync(BrowserNames.Chrome);
    ```
 1. Configure with custom configuration options:
    ```cs
-   DriverSetup.ConfigureChrome()
+   await DriverSetup.ConfigureChrome()
        .WithAutoVersion()
        // Additional options can be set here.
-       .SetUp();
+       .SetUpAsync();
    ```
 
-`DriverSetup.AutoSetUp` method also supports multiple drivers setup:
+`DriverSetup.AutoSetUpAsync` method also supports multiple drivers setup:
 
 ```cs
-DriverSetup.AutoSetUp(BrowserNames.Chrome, BrowserNames.Edge);
+DriverSetup.AutoSetUpAsync([BrowserNames.Chrome, BrowserNames.Edge]);
 ```
 
 **Note:**
@@ -120,17 +120,17 @@ Version auto-detection is currently supported for Chrome, Firefox and Edge brows
 ### Set up latest version
 
 ```cs
-DriverSetup.ConfigureChrome()
+await DriverSetup.ConfigureChrome()
     .WithLatestVersion()
-    .SetUp();
+    .SetUpAsync();
 ```
 
 ### Set up specific version
 
 ```cs
-DriverSetup.ConfigureChrome()
+await DriverSetup.ConfigureChrome()
     .WithVersion("87.0.4280.88")
-    .SetUp();
+    .SetUpAsync();
 ```
 
 **Version format:**
@@ -143,9 +143,9 @@ DriverSetup.ConfigureChrome()
 ### Set up version corresponding to specific browser version
 
 ```cs
-DriverSetup.ConfigureChrome()
+await DriverSetup.ConfigureChrome()
     .ByBrowserVersion("87")
-    .SetUp();
+    .SetUpAsync();
 ```
 
 **Note:**
@@ -190,24 +190,23 @@ This feature is currently supported for Chrome, Firefox and Edge browsers.
   Creates the driver setup configuration builder using `driverSetupStrategyFactory`
   that instantiates specific `IDriverSetupStrategy`.
 - **`DriverSetupResult AutoSetUp(string browserName)`** &\
-  **`Task<DriverSetupResult> AutoSetUpAsync(string browserName)`**\
+  **`Task<DriverSetupResult> AutoSetUpAsync(string browserName, CancellationToken cancellationToken = default)`**\
   Sets up driver with auto version detection for the browser with the specified name.
   Supported browser names are defined in `BrowserNames` static class.
 - **`DriverSetupResult[] AutoSetUp(params string[] browserNames)`** &\
   **`DriverSetupResult[] AutoSetUp(IEnumerable<string> browserNames)`** &\
-  **`Task<DriverSetupResult[]> AutoSetUpAsync(params string[] browserNames)`** &\
-  **`Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames)`**\
+  **`Task<DriverSetupResult[]> AutoSetUpAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
 - **`DriverSetupResult[] AutoSetUpSafely(IEnumerable<string> browserNames)`** &\
-  **`Task<DriverSetupResult[]> AutoSetUpSafelyAsync(IEnumerable<string> browserNames)`**\
+  **`Task<DriverSetupResult[]> AutoSetUpSafelyAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`**\
   Sets up drivers with auto version detection for the browsers with the specified names.
   Supported browser names are defined in `BrowserNames` static class.
   Skips invalid/unsupported browser names.
 - **`DriverSetupOptionsBuilder GetDefaultConfiguration(string browserName)`**\
   Gets the default driver setup configuration builder.
 - **`DriverSetupResult[] SetUpPendingConfigurations()`** &\
-  **`Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync()`**\
+  **`Task<DriverSetupResult[]> SetUpPendingConfigurationsAsync(CancellationToken cancellationToken = default)`**\
   Sets up pending configurations that are stored in `PendingConfigurations` property.
 - **`void RegisterStrategyFactory(string browserName, Func<IHttpRequestExecutor, IDriverSetupStrategy> driverSetupStrategyFactory)`**\
   Registers the driver setup strategy factory.
@@ -243,13 +242,13 @@ DriverSetup.GetDefaultConfiguration(BrowserNames.InternetExplorer)
 ### Driver-specific configuration
 
 ```cs
-DriverSetup.ConfigureChrome()
+await DriverSetup.ConfigureChrome()
     .WithStorageDirectoryPath("...")
     .WithVersionCache(false)
-    .SetUp();
+    .SetUpAsync();
 ```
 
-*Don't forget to call `SetUp()` or `SetUpAsync()` at the end.*
+*Don't forget to call `SetUpAsync()` or `SetUp()` at the end.*
 
 ### Configuration methods
 
@@ -298,8 +297,8 @@ DriverSetup.ConfigureChrome()
   Sets the configuration action of `HttpClientHandler`.
   The `HttpClientHandler` instance is used to get a driver version information
   and to download a driver archive.
-- **`WithMutex(bool isEnabled)`**\
-  Sets a value indicating whether to use mutex to sync driver setup across machine..
+- **`WithInterProcessSynchronization(bool isEnabled)`**\
+  Sets a value indicating whether to use inter-process synchronization to synchronize driver setup across machine.
   The default value is `false`.
 - **`WithVersionCache(bool isEnabled)`**\
   Sets a value indicating whether to use version cache.
@@ -347,13 +346,15 @@ so as a browser name the following constants can be used:
 
 ### BrowserDetector methods
 
-- **`string GetInstalledBrowserVersion(string browserName)`**\
+- **`Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default)`** &\
+  **`string? GetInstalledBrowserVersion(string browserName)`**\
   Gets the installed browser version by the browser name.
-- **`bool IsBrowserInstalled(string browserName)`**\
+- **`Task<bool> IsBrowserInstalledAsync(string browserName, CancellationToken cancellationToken = default)`** &\
+  **`bool IsBrowserInstalled(string browserName)`**\
   Determines whether the browser with the specified name is installed.
-- **`string GetFirstInstalledBrowserName(params string[] browserNames)`**\
- Gets the name of the first installed browser among the `browserNames`.
-- **`string GetFirstInstalledBrowserName(IEnumerable<string> browserNames)`**\
+- **`Task<string?> GetFirstInstalledBrowserNameAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`** &\
+  **`string? GetFirstInstalledBrowserName(IEnumerable<string> browserNames)`** &\
+  **`string? GetFirstInstalledBrowserName(params string[] browserNames)`**\
  Gets the name of the first installed browser among the `browserNames`.
 
 ### BrowserDetector usage
@@ -361,7 +362,7 @@ so as a browser name the following constants can be used:
 #### Get first installed browser name
 
 ```cs
-string browserName = BrowserDetector.GetFirstInstalledBrowserName(
+string? browserName = BrowserDetector.GetFirstInstalledBrowserName(
     BrowserNames.Chrome,
     BrowserNames.Firefox,
     BrowserNames.Edge);
@@ -376,7 +377,7 @@ bool isChromeInstalled = BrowserDetector.IsBrowserInstalled(BrowserNames.Chrome)
 #### Get installed browser version
 
 ```cs
-string chromeVersion = BrowserDetector.GetInstalledBrowserVersion(BrowserNames.Chrome);
+string? chromeVersion = BrowserDetector.GetInstalledBrowserVersion(BrowserNames.Chrome);
 ```
 
 ## Community
