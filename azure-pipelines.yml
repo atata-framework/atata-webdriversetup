@@ -41,7 +41,7 @@ jobs:
     inputs:
       command: test
       projects: '**/*Tests.csproj'
-      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build -f net10.0
   - task: PublishPipelineArtifact@1
     displayName: Publish test results
     condition: succeededOrFailed()
@@ -49,8 +49,37 @@ jobs:
       artifactName: Windows test results
       targetPath: $(resultsDirectoryPath)
 
-- job: RunTestsOnLinux
-  displayName: Run tests on Linux
+- job: RunTestsOnWindows-NetFramework
+  displayName: Run tests on Windows / .NET Framework
+  pool:
+    vmImage: windows-latest
+  steps:
+  - task: UseDotNet@2
+    displayName: Set up .NET SDK
+    inputs:
+      version: $(netSdkVersion)
+  - task: DotNetCoreCLI@2
+    displayName: Build test projects
+    inputs:
+      command: build
+      projects: '**/*Tests.csproj'
+      arguments: -c $(buildConfiguration) -p:RunAnalyzers=false
+  - task: DotNetCoreCLI@2
+    displayName: Run tests
+    timeoutInMinutes: 5
+    inputs:
+      command: test
+      projects: '**/*Tests.csproj'
+      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build -f net462
+  - task: PublishPipelineArtifact@1
+    displayName: Publish test results
+    condition: succeededOrFailed()
+    inputs:
+      artifactName: Windows .NET Framework test results
+      targetPath: 'test/Atata.WebDriverSetup.IntegrationTests/bin/$(buildConfiguration)/net462/results'
+
+- job: RunTestsOnUbuntu
+  displayName: Run tests on Ubuntu
   pool:
     vmImage: ubuntu-latest
   steps:
@@ -70,12 +99,12 @@ jobs:
     inputs:
       command: test
       projects: '**/*Tests.csproj'
-      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build -f net10.0
   - task: PublishPipelineArtifact@1
     displayName: Publish test results
     condition: succeededOrFailed()
     inputs:
-      artifactName: Linux test results
+      artifactName: Ubuntu test results
       targetPath: $(resultsDirectoryPath)
 
 - job: RunTestsOnMacOS
@@ -99,7 +128,7 @@ jobs:
     inputs:
       command: test
       projects: '**/*Tests.csproj'
-      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
+      arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build -f net10.0
   - task: PublishPipelineArtifact@1
     displayName: Publish test results
     condition: succeededOrFailed()

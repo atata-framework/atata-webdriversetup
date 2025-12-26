@@ -42,12 +42,18 @@ internal sealed class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
         await _realExecutor.DownloadStreamAsync(url, cancellationToken)
             .ConfigureAwait(false);
 
-    public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default) =>
-        DownloadStringInterceptions.TryDequeue(out var interceptor)
+    public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default)
+    {
+        var interceptor = DownloadStringInterceptions.Count > 0
+            ? DownloadStringInterceptions.Dequeue()
+            : null;
+
+        return interceptor is not null
             ? await interceptor.Invoke(async () => await _realExecutor.DownloadStringAsync(url, cancellationToken).ConfigureAwait(false))
                 .ConfigureAwait(false)
             : await _realExecutor.DownloadStringAsync(url, cancellationToken)
                 .ConfigureAwait(false);
+    }
 
     public async Task<Uri> GetRedirectUrlAsync(string url, CancellationToken cancellationToken = default) =>
         await _realExecutor.GetRedirectUrlAsync(url, cancellationToken)

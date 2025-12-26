@@ -114,7 +114,9 @@ public sealed class DriverSetupConfigurationBuilderTests : IntegrationTestFixtur
         builderConfiguration.Invoke(builder);
 
         var result = await builder
+#if !NETFRAMEWORK
             .WithCheckCertificateRevocationList(false)
+#endif
             .WithHttpRequestTryCount(1)
             .WithHttpRequestExecutor(
                 config => fakeHttpRequestExecutorProxy = new FakeHttpRequestExecutorProxy(
