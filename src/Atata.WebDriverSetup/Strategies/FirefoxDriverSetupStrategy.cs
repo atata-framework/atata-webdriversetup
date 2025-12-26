@@ -51,7 +51,7 @@ public class FirefoxDriverSetupStrategy :
             ? AppVersionDetector.GetFromProgramFiles(@"Mozilla Firefox\firefox.exe")
                 ?? RegistryUtils.GetValue(@"HKEY_CURRENT_USER\Software\Mozilla\Mozilla Firefox")
                 ?? AppVersionDetector.GetByApplicationPathInRegistry("firefox.exe")
-            : (OSInfo.IsOSX
+            : (OSInfo.IsMacOS
                 ? (await AppVersionDetector.GetThroughOSXApplicationCliAsync("Firefox", cancellationToken).ConfigureAwait(false))
                 : (await AppVersionDetector.GetThroughCliAsync("firefox", "-v", cancellationToken).ConfigureAwait(false)))
                 ?.Replace("Mozilla Firefox ", null);

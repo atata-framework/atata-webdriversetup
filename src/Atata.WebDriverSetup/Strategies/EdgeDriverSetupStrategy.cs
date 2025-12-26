@@ -75,7 +75,7 @@ public class EdgeDriverSetupStrategy :
             ? AppVersionDetector.GetFromProgramFiles(@"Microsoft\Edge\Application\msedge.exe")
                 ?? AppVersionDetector.GetFromBLBeaconInRegistry(@"Microsoft\Edge")
                 ?? AppVersionDetector.GetByApplicationPathInRegistry("msedge.exe")
-            : (OSInfo.IsOSX
+            : (OSInfo.IsMacOS
                 ? (await AppVersionDetector.GetThroughOSXApplicationCliAsync("Microsoft Edge", cancellationToken).ConfigureAwait(false))
                 : (await AppVersionDetector.GetThroughCliAsync("microsoft-edge", "--version", cancellationToken).ConfigureAwait(false)))
                     ?.Replace("Microsoft Edge ", null);

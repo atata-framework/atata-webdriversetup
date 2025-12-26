@@ -53,7 +53,7 @@ public sealed class TargetOSPlatform
     private static TargetOSFamily DetectOSFamily() =>
         OSInfo.IsWindows
             ? TargetOSFamily.Windows
-            : OSInfo.IsOSX
+            : OSInfo.IsMacOS
                 ? TargetOSFamily.MacOS
                 : TargetOSFamily.Linux;
 

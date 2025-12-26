@@ -28,7 +28,7 @@ public static class OSInfo
     /// <summary>
     /// Gets a value indicating whether the current OS is macOS.
     /// </summary>
-    public static bool IsOSX =>
+    public static bool IsMacOS =>
 #if NET8_0_OR_GREATER
         OperatingSystem.IsMacOS();
 #else

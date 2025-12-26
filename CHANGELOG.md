@@ -82,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       CancellationToken cancellationToken = default);
   ```
 - In `TargetOSFamily` enum rename `Mac` to `MacOS`.
+- In `OSInfo` rename `IsOSX` property to `IsMacOS`.
 
 ### Deprecated
 
