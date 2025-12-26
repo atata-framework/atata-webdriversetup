@@ -5,7 +5,7 @@ namespace Atata.WebDriverSetup;
 /// <summary>
 /// Provides a set of utility methods for working with a registry.
 /// </summary>
-internal static class RegistryUtils
+public static class RegistryUtils
 {
     private const string CurrentUserRegistryAppPathPrefix =
         @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\App Paths\";
@@ -19,7 +19,7 @@ internal static class RegistryUtils
     /// </summary>
     /// <param name="applicationName">Name of the application.</param>
     /// <returns>The path or <see langword="null"/>.</returns>
-    internal static string? GetApplicationPath(string applicationName) =>
+    public static string? GetApplicationPath(string applicationName) =>
         GetValue(CurrentUserRegistryAppPathPrefix + applicationName)
             ?? GetValue(LocalMachineRegistryAppPathPrefix + applicationName);
 
@@ -29,7 +29,7 @@ internal static class RegistryUtils
     /// <param name="keyName">Name of the key.</param>
     /// <param name="valueName">Name of the value.</param>
     /// <returns>The value or <see langword="null"/>.</returns>
-    internal static string? GetValue(string keyName, string? valueName = null)
+    public static string? GetValue(string keyName, string? valueName = null)
     {
 #if NET8_0_OR_GREATER
         if (!OperatingSystem.IsWindows())
