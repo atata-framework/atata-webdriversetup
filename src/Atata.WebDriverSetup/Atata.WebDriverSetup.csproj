@@ -27,9 +27,16 @@ The package targets .NET 8.0 and .NET Framework 4.6.2.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atata.Cli" Version="4.0.0-beta.1" />
+    <PackageReference Include="Atata.Cli" Version="4.0.0-beta.3" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" Condition="'$(TargetFramework)' == 'net462'" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" Condition="'$(TargetFramework)' == 'net462'" />
   </ItemGroup>
 
