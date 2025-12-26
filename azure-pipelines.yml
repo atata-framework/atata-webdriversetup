@@ -24,15 +24,19 @@ jobs:
   strategy:
     matrix:
       Ubuntu:
+        code: ubuntu-net
         imageName: 'ubuntu-latest'
         testTargetFramework: net10.0
       macOS:
+        code: mac-net
         imageName: 'macOS-latest'
         testTargetFramework: net10.0
       Windows:
+        code: win-net
         imageName: 'windows-latest'
         testTargetFramework: net10.0
       'Windows / .NET Framework':
+        code: win-netfx
         imageName: 'windows-latest'
         testTargetFramework: net462
   pool:
@@ -59,5 +63,5 @@ jobs:
     displayName: Publish integration test results
     condition: succeededOrFailed()
     inputs:
-      artifactName: $(Agent.JobName) integration test results
+      artifactName: $(code)_integration_test_results
       targetPath: 'test/Atata.WebDriverSetup.IntegrationTests/bin/$(buildConfiguration)/$(testTargetFramework)/results'
