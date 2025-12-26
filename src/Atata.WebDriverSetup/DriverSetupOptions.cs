@@ -20,7 +20,9 @@ public class DriverSetupOptions
         if (baseOptions is null)
         {
             StorageDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
+#if !NETFRAMEWORK
             CheckCertificateRevocationList = true;
+#endif
             UseInterProcessSynchronization = false;
             UseVersionCache = true;
 
@@ -64,6 +66,7 @@ public class DriverSetupOptions
         set => SetOption(nameof(Proxy), value);
     }
 
+#if !NETFRAMEWORK
     /// <summary>
     /// Gets or sets a value indicating whether the certificate is automatically picked
     /// from the certificate store or if the caller is allowed to pass in a specific
@@ -75,6 +78,7 @@ public class DriverSetupOptions
         get => GetOption<bool>(nameof(CheckCertificateRevocationList));
         set => SetOption(nameof(CheckCertificateRevocationList), value);
     }
+#endif
 
     /// <summary>
     /// Gets or sets the configuration action of <see cref="HttpClientHandler"/>.
@@ -211,6 +215,7 @@ public class DriverSetupOptions
                 : setProxyAction + resultAction;
         }
 
+#if !NETFRAMEWORK
         if (CheckCertificateRevocationList)
         {
             Action<HttpClientHandler> checkCertificateAction = x => x.CheckCertificateRevocationList = true;
@@ -218,6 +223,7 @@ public class DriverSetupOptions
                 ? checkCertificateAction
                 : checkCertificateAction + resultAction;
         }
+#endif
 
         return resultAction;
     }

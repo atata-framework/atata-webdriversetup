@@ -83,6 +83,7 @@ public abstract class DriverSetupOptionsBuilder<TBuilder, TContext>
         return (TBuilder)this;
     }
 
+#if !NETFRAMEWORK
     /// <summary>
     /// Sets a value indicating whether the certificate is automatically picked
     /// from the certificate store or if the caller is allowed to pass in a specific
@@ -100,6 +101,7 @@ public abstract class DriverSetupOptionsBuilder<TBuilder, TContext>
         BuildingContext.CheckCertificateRevocationList = checkCertificateRevocationList;
         return (TBuilder)this;
     }
+#endif
 
     /// <summary>
     /// Sets the configuration action of <see cref="HttpClientHandler"/>.
