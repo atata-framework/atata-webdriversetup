@@ -54,7 +54,7 @@ public sealed class TargetOSPlatform
         OSInfo.IsWindows
             ? TargetOSFamily.Windows
             : OSInfo.IsOSX
-                ? TargetOSFamily.Mac
+                ? TargetOSFamily.MacOS
                 : TargetOSFamily.Linux;
 
     private static TargetArchitecture DetectArchitecture() =>
@@ -80,8 +80,8 @@ public sealed class TargetOSPlatform
             { OSFamily: TargetOSFamily.Windows, Architecture: TargetArchitecture.X32 } => OSPlatforms.Windows32,
             { OSFamily: TargetOSFamily.Windows, Architecture: TargetArchitecture.X64 } => OSPlatforms.Windows64,
             { OSFamily: TargetOSFamily.Windows, Architecture: TargetArchitecture.Arm64 } => OSPlatforms.WindowsArm64,
-            { OSFamily: TargetOSFamily.Mac, Architecture: TargetArchitecture.X64 } => OSPlatforms.Mac64,
-            { OSFamily: TargetOSFamily.Mac, Architecture: TargetArchitecture.Arm64 } => OSPlatforms.MacArm64,
+            { OSFamily: TargetOSFamily.MacOS, Architecture: TargetArchitecture.X64 } => OSPlatforms.Mac64,
+            { OSFamily: TargetOSFamily.MacOS, Architecture: TargetArchitecture.Arm64 } => OSPlatforms.MacArm64,
             { OSFamily: TargetOSFamily.Linux } => OSPlatforms.Linux64,
             _ => throw new InvalidOperationException($"Cannot resolve {nameof(OSPlatforms)} value.")
         };

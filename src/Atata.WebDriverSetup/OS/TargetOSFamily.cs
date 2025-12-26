@@ -13,7 +13,7 @@ public enum TargetOSFamily
     /// <summary>
     /// The macOS family.
     /// </summary>
-    Mac,
+    MacOS,
 
     /// <summary>
     /// The Linux family.

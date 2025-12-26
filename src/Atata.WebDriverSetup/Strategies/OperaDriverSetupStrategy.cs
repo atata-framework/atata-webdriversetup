@@ -29,7 +29,7 @@ public class OperaDriverSetupStrategy :
         return platform.OSFamily switch
         {
             TargetOSFamily.Windows => $"{commonNamePart}win{platform.Bits}.zip",
-            TargetOSFamily.Mac => $"{commonNamePart}mac64.zip",
+            TargetOSFamily.MacOS => $"{commonNamePart}mac64.zip",
             _ => $"{commonNamePart}linux64.zip"
         };
     }

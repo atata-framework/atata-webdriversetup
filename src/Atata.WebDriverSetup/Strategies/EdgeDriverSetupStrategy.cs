@@ -56,7 +56,7 @@ public class EdgeDriverSetupStrategy :
         platform.OSFamily switch
         {
             TargetOSFamily.Windows => $"edgedriver_{GetWindowsArchitectureSuffix(platform.Architecture)}.zip",
-            TargetOSFamily.Mac => $"edgedriver_mac64{(platform.Architecture == TargetArchitecture.Arm64 ? "_m1" : null)}.zip",
+            TargetOSFamily.MacOS => $"edgedriver_mac64{(platform.Architecture == TargetArchitecture.Arm64 ? "_m1" : null)}.zip",
             _ => "edgedriver_linux64.zip"
         };
 

@@ -31,7 +31,7 @@ public class FirefoxDriverSetupStrategy :
         return platform.OSFamily switch
         {
             TargetOSFamily.Windows => $"{commonNamePart}win{GetArchitectureSuffix(platform.Architecture)}.zip",
-            TargetOSFamily.Mac => $"{commonNamePart}macos{(platform.Architecture == TargetArchitecture.Arm64 ? GetArchitectureSuffix(TargetArchitecture.Arm64) : null)}.tar.gz",
+            TargetOSFamily.MacOS => $"{commonNamePart}macos{(platform.Architecture == TargetArchitecture.Arm64 ? GetArchitectureSuffix(TargetArchitecture.Arm64) : null)}.tar.gz",
             _ => $"{commonNamePart}linux{GetArchitectureSuffix(platform.Architecture)}.tar.gz"
         };
     }

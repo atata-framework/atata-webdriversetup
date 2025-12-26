@@ -106,7 +106,7 @@ public class ChromeDriverSetupStrategy :
         platform.OSFamily switch
         {
             TargetOSFamily.Windows => "chromedriver_win32.zip",
-            TargetOSFamily.Mac => $"chromedriver_mac{(platform.Architecture == TargetArchitecture.Arm64 ? "_arm" : null)}64.zip",
+            TargetOSFamily.MacOS => $"chromedriver_mac{(platform.Architecture == TargetArchitecture.Arm64 ? "_arm" : null)}64.zip",
             _ => "chromedriver_linux64.zip"
         };
 
@@ -114,7 +114,7 @@ public class ChromeDriverSetupStrategy :
         platform.OSFamily switch
         {
             TargetOSFamily.Windows => $"win{platform.Bits}",
-            TargetOSFamily.Mac => $"mac-{(platform.Architecture == TargetArchitecture.Arm64 ? "arm" : "x")}64",
+            TargetOSFamily.MacOS => $"mac-{(platform.Architecture == TargetArchitecture.Arm64 ? "arm" : "x")}64",
             _ => "linux64"
         };
 
