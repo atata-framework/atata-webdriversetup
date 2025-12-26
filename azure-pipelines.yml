@@ -49,7 +49,7 @@ jobs:
       artifactName: Windows test results
       targetPath: $(resultsDirectoryPath)
 
-- job: RunTestsOnWindows-NetFramework
+- job: RunTestsOnWindows_NetFramework
   displayName: Run tests on Windows / .NET Framework
   pool:
     vmImage: windows-latest
