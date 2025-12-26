@@ -92,6 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In `DriverSetup` remove `AutoSetUpAsync(params string[] browserNames)` method in favor of the new `AutoSetUpAsync(IEnumerable<string> browserNames, CancellationToken cancellationToken = default)`.
 - In `AppVersionDetector` remove `GetThroughCli` method in favor of the new `GetThroughCliAsync`.
 - In `AppVersionDetector` remove `GetThroughOSXApplicationCli` method in favor of the new `GetThroughOSXApplicationCliAsync`.
+- In `HttpRequestExecutor` constructor remove `proxy` and `checkCertificateRevocationList` parameters in favor of using single `httpClientHandlerConfigurationAction` parameter for `HttpClientHandler` configuration.
 
 ## [3.6.0] - 2025-10-13
 
