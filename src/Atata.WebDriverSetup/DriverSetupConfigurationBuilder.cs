@@ -214,10 +214,9 @@ public class DriverSetupConfigurationBuilder : DriverSetupOptionsBuilder<DriverS
 
     internal static IHttpRequestExecutor CreateDefaultHttpRequestExecutor(DriverSetupConfiguration configuration)
     {
-        IHttpRequestExecutor executor = new HttpRequestExecutor(
-            configuration.Proxy,
-            configuration.CheckCertificateRevocationList,
-            configuration.HttpClientHandlerConfigurationAction);
+        Action<HttpClientHandler>? handlerConfigurationAction = configuration.CreateAggregateHttpClientHandlerConfigurationAction();
+
+        IHttpRequestExecutor executor = new HttpRequestExecutor(handlerConfigurationAction);
 
 #if DEBUG
         executor = new LoggingHttpRequestExecutor(executor);

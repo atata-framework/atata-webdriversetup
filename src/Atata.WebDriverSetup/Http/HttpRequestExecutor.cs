@@ -3,31 +3,14 @@
 /// <inheritdoc/>
 public class HttpRequestExecutor : IHttpRequestExecutor
 {
-    private readonly IWebProxy? _proxy;
-
-    private readonly bool _checkCertificateRevocationList;
-
     private readonly Action<HttpClientHandler>? _httpClientHandlerConfigurationAction;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpRequestExecutor"/> class.
     /// </summary>
-    /// <param name="proxy">The proxy.</param>
-    /// <param name="checkCertificateRevocationList">
-    /// A value indicating whether the certificate is automatically picked
-    /// from the certificate store or if the caller is allowed to pass in a specific
-    /// client certificate.
-    /// </param>
     /// <param name="httpClientHandlerConfigurationAction">The configuration action of <see cref="HttpClientHandler"/>.</param>
-    public HttpRequestExecutor(
-        IWebProxy? proxy = null,
-        bool checkCertificateRevocationList = true,
-        Action<HttpClientHandler>? httpClientHandlerConfigurationAction = null)
-    {
-        _proxy = proxy;
-        _checkCertificateRevocationList = checkCertificateRevocationList;
+    public HttpRequestExecutor(Action<HttpClientHandler>? httpClientHandlerConfigurationAction = null) =>
         _httpClientHandlerConfigurationAction = httpClientHandlerConfigurationAction;
-    }
 
     /// <inheritdoc/>
     public async Task<string> DownloadStringAsync(string url, CancellationToken cancellationToken = default)
@@ -92,15 +75,11 @@ public class HttpRequestExecutor : IHttpRequestExecutor
     {
         HttpClientHandler httpClientHandler = new()
         {
-            Proxy = _proxy,
             AllowAutoRedirect = allowAutoRedirect
         };
 
-        if (_checkCertificateRevocationList)
-            httpClientHandler.CheckCertificateRevocationList = true;
-
         _httpClientHandlerConfigurationAction?.Invoke(httpClientHandler);
 
-        return new HttpClient(httpClientHandler, true);
+        return new(httpClientHandler, true);
     }
 }

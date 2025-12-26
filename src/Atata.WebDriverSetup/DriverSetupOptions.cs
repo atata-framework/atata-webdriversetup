@@ -198,4 +198,27 @@ public class DriverSetupOptions
     /// <param name="value">The value to set.</param>
     protected void SetOption(string optionName, object? value) =>
         _optionValues[optionName] = value;
+
+    internal Action<HttpClientHandler>? CreateAggregateHttpClientHandlerConfigurationAction()
+    {
+        var resultAction = HttpClientHandlerConfigurationAction;
+
+        if (Proxy is not null)
+        {
+            Action<HttpClientHandler> setProxyAction = x => x.Proxy = Proxy;
+            resultAction = resultAction is null
+                ? setProxyAction
+                : setProxyAction + resultAction;
+        }
+
+        if (CheckCertificateRevocationList)
+        {
+            Action<HttpClientHandler> checkCertificateAction = x => x.CheckCertificateRevocationList = true;
+            resultAction = resultAction is null
+                ? checkCertificateAction
+                : checkCertificateAction + resultAction;
+        }
+
+        return resultAction;
+    }
 }
