@@ -21,7 +21,7 @@ public class ChromeDriverSetupStrategyTests
         $"{ExpectedDriverDownloadUrlBase}linux64.zip";
 
     private readonly ChromeDriverSetupStrategy _sut = new(
-        new HttpRequestExecutor());
+        new HttpRequestExecutor(checkCertificateRevocationList: false));
 
     [TestCase(
         Architecture.X32,

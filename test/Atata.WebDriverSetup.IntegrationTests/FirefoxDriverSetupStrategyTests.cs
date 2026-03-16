@@ -33,7 +33,7 @@ public class FirefoxDriverSetupStrategyTests
         $"{ExpectedDriverDownloadUrlBase}linux-aarch64.tar.gz";
 
     private readonly FirefoxDriverSetupStrategy _sut = new(
-        new HttpRequestExecutor());
+        new HttpRequestExecutor(checkCertificateRevocationList: false));
 
     [TestCase(
         Architecture.X32,

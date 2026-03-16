@@ -7,7 +7,7 @@ internal sealed class FakeHttpRequestExecutorProxy : IHttpRequestExecutor
     private readonly List<(string Url, string FilePath)> _downloadFileCalls = [];
 
     public FakeHttpRequestExecutorProxy()
-        : this(new HttpRequestExecutor())
+        : this(new HttpRequestExecutor(checkCertificateRevocationList: false))
     {
     }
 

@@ -27,7 +27,7 @@ public class EdgeDriverSetupStrategyTests
         $"{ExpectedDriverDownloadUrlBase}linux64.zip";
 
     private readonly EdgeDriverSetupStrategy _sut = new(
-        new HttpRequestExecutor());
+        new HttpRequestExecutor(checkCertificateRevocationList: false));
 
     [TestCase(
         Architecture.X32,
