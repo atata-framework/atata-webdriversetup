@@ -6,7 +6,7 @@ public sealed class GlobalFixture
     [OneTimeSetUp]
     public void GlobalSetUp()
     {
-        if (OSInfo.IsOSX)
+        if (OperatingSystem.IsMacOS())
             DriverSetup.GlobalConfiguration.WithCheckCertificateRevocationList(false);
     }
 }
