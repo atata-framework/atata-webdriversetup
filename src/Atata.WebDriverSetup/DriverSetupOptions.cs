@@ -21,7 +21,7 @@ public class DriverSetupOptions
         {
             StorageDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "drivers");
 #if !NETFRAMEWORK
-            CheckCertificateRevocationList = true;
+            CheckCertificateRevocationList = false;
 #endif
             UseInterProcessSynchronization = false;
             UseVersionCache = true;
@@ -71,7 +71,7 @@ public class DriverSetupOptions
     /// Gets or sets a value indicating whether the certificate is automatically picked
     /// from the certificate store or if the caller is allowed to pass in a specific
     /// client certificate.
-    /// The default value is <see langword="true"/>.
+    /// The default value is <see langword="false"/>.
     /// </summary>
     public bool CheckCertificateRevocationList
     {
