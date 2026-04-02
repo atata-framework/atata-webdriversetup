@@ -1504,7 +1504,11 @@ internal static partial class EdgeDriverVersionsMap
         new("146.0.3856.49", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
         new("146.0.3856.54", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
         new("146.0.3856.59", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
-        new("146.0.3856.62", Windows32 | Windows64 | WindowsArm64 | Linux64),
+        new("146.0.3856.62", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("146.0.3856.72", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("146.0.3856.78", Windows32 | Windows64 | WindowsArm64),
+        new("146.0.3856.84", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("146.0.3856.97", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
 
         new("147.0.3858.0", Windows32 | Windows64 | WindowsArm64),
         new("147.0.3859.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
@@ -1539,5 +1543,10 @@ internal static partial class EdgeDriverVersionsMap
         new("147.0.3910.0", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64),
         new("147.0.3911.0", Windows32 | Windows64 | WindowsArm64),
         new("147.0.3912.0", Windows32 | Windows64 | WindowsArm64),
+        new("147.0.3912.10", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("147.0.3912.16", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("147.0.3912.26", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("147.0.3912.31", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
+        new("147.0.3912.37", Windows32 | Windows64 | WindowsArm64 | Mac64 | MacArm64 | Linux64),
     ];
 }
