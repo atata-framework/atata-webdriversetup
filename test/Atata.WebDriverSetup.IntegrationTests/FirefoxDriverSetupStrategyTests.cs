@@ -1,7 +1,6 @@
 ﻿namespace Atata.WebDriverSetup.IntegrationTests;
 
-[TestFixture]
-public class FirefoxDriverSetupStrategyTests
+public sealed class FirefoxDriverSetupStrategyTests
 {
     private const string TestVersion = "0.33.0";
 
@@ -80,7 +79,9 @@ public class FirefoxDriverSetupStrategyTests
         return url.ToString();
     }
 
-    [TestCaseSource(typeof(Architectures), nameof(Architectures.All))]
+    [TestCase(Architecture.X32, ExcludePlatform = Platforms.Linux)]
+    [TestCase(Architecture.X64)]
+    [TestCase(Architecture.Arm64)]
     public void GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
     {
         string latestVersion = _sut.GetDriverLatestVersion();
