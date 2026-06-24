@@ -80,7 +80,7 @@ public class EdgeDriverSetupStrategyTests
             .Should().MatchRegex(@"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$");
 
     [TestCase("100.0.1155.0", ExpectedResult = "100.0.1155.0")]
-    [TestCase("150.1.2.3", ExpectedResult = "150.1.2.3")]
+    [TestCase("250.1.2.3", ExpectedResult = "250.1.2.3")]
     [TestCase("130.0.2816.0", ExpectedResult = "130.0.2816.0")]
     [TestCase("130.0.2849.50", IncludePlatform = Platforms.WindowsAndLinux, ExpectedResult = "130.0.2849.46")]
     [TestCase("130.0.2841.0", IncludePlatform = Platforms.MacOS, ExpectedResult = "130.0.2821.1")]
