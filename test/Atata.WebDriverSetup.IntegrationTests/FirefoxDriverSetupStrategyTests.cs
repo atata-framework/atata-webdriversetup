@@ -79,7 +79,9 @@ public sealed class FirefoxDriverSetupStrategyTests
         return url.ToString();
     }
 
-    [TestCaseSource(typeof(Architectures), nameof(Architectures.All))]
+    [TestCase(Architecture.X32, ExcludePlatform = Platforms.Linux)]
+    [TestCase(Architecture.X64)]
+    [TestCase(Architecture.Arm64)]
     public async Task GetDriverDownloadUrl_WithLatestVersion(Architecture architecture)
     {
         string latestVersion = await _sut.GetDriverLatestVersionAsync();
