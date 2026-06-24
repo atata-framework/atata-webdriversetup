@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update Edge driver versions map.
+- Upgrade System.Text.Json package reference to v8.0.6.
 
 ## [3.8.0] - 2026-03-16
 
