@@ -16,4 +16,16 @@ public sealed class GridLink<TOwner> : Link<TOwner>
 
         return Owner;
     }
+
+    public TOwner ClickToOpenInNewTab()
+    {
+        Log.ExecuteSection(new ClickLogSection(this), () =>
+        {
+            string href = Href.Value!;
+
+            Script.Execute($"window.open('{href}', '_blank');");
+        });
+
+        return Owner;
+    }
 }

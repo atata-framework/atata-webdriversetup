@@ -5,7 +5,7 @@ namespace Atata.WebDriverSetup.EdgeDriverVersionsMapReader;
 
 internal static class VersionsMapReader
 {
-    private const string DriverStorageUrl = "https://msedgewebdriverstorage.z22.web.core.windows.net/";
+    private const string DriverStorageUrl = "https://msedgedriver.microsoft.com/catalog/index.html";
 
     private static readonly (string DriverName, string PlatformName)[] s_driverPlatformMap = [
         new("edgedriver_win32.zip", "Windows32"),
@@ -68,17 +68,21 @@ internal static class VersionsMapReader
         foreach (var versionLink in versionsPage.VersionLinks.Skip(1).Value)
         {
             string versionString = versionLink.Content.Value.TrimEnd('/');
-            Version version = new(versionString);
 
-            versionLink.CtrlClick();
+            if (versionString != "..")
+            {
+                Version version = new(versionString);
 
-            var versionPage = Go.ToNextWindow<VersionPage>();
+                versionLink.ClickToOpenInNewTab();
 
-            string versionLine = ReadVersionLine(versionPage, versionString);
+                var versionPage = Go.ToNextWindow<VersionPage>();
 
-            versionPage.CloseWindow();
+                string versionLine = ReadVersionLine(versionPage, versionString);
 
-            yield return new(version, versionLine);
+                versionPage.CloseWindow();
+
+                yield return new(version, versionLine);
+            }
         }
     }
 
@@ -91,10 +95,11 @@ internal static class VersionsMapReader
             .Append(version)
             .Append("\", ");
 
-        string[] driverNames = versionPage.DriverLinks
+        string[] driverNames = [.. versionPage.DriverLinks
             .Skip(1)
-            .Select(x => x.Content.Value)
-            .ToArray();
+            .Value
+            .SkipLast(1)
+            .Select(x => x.Content.Value)];
 
         bool addJoinOperator = false;
 
