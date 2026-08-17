@@ -137,6 +137,7 @@ internal sealed class DriverSetupExecutor
         }
     }
 
+    [SuppressMessage("Minor Vulnerability", "S4036:OS commands should not rely on PATH resolution")]
     private static void GrantFileExecutePermission(string filePath)
     {
         if (!OSInfo.IsWindows)
