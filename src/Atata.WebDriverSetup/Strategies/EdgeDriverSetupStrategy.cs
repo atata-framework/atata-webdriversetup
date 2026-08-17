@@ -121,7 +121,9 @@ public class EdgeDriverSetupStrategy :
 
         if (lastIndexOfOriginalVersion >= 0)
         {
+#pragma warning disable S6444 // Pass a timeout to limit the execution time.
             Regex anyVersionRegex = new($"href=\"{GetDriverDownloadUrlString("([^\"]+)", platform)}\"");
+#pragma warning restore S6444 // Pass a timeout to limit the execution time.
 
             Match previousVersionRegexMatch = anyVersionRegex.Match(downloadsPageHtml, lastIndexOfOriginalVersion + originalVersionUrlVersionHrefStart.Length);
 
@@ -135,7 +137,11 @@ public class EdgeDriverSetupStrategy :
         }
 
         string majorVersion = VersionUtils.TrimMinor(version);
+
+#pragma warning disable S6444 // Pass a timeout to limit the execution time.
         Regex majorVersionRegex = new($"href=\"{GetDriverDownloadUrlString($"({majorVersion}\\.[^\"]+)", platform)}\"");
+#pragma warning restore S6444 // Pass a timeout to limit the execution time.
+
         MatchCollection majorVersionRegexMatches = majorVersionRegex.Matches(downloadsPageHtml);
 
         if (majorVersionRegexMatches.Count > 0)

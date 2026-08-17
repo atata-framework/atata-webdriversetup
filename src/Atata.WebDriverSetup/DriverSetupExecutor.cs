@@ -188,7 +188,9 @@ internal sealed class DriverSetupExecutor
 
         if (pathVariableValue is not null)
         {
+#pragma warning disable S6444 // Pass a timeout to limit the execution time.
             Regex isTherePathRegex = new($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
+#pragma warning restore S6444 // Pass a timeout to limit the execution time.
 
             if (!isTherePathRegex.IsMatch(pathVariableValue))
             {
