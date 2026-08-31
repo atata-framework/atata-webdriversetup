@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgrade Atata.Cli package reference to v4.0.0.
 - Change package target frameworks from .NET Standard 2.0 to .NET 8.0 and .NET Framework 4.6.2.
 - Enable nullable reference types.
 - Change default value of `DriverSetupOptions.CheckCertificateRevocationList` property from `true` to `false`.
