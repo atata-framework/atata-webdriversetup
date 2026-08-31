@@ -34,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change package target frameworks from .NET Standard 2.0 to .NET 8.0 and .NET Framework 4.6.2.
 - Enable nullable reference types.
 - Change default value of `DriverSetupOptions.CheckCertificateRevocationList` property from `true` to `false`.
-- Update Edge driver versions map.
 - Add `CancellationToken cancellationToken = default` parameter to the following methods of `DriverSetup`:
   - `AutoSetUpAsync`
   - `AutoSetUpSafelyAsync`
@@ -96,6 +95,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In `AppVersionDetector` remove `GetThroughCli` method in favor of the new `GetThroughCliAsync`.
 - In `AppVersionDetector` remove `GetThroughOSXApplicationCli` method in favor of the new `GetThroughMacOSApplicationCliAsync`.
 - In `HttpRequestExecutor` constructor remove `proxy` and `checkCertificateRevocationList` parameters in favor of using single `httpClientHandlerConfigurationAction` parameter for `HttpClientHandler` configuration.
+
+## [3.10.0] - 2026-08-31
+
+### Changed
+
+- Update Edge driver versions map.
 
 ## [3.9.0] - 2026-06-24
 
@@ -321,7 +326,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial version release.
 
-[Unreleased]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.9.0...HEAD
+[Unreleased]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.10.0...HEAD
+[3.10.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.9.0...v3.10.0
 [3.9.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.8.0...v3.9.0
 [3.8.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.7.0...v3.8.0
 [3.7.0]: https://github.com/atata-framework/atata-webdriversetup/compare/v3.6.0...v3.7.0
