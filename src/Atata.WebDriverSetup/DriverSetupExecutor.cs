@@ -134,6 +134,7 @@ internal sealed class DriverSetupExecutor
         }
     }
 
+    [SuppressMessage("Minor Vulnerability", "S4036:OS commands should not rely on PATH resolution")]
     private static void GrantFileExecutePermission(string filePath)
     {
         if (!OSInfo.IsWindows)
@@ -182,7 +183,7 @@ internal sealed class DriverSetupExecutor
         const string pathVariableName = "PATH";
         string pathVariableValue = Environment.GetEnvironmentVariable(pathVariableName, EnvironmentVariableTarget.Process);
 
-        Regex isTherePathRegex = new Regex($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
+        Regex isTherePathRegex = new($"(^|{Path.PathSeparator}){Regex.Escape(path)}({Path.PathSeparator}|$)");
 
         if (!isTherePathRegex.IsMatch(pathVariableValue))
         {
