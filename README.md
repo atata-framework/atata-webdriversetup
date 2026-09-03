@@ -14,6 +14,8 @@ Basically, it provides functionality similar to Selenium Manager or Java `WebDri
 
 *The package targets .NET 8.0 and .NET Framework 4.6.2.*
 
+**[What's new in v4.0.0](https://github.com/atata-framework/atata-webdriversetup/releases/tag/v4.0.0)**
+
 ## Table of contents
 
 - [Features](#features)
