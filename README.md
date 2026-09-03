@@ -292,7 +292,7 @@ await DriverSetup.ConfigureChrome()
   Sets a value indicating whether the certificate is automatically picked
   from the certificate store or if the caller is allowed to pass in a specific
   client certificate.
-  The default value is `true`.
+  The default value is `false`.
 - **`WithHttpClientHandlerConfiguration(Action<HttpClientHandler> httpClientHandlerConfigurationAction)`**\
   Sets the configuration action of `HttpClientHandler`.
   The `HttpClientHandler` instance is used to get a driver version information
@@ -330,7 +330,7 @@ In order to handle such errors you can try one or both of the configuration sett
 
 ```cs
 DriverSetup.GlobalConfiguration
-    .WithCheckCertificateRevocationList(false)
+    .WithCheckCertificateRevocationList(false) // CheckCertificateRevocationList is false by default.
     .WithHttpClientHandlerConfiguration(x => x.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator);
 ```
 
