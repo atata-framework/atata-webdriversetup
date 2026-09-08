@@ -12,33 +12,9 @@
 e.g. `chromedriver`, `geckodriver`, etc.
 Basically, it provides functionality similar to Selenium Manager or Java `WebDriverManager`.
 
-*The package targets .NET 8.0 and .NET Framework 4.6.2.*
-
 **[What's new in v4.0.0](https://github.com/atata-framework/atata-webdriversetup/releases/tag/v4.0.0)**
 
-## Table of contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Set up version corresponding to locally installed browser version](#set-up-version-corresponding-to-locally-installed-browser-version)
-  - [Set up latest version](#set-up-latest-version)
-  - [Set up specific version](#set-up-specific-version)
-  - [Set up version corresponding to specific browser version](#set-up-version-corresponding-to-specific-browser-version)
-- [DriverSetup members](#driversetup-members)
-  - [DriverSetup properties](#driversetup-properties)
-  - [DriverSetup methods](#driversetup-methods)
-- [Configuration](#configuration)
-  - [Global configuration](#global-configuration)
-  - [Driver-specific configuration](#driver-specific-configuration)
-  - [Configuration methods](#configuration-methods)
-  - [Handle HTTPS certificate errors](#handle-https-certificate-errors)
-- [BrowserDetector](#browserdetector)
-  - [BrowserDetector methods](#browserdetector-methods)
-  - [BrowserDetector usage](#browserdetector-usage)
-- [Feedback](#feedback)
-- [SemVer](#semver)
-- [License](#license)
+*The package targets .NET 8.0 and .NET Framework 4.6.2.*
 
 ## Features
 
@@ -63,11 +39,12 @@ Install [`Atata.WebDriverSetup`](https://www.nuget.org/packages/Atata.WebDriverS
   dotnet add package Atata.WebDriverSetup
   ```
 
-The package depends on:
+## Dependencies
 
-- [`Microsoft.Win32.Registry`](https://www.nuget.org/packages/Microsoft.Win32.Registry/) - is used to detect locally installed browser version through Windows Registry.
-- [`Atata.Cli`](https://www.nuget.org/packages/Atata.Cli/) - is used to detect locally installed browser version through CLI on Linux and macOS.
-- [`System.Text.Json`](https://www.nuget.org/packages/System.Text.Json/) - is used to read JSON HTTP responses.
+- [Atata.Cli](https://www.nuget.org/packages/Atata.Cli) package.
+  Is used to detect locally installed browser version through CLI on Linux and macOS.
+- [Microsoft.Win32.Registry](https://www.nuget.org/packages/Microsoft.Win32.Registry) package.
+  Is used to detect locally installed browser version through Windows Registry.
 
 ## Usage
 
@@ -395,6 +372,23 @@ Any feedback, issues and feature requests are welcome.
 If you faced an issue please report it to [Atata.WebDriverSetup Issues](https://github.com/atata-framework/atata-webdriversetup/issues),
 [ask a question on Stack Overflow](https://stackoverflow.com/questions/ask?tags=atata+csharp) using [atata](https://stackoverflow.com/questions/tagged/atata) tag
 or use another [Atata Contact](https://atata.io/contact/) way.
+
+## Contact author
+
+Contact me, Yevhenii Shunevych, if you need help with test automation using the Atata Framework.
+You can [hire me for test automation development or consulting](https://atata.io/consulting/) if you are looking for a high-quality, maintainable automation solution for your project.
+
+- LinkedIn: https://www.linkedin.com/in/yevgeniy-shunevych
+- Email: yevgeniy.shunevych@gmail.com
+- Consulting: https://atata.io/consulting/
+
+## Sponsorship
+
+Many thanks to the sponsors that regularly support the development of Atata Framework through donations:
+
+- **[Lombiq Technologies](https://lombiq.com/)**
+
+If Atata Framework is useful to you or your company, consider supporting the framework development with a [donation](https://atata.io/donate/).
 
 ## Contributing
 
