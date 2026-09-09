@@ -135,11 +135,11 @@ This feature is currently supported for Chrome, Firefox and Edge browsers.
 - Firefox: `"104"`, `"104.0"` or `"104.0.1"`
 - Edge: `"89.0.774.4"`
 
-## DriverSetup members
+## `DriverSetup` members
 
 `DriverSetup` is a static class, so all its members are static too.
 
-### DriverSetup properties
+### `DriverSetup` properties
 
 - **`DriverSetupOptions GlobalOptions { get; }`**\
   Gets the global setup options.
@@ -150,7 +150,7 @@ This feature is currently supported for Chrome, Firefox and Edge browsers.
   Gets the pending driver setup configurations,
   the configurations that were created but were not set up.
 
-### DriverSetup methods
+### `DriverSetup` methods
 
 - **`DriverSetupConfigurationBuilder ConfigureChrome()`**\
   Creates the Chrome driver setup configuration builder.
@@ -313,7 +313,7 @@ DriverSetup.GlobalConfiguration
     .WithHttpClientHandlerConfiguration(x => x.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator);
 ```
 
-## BrowserDetector
+## `BrowserDetector`
 
 `BrowserDetector` - provides a set of static methods for a detection of browser installations.
 Browser detection is supported for Chrome, Firefox and Edge,
@@ -323,7 +323,7 @@ so as a browser name the following constants can be used:
 - `BrowserNames.Firefox`
 - `BrowserNames.Edge`
 
-### BrowserDetector methods
+### `BrowserDetector` methods
 
 - **`Task<string?> GetInstalledBrowserVersionAsync(string browserName, CancellationToken cancellationToken = default)`** &\
   **`string? GetInstalledBrowserVersion(string browserName)`**\
@@ -336,7 +336,7 @@ so as a browser name the following constants can be used:
   **`string? GetFirstInstalledBrowserName(params string[] browserNames)`**\
  Gets the name of the first installed browser among the `browserNames`.
 
-### BrowserDetector usage
+### `BrowserDetector` usage
 
 #### Get first installed browser name
 
