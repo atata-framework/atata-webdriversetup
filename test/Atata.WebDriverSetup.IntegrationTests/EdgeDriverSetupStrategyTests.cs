@@ -2,7 +2,7 @@
 
 public sealed class EdgeDriverSetupStrategyTests
 {
-    private const string TestVersion = "116.0.1938.81";
+    private const string TestVersion = "154.0.4245.0";
 
     private const string ExpectedDriverDownloadUrlBase =
         $"https://msedgedriver.microsoft.com/{TestVersion}/edgedriver_";
